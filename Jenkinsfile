@@ -43,6 +43,20 @@ pipeline {
             }
         }
 
+        stage('Wait for MySQL') {
+            steps {
+                sh '''
+                echo "Waiting for MySQL to be ready..."
+                until docker run --rm --network sail mysql:8.0 mysqladmin ping -hmysql -psail --silent; do
+                    echo "MySQL not ready yet..."
+                    sleep 2
+                done
+                echo "MySQL is ready!"
+                '''
+            }
+        }
+
+
         stage('Generate Key & Run Migrations') {
             steps {
                 echo "Generating APP_KEY and running migrations..."
