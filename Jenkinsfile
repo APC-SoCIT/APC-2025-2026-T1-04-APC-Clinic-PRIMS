@@ -3,26 +3,56 @@ pipeline {
 
     environment {
         COMPOSER_IMAGE = 'laravelsail/php82-composer:latest'
+        GIT_CREDENTIALS = 'prims-cicd' // your Jenkins GitHub credential ID
+        GIT_EMAIL = 'jmmiyabe@student.apc.edu.ph'
+        GIT_NAME = 'jmmiyabe'
+    }
+
+    options {
+        skipDefaultCheckout(true) // We'll do a custom checkout
+        timestamps()
     }
 
     stages {
 
-        stage('Install Sail') {
+        stage('Clean Workspace') {
             steps {
-                sh """
-                docker run --rm -u \$(id -u):\$(id -g) -v \$(pwd):/var/www/html -w /var/www/html $COMPOSER_IMAGE composer require laravel/sail --dev
-                docker run --rm -u \$(id -u):\$(id -g) -v \$(pwd):/var/www/html -w /var/www/html $COMPOSER_IMAGE php artisan sail:install
-                """
+                deleteDir() // Ensures old .git/config.lock issues are gone
+            }
+        }
+
+        stage('Checkout Code') {
+            steps {
+                checkout([$class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [[$class: 'CleanBeforeCheckout']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/APC-SoCIT/APC-2025-2026-T1-04-APC-Clinic-PRIMS.git',
+                        credentialsId: env.GIT_CREDENTIALS
+                    ]]
+                ])
             }
         }
 
         stage('Setup Environment & Permissions') {
             steps {
-                sh """
-                cp .env.example .env
-                chmod -R 777 storage bootstrap/cache .env || true
-                git config --global --add safe.directory \$(pwd)
-                """
+                sh '''
+                cp .env.example .env || true
+                chmod -R 777 storage bootstrap/cache .env
+                git config --global user.email "${GIT_EMAIL}"
+                git config --global user.name "${GIT_NAME}"
+                '''
+            }
+        }
+
+        stage('Install Sail & Dependencies') {
+            steps {
+                sh '''
+                docker run --rm -u $(id -u):$(id -g) -v $(pwd):/var/www/html -w /var/www/html $COMPOSER_IMAGE composer require laravel/sail --dev
+                docker run --rm -u $(id -u):$(id -g) -v $(pwd):/var/www/html -w /var/www/html $COMPOSER_IMAGE php artisan sail:install
+                ./vendor/bin/sail composer install
+                '''
             }
         }
 
@@ -34,26 +64,16 @@ pipeline {
 
         stage('Fix Sail Ownership') {
             steps {
-                // Make sure Sail user can write to mounted files
                 sh './vendor/bin/sail root-shell -c "chown -R sail:sail /var/www/html"'
             }
         }
 
-        stage('Install Dependencies') {
+        stage('App Setup') {
             steps {
-                sh './vendor/bin/sail composer install'
-            }
-        }
-
-        stage('Generate App Key') {
-            steps {
-                sh './vendor/bin/sail artisan key:generate'
-            }
-        }
-
-        stage('Migrate & Seed Database') {
-            steps {
-                sh './vendor/bin/sail artisan migrate:fresh --seed'
+                sh '''
+                ./vendor/bin/sail artisan key:generate
+                ./vendor/bin/sail artisan migrate:fresh --seed
+                '''
             }
         }
 
@@ -70,17 +90,8 @@ pipeline {
         stage('Commit & Push Changes') {
             steps {
                 sh '''
-                # Configure Git if not already configured
-                git config --global user.email "jmmiyabe@student.apc.edu.ph"
-                git config --global user.name "jmmiyabe"
-
-                # Add any changes
                 git add .
-
-                # Commit, but don't fail if nothing to commit
                 git commit -m "Automated update from Jenkins pipeline" || true
-
-                # Push to the current branch
                 git push origin HEAD
                 '''
             }
@@ -89,7 +100,7 @@ pipeline {
 
     post {
         always {
-            sh './vendor/bin/sail down || true'
+            sh './vendor/bin/sail down || true' // stops containers after the build
         }
     }
 }
