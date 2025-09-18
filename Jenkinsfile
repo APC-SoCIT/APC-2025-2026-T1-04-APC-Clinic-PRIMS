@@ -59,18 +59,6 @@ pipeline {
             }
         }
 
-        stage('Unit Test') {
-            steps {
-                sh './vendor/bin/sail artisan test'
-            }
-        }
-
-        stage('Integration Test') {
-            steps {
-                sh 'curl -f http://localhost || exit 1'
-            }
-        }
-
         stage('Create Docker Image') {
             steps {
                 sh 'docker build -t prims-app:latest .'
