@@ -1,6 +1,7 @@
 pipeline {
-    agent any
-
+    agent {
+        docker { image 'laravelsail/php82-composer' }
+    }
     environment {
         COMPOSE_FILE = 'docker-compose.yml'
         WWWUSER = '1000'
