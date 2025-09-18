@@ -16,11 +16,12 @@ pipeline {
             }
         }
 
-        stage('Setup Environment') {
+        stage('Setup Environment & Permissions') {
             steps {
                 sh """
                 cp .env.example .env
                 chmod -R 777 storage bootstrap/cache .env || true
+                git config --global --add safe.directory \$(pwd)
                 """
             }
         }
@@ -28,6 +29,13 @@ pipeline {
         stage('Start Sail') {
             steps {
                 sh './vendor/bin/sail up -d'
+            }
+        }
+
+        stage('Fix Sail Ownership') {
+            steps {
+                // Make sure Sail user can write to mounted files
+                sh './vendor/bin/sail root-shell -c "chown -R sail:sail /var/www/html"'
             }
         }
 
@@ -58,7 +66,6 @@ pipeline {
                 '''
             }
         }
-
     }
 
     post {
