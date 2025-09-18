@@ -5,20 +5,7 @@ pipeline {
         COMPOSER_IMAGE = 'laravelsail/php82-composer:latest'
     }
 
-    options {
-        // Clean workspace at the start to avoid leftover permission issues
-        skipDefaultCheckout(false)
-        buildDiscarder(logRotator(numToKeepStr: '10'))
-        cleanWs()
-    }
-
     stages {
-
-        stage('Checkout Code') {
-            steps {
-                checkout scm
-            }
-        }
 
         stage('Install Sail') {
             steps {
@@ -47,6 +34,7 @@ pipeline {
 
         stage('Fix Sail Ownership') {
             steps {
+                // Make sure Sail user can write to mounted files
                 sh './vendor/bin/sail root-shell -c "chown -R sail:sail /var/www/html"'
             }
         }
@@ -81,31 +69,26 @@ pipeline {
 
         stage('Commit & Push Changes') {
             steps {
-                script {
-                    // Make sure Jenkins user owns the workspace
-                    sh "sudo chown -R \$(whoami):\$(whoami) \$(pwd) || true"
+                sh '''
+                # Configure Git if not already configured
+                git config --global user.email "jmmiyabe@student.apc.edu.ph"
+                git config --global user.name "jmmiyabe"
 
-                    sh '''
-                    git config --global user.email "jmmiyabe@student.apc.edu.ph"
-                    git config --global user.name "jmmiyabe"
+                # Add any changes
+                git add .
 
-                    # Stage any changes
-                    git add .
+                # Commit, but don't fail if nothing to commit
+                git commit -m "Automated update from Jenkins pipeline" || true
 
-                    # Commit changes, ignore if nothing to commit
-                    git commit -m "Automated update from Jenkins pipeline" || true
-
-                    # Push changes safely
-                    git push origin HEAD || true
-                    '''
-                }
+                # Push to the current branch
+                git push origin HEAD
+                '''
             }
         }
     }
 
     post {
         always {
-            // Tear down Sail safely
             sh './vendor/bin/sail down || true'
         }
     }
