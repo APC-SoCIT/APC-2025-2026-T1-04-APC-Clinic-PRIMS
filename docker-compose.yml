@@ -123,5 +123,3 @@ volumes:
         driver: local
     sail-meilisearch:
         driver: local
-    jenkins_home_new:
-        driver: local
