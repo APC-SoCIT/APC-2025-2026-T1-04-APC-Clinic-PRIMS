@@ -22,7 +22,7 @@ pipeline {
 
         stage('Start Sail') {
             steps {
-                sh './vendor/bin/sail up -d'
+                sh 'docker compose up -d'
             }
         }
 
