@@ -106,7 +106,7 @@ services:
         - "8080:8080"   # Jenkins web UI
         - "50000:50000" # Jenkins agent connections
         volumes:
-        - jenkins_home:/var/jenkins_home
+        - jenkins_home_new:/var/jenkins_home
         - /var/run/docker.sock:/var/run/docker.sock
         - /usr/local/bin/docker:/usr/local/bin/docker
         networks:
@@ -136,5 +136,5 @@ volumes:
         driver: local
     sail-meilisearch:
         driver: local
-    jenkins_home:
+    jenkins_home_new:
         driver: local
