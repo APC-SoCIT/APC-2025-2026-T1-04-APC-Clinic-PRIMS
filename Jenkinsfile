@@ -4,12 +4,13 @@ pipeline {
     environment {
         APP_IMAGE = 'prims-app:latest'
         DB_CONNECTION = 'mysql'
-        DB_HOST = '127.0.0.1'  // change if using a DB container
+        DB_HOST = 'mysql'       // use the service name from docker-compose.yml
         DB_PORT = '3306'
         DB_DATABASE = 'laravel'
         DB_USERNAME = 'sail'
         DB_PASSWORD = 'password'
     }
+
 
     stages {
 
