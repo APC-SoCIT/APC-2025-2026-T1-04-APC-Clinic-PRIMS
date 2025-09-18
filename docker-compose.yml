@@ -99,18 +99,18 @@ services:
             retries: 3
             timeout: 5s
     jenkins:
-        image: jenkins/jenkins:lts
+        image: 'jenkins/jenkins:lts'
         container_name: jenkins
         user: root
         ports:
-        - "8080:8080"   # Jenkins web UI
-        - "50000:50000" # Jenkins agent connections
+            - '8080:8080'
+            - '50000:50000'
         volumes:
-        - jenkins_home_new:/var/jenkins_home
-        - /var/run/docker.sock:/var/run/docker.sock
-        - /usr/local/bin/docker:/usr/local/bin/docker
+            - 'jenkins_home_new:/var/jenkins_home'
+            - '/var/run/docker.sock:/var/run/docker.sock'
+            - '/usr/local/bin/docker:/usr/local/bin/docker'
         networks:
-        - sail
+            - sail
     mailpit:
         image: 'axllent/mailpit:latest'
         ports:
