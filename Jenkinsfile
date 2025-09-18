@@ -1,17 +1,13 @@
 pipeline {
     agent any
 
-    environment {
-        APP_IMAGE = 'prims-app:latest'
-        DB_CONNECTION = 'mysql'
-        DB_HOST = 'mysql'
-        DB_PORT = '3306'
-        DB_DATABASE = 'laravel'
-        DB_USERNAME = 'sail'
-        DB_PASSWORD = 'password'
-    }
-
     stages {
+        stage('Install Dependencies') {
+            steps {
+                sh 'composer install --no-interaction --prefer-dist --optimize-autoloader'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t $APP_IMAGE .'
@@ -27,30 +23,26 @@ pipeline {
             }
         }
 
-        stage('Generate App Key & Run Migrations') {
+        stage('Generate Key') {
             steps {
                 sh '''
-                docker run --rm \
-                    -v $PWD:/var/www/html \
-                    -e DB_CONNECTION=$DB_CONNECTION \
-                    -e DB_HOST=$DB_HOST \
-                    -e DB_PORT=$DB_PORT \
-                    -e DB_DATABASE=$DB_DATABASE \
-                    -e DB_USERNAME=$DB_USERNAME \
-                    -e DB_PASSWORD=$DB_PASSWORD \
-                    $APP_IMAGE \
-                    bash -c "php artisan key:generate && php artisan migrate:fresh --seed"
+                    if ! grep -q "APP_KEY=" .env || [ -z "$(grep 'APP_KEY=' .env | cut -d '=' -f2)" ]; then
+                        key=$(./vendor/bin/sail artisan key:generate --show)
+                        sed -i "s|^APP_KEY=.*|APP_KEY=$key|" .env
+                    fi
                 '''
             }
         }
 
-        stage('Install Frontend & Build Assets') {
+        stage('Setup App') {
             steps {
                 sh '''
-                docker run --rm \
-                    -v $PWD:/var/www/html \
-                    $APP_IMAGE \
-                    bash -c "npm install && npm audit fix || true && npm run build"
+                    ./vendor/bin/sail artisan key:generate
+                    ./vendor/bin/sail artisan migrate:fresh --seed --env=testing
+                    ./vendor/bin/sail root-shell -c "chown -R sail:sail /var/www/html"
+                    ./vendor/bin/sail npm install
+                    ./vendor/bin/sail npm audit fix || true
+                    ./vendor/bin/sail npm run build
                 '''
             }
         }
