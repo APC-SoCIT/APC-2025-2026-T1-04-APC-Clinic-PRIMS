@@ -5,13 +5,6 @@ pipeline {
         COMPOSER_IMAGE = 'laravelsail/php82-composer:latest'
     }
 
-    options {
-        // Clean workspace at the start to avoid leftover permission issues
-        skipDefaultCheckout(false)
-        buildDiscarder(logRotator(numToKeepStr: '10'))
-        cleanWs()
-    }
-
     stages {
 
         stage('Checkout Code') {
