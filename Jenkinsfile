@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        # Sail alias for Docker commands
         SAIL = './vendor/bin/sail'
     }
 
