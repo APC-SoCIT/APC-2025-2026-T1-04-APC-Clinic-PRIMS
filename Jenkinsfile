@@ -1,7 +1,6 @@
 pipeline {
-    agent {
-        docker { image 'laravelsail/php82-composer' }
-    }
+    agent any
+
     environment {
         COMPOSE_FILE = 'docker-compose.yml'
         WWWUSER = '1000'
@@ -23,7 +22,7 @@ pipeline {
 
         stage('Start Sail') {
             steps {
-                sh 'docker compose up -d'
+                sh './vendor/bin/sail up -d'
             }
         }
 
@@ -57,6 +56,18 @@ pipeline {
                     ./vendor/bin/sail npm audit fix || true
                     ./vendor/bin/sail npm run build
                 '''
+            }
+        }
+
+        stage('Unit Test') {
+            steps {
+                sh './vendor/bin/sail artisan test'
+            }
+        }
+
+        stage('Integration Test') {
+            steps {
+                sh 'curl -f http://localhost || exit 1'
             }
         }
 
