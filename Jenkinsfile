@@ -21,7 +21,7 @@ pipeline {
         stage('Prepare Environment') {
             steps {
                 sh '''
-                cp .env.testing .env
+                cp .env.example .env
                 chmod -R 777 storage bootstrap/cache .env
                 '''
             }
