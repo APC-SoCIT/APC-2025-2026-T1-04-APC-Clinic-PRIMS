@@ -11,6 +11,8 @@ pipeline {
         DB_DATABASE = 'laravel'
         DB_USERNAME = 'sail'
         DB_PASSWORD = 'password'
+        DOCKER_HOST = 'tcp://dind:2375'
+        DOCKER_TLS_VERIFY = '0'
     }
 
     stages {
