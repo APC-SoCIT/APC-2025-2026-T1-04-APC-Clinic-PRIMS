@@ -75,20 +75,12 @@ pipeline {
         stage('Commit & Push Changes') {
             steps {
                 script {
-                    // Make sure Jenkins user owns the workspace
-                    sh "sudo chown -R \$(whoami):\$(whoami) \$(pwd) || true"
-
                     sh '''
                     git config --global user.email "jmmiyabe@student.apc.edu.ph"
                     git config --global user.name "jmmiyabe"
 
-                    # Stage any changes
                     git add .
-
-                    # Commit changes, ignore if nothing to commit
                     git commit -m "Automated update from Jenkins pipeline" || true
-
-                    # Push changes safely
                     git push origin HEAD || true
                     '''
                 }
