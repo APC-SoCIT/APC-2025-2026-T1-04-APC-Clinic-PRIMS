@@ -5,7 +5,20 @@ pipeline {
         COMPOSER_IMAGE = 'laravelsail/php82-composer:latest'
     }
 
+    options {
+        // Clean workspace at the start to avoid leftover permission issues
+        skipDefaultCheckout(false)
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        cleanWs()
+    }
+
     stages {
+
+        stage('Checkout Code') {
+            steps {
+                checkout scm
+            }
+        }
 
         stage('Install Sail') {
             steps {
@@ -16,11 +29,12 @@ pipeline {
             }
         }
 
-        stage('Setup Environment') {
+        stage('Setup Environment & Permissions') {
             steps {
                 sh """
                 cp .env.example .env
                 chmod -R 777 storage bootstrap/cache .env || true
+                git config --global --add safe.directory \$(pwd)
                 """
             }
         }
@@ -28,6 +42,12 @@ pipeline {
         stage('Start Sail') {
             steps {
                 sh './vendor/bin/sail up -d'
+            }
+        }
+
+        stage('Fix Sail Ownership') {
+            steps {
+                sh './vendor/bin/sail root-shell -c "chown -R sail:sail /var/www/html"'
             }
         }
 
@@ -59,10 +79,33 @@ pipeline {
             }
         }
 
+        stage('Commit & Push Changes') {
+            steps {
+                script {
+                    // Make sure Jenkins user owns the workspace
+                    sh "sudo chown -R \$(whoami):\$(whoami) \$(pwd) || true"
+
+                    sh '''
+                    git config --global user.email "jmmiyabe@student.apc.edu.ph"
+                    git config --global user.name "jmmiyabe"
+
+                    # Stage any changes
+                    git add .
+
+                    # Commit changes, ignore if nothing to commit
+                    git commit -m "Automated update from Jenkins pipeline" || true
+
+                    # Push changes safely
+                    git push origin HEAD || true
+                    '''
+                }
+            }
+        }
     }
 
     post {
         always {
+            // Tear down Sail safely
             sh './vendor/bin/sail down || true'
         }
     }
