@@ -66,26 +66,25 @@ pipeline {
                 '''
             }
         }
-    }
 
-    stage('Commit & Push Changes') {
-        steps {
-            sh '''
-            # Configure Git if not already configured
-            git config --global user.email "jmmiyabe@student.apc.edu.ph"
-            git config --global user.name "jmmiyabe"
+        stage('Commit & Push Changes') {
+            steps {
+                sh '''
+                # Configure Git if not already configured
+                git config --global user.email "jmmiyabe@student.apc.edu.ph"
+                git config --global user.name "jmmiyabe"
 
-            # Add any changes
-            git add .
+                # Add any changes
+                git add .
 
-            # Commit, but don't fail if nothing to commit
-            git commit -m "Automated update from Jenkins pipeline" || true
+                # Commit, but don't fail if nothing to commit
+                git commit -m "Automated update from Jenkins pipeline" || true
 
-            # Push to the current branch
-            git push origin HEAD
-            '''
+                # Push to the current branch
+                git push origin HEAD
+                '''
+            }
         }
-    }
 
     post {
         always {
