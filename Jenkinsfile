@@ -9,7 +9,7 @@ pipeline {
 
         stage('Fix Permissions') {
             steps {
-                sh 'sudo chown -R 1000:1000 /var/lib/jenkins/workspace/PRIMS'
+                sh 'docker run --rm -v $PWD:/app -w /app laravelsail/php82-composer:latest chown -R sail:sail /app'
             }
         }
 
