@@ -52,6 +52,18 @@ pipeline {
             }
         }
 
+        stage('Wait for MySQL') {
+    steps {
+        sh '''
+        echo "⏳ Waiting for MySQL to be ready..."
+        until ./vendor/bin/sail mysqladmin ping -h mysql --silent; do
+          sleep 3
+        done
+        echo "✅ MySQL is ready!"
+        '''
+    }
+}
+
         stage('Migrate & Seed Database') {
             steps {
                 sh './vendor/bin/sail artisan migrate:fresh --seed'
