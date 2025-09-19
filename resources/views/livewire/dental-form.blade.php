@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div class="pb-5">
     <div class="bg-white rounded-md shadow-md mt-5 p-6">
 
@@ -301,3 +302,5 @@
         </form>
     </div>
 </div>
+=======
+>>>>>>> 59521b7 (dental form)

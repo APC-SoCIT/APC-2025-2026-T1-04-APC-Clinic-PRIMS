@@ -27,6 +27,7 @@ class PatientSeeder extends Seeder
                 'civil_status' => 'Single',
                 'religion' => 'Roman Catholic',
                 'contact_number' => '09761164892',
+<<<<<<< HEAD
 
 
                 'email' => 'smcatingub@student.apc.edu.ph',
@@ -35,6 +36,11 @@ class PatientSeeder extends Seeder
 
                 'barangay' => 'Pinagbuhatan',
 
+=======
+                'apc_id_number' => '2022-140224',
+                'street_number' => 'Street Number',
+                'barangay' => 'Barangay',
+>>>>>>> 59521b7 (dental form)
                 'city' => 'Pasig',
                 'province' => 'NCR',
                 'zip_code' => '1602',
@@ -55,6 +61,7 @@ class PatientSeeder extends Seeder
                 'civil_status' => 'Single',
                 'religion' => 'Born Again Christian',
                 'contact_number' => '09326091141',
+<<<<<<< HEAD
 
                 'email' => 'eddaduya@student.apc.edu.ph',
                 'house_unit_number' => 'number',
@@ -62,6 +69,11 @@ class PatientSeeder extends Seeder
 
                 'barangay' => 'Merville',
 
+=======
+                'apc_id_number' => '2022-140335',
+                'street_number' => 'Street Number',
+                'barangay' => 'Barangay',
+>>>>>>> 59521b7 (dental form)
                 'city' => 'Paranaque',
                 'province' => 'NCR',
                 'zip_code' => '1709',
@@ -82,6 +94,7 @@ class PatientSeeder extends Seeder
                 'civil_status' => 'Married',
                 'religion' => 'Catholic maybe',
                 'contact_number' => '09129087654',
+<<<<<<< HEAD
 
                 'email' => 'cknailgas@student.apc.edu.ph',
                 'house_unit_number' => '123',
@@ -95,6 +108,15 @@ class PatientSeeder extends Seeder
                 'emergency_contact_number' => '09876543210',
                 'emergency_contact_relationship' => 'Relationship',
 
+=======
+                'apc_id_number' => '2022-140267',
+                'street_number' => 'Street Number',
+                'barangay' => 'Barangay',
+                'city' => 'Taguig',
+                'province' => 'NCR',
+                'zip_code' => '1630',
+                'country' => 'Philippines',
+>>>>>>> 59521b7 (dental form)
             ],
             [
                 'apc_id_number' => '2022-140289',
@@ -109,12 +131,18 @@ class PatientSeeder extends Seeder
                 'civil_status' => 'Married',
                 'religion' => 'Catholic maybe',
                 'contact_number' => '09456298987',
+<<<<<<< HEAD
                 
                 'house_unit_number' => '123',
                 'street' => 'Street',
 
                 'barangay' => 'Barangay',
 
+=======
+                'apc_id_number' => '2022-140289',
+                'street_number' => 'Street Number',
+                'barangay' => 'Barangay',
+>>>>>>> 59521b7 (dental form)
                 'city' => 'Taguig',
                 'province' => 'NCR',
                 'zip_code' => '0000',
@@ -135,6 +163,7 @@ class PatientSeeder extends Seeder
                 'civil_status' => 'Married',
                 'religion' => 'Christian diba',
                 'contact_number' => '09658014225',
+<<<<<<< HEAD
 
 
                 'email' => 'jmmiyabe@student.apc.edu.ph',
@@ -143,6 +172,11 @@ class PatientSeeder extends Seeder
 
                 'barangay' => 'Barangay',
 
+=======
+                'apc_id_number' => '2022-140145',
+                'street_number' => 'street',
+                'barangay' => 'Barangay',
+>>>>>>> 59521b7 (dental form)
                 'city' => 'Taguig',
                 'province' => 'NCR',
                 'zip_code' => '0000',

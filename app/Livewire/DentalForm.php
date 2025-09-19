@@ -9,7 +9,9 @@ use Carbon\Carbon;
 
 class DentalForm extends Component
 {
-    public $apc_id_number, $first_name, $middle_initial, $last_name, $gender, $age, $date_of_birth, $nationality, $blood_type, $civil_status, $religion, $contact_number, $email, $house_unit_number, $street, $barangay, $city, $province, $zip_code, $country, $emergency_contact_name, $emergency_contact_number, $emergency_contact_relationship;
+    public $apc_id_number, $email, $first_name, $mi, $last_name, $contact_number,
+           $dob, $age, $gender, $street_number, $barangay, $city,
+           $province, $zip_code, $country, $nationality;
 
     public function searchPatient()
     {
@@ -27,28 +29,20 @@ class DentalForm extends Component
         }
 
         if ($patient) {
-            $this->apc_id_number = $patient->apc_id_number;
-            $this->first_name = $patient->first_name;
-            $this->middle_initial = $patient->middle_initial;
-            $this->last_name = $patient->last_name;
-            $this->gender = $patient->gender;
-            $this->date_of_birth = $patient->date_of_birth;
-            $this->nationality = $patient->nationality;
-            $this->blood_type = $patient->blood_type;
-            $this->civil_status = $patient->civil_status;
-            $this->religion = $patient->religion;
-            $this->contact_number = $patient->contact_number;
             $this->email = $patient->email;
-            $this->house_unit_number = $patient->house_unit_number;
-            $this->street = $patient->street;
+            $this->first_name = $patient->first_name;
+            $this->mi = $patient->middle_initial;
+            $this->last_name = $patient->last_name;
+            $this->dob = $patient->date_of_birth;
+            $this->gender = $patient->gender;
+            $this->street_number = $patient->street_number;
             $this->barangay = $patient->barangay;
             $this->city = $patient->city;
             $this->province = $patient->province;
             $this->zip_code = $patient->zip_code;
             $this->country = $patient->country;
-            $this->emergency_contact_name = $patient->emergency_contact_name;
-            $this->emergency_contact_number = $patient->emergency_contact_number;
-            $this->emergency_contact_relationship = $patient->emergency_contact_relationship;
+            $this->contact_number = $patient->contact_number;
+            $this->nationality = $patient->nationality;
             $this->calculateAge();
         } else {
             $this->resetPatientFields();
@@ -57,33 +51,15 @@ class DentalForm extends Component
 
     private function resetPatientFields()
     {
-        $this->apc_id_number = null;
-        $this->first_name = null;
-        $this->middle_initial = null;
-        $this->last_name = null;
-        $this->gender = null;
-        $this->date_of_birth = null;
-        $this->nationality = null;
-        $this->blood_type = null;
-        $this->civil_status = null;
-        $this->religion = null;
-        $this->contact_number = null;
-        $this->email = null;
-        $this->house_unit_number = null;
-        $this->street = null;
-        $this->barangay = null;
-        $this->city = null;
-        $this->province = null;
-        $this->zip_code = null;
-        $this->country = null;
-        $this->emergency_contact_name = null;
-        $this->emergency_contact_number = null;
-        $this->emergency_contact_relationship = null;
+        $this->email = null; $this->first_name = null; $this->mi = null; $this->last_name = null;
+        $this->dob = null; $this->age = null; $this->gender = null; $this->street_number = null;
+        $this->barangay = null; $this->city = null; $this->province = null; $this->zip_code = null;
+        $this->country = null; $this->contact_number = null; $this->nationality = null;
     }
 
     public function calculateAge()
     {
-        $this->age = $this->date_of_birth ? Carbon::parse($this->date_of_birth)->age : null;
+        $this->age = $this->dob ? Carbon::parse($this->dob)->age : null;
     }
 
 
