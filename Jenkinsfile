@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         COMPOSER_IMAGE = 'laravelsail/php82-composer:latest'
+        COMPOSER_CACHE_DIR = '/tmp'
     }
 
     stages {
