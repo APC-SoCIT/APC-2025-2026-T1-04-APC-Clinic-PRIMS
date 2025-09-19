@@ -59,6 +59,12 @@ pipeline {
             }
         }
 
+        stage('Run Tests') {
+            steps {
+                sh './vendor/bin/sail artisan test --parallel'
+            }
+        }
+
     }
 
     post {
