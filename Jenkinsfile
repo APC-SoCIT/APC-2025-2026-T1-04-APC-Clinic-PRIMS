@@ -7,6 +7,12 @@ pipeline {
 
     stages {
 
+        stage('Fix Permissions') {
+            steps {
+                sh 'sudo chown -R 1000:1000 /var/lib/jenkins/workspace/PRIMS'
+            }
+        }
+
         stage('Install Sail') {
             steps {
                 sh """
