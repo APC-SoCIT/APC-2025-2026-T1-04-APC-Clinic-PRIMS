@@ -9,12 +9,16 @@ pipeline {
 
         stage('Install Sail') {
             steps {
-                sh """
-                docker run --rm -u \$(id -u):\$(id -g) -v \$(pwd):/var/www/html -w /var/www/html $COMPOSER_IMAGE composer require laravel/sail --dev
-                docker run --rm -u \$(id -u):\$(id -g) -v \$(pwd):/var/www/html -w /var/www/html $COMPOSER_IMAGE php artisan sail:install
-                """
+                sh '''
+                docker run --rm -u $(id -u):$(id -g) \
+                -v $PWD:/var/www/html -w /var/www/html \
+                -e COMPOSER_HOME=/var/www/html/.composer \
+                laravelsail/php82-composer:latest \
+                composer require laravel/sail --dev
+                '''
             }
         }
+
 
         stage('Setup Environment') {
             steps {
