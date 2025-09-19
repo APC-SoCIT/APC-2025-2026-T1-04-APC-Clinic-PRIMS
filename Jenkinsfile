@@ -33,6 +33,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
+                sh './vendor/bin/sail git config --global --add safe.directory /var/www/html'
                 sh './vendor/bin/sail composer install'
             }
         }
