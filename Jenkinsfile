@@ -7,12 +7,6 @@ pipeline {
 
     stages {
 
-        stage('Fix Permissions') {
-            steps {
-                sh 'docker run --rm -v $PWD:/app -w /app laravelsail/php82-composer:latest chown -R sail:sail /app'
-            }
-        }
-
         stage('Install Sail') {
             steps {
                 sh """
@@ -39,7 +33,6 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh './vendor/bin/sail git config --global --add safe.directory /var/www/html'
                 sh './vendor/bin/sail composer install'
             }
         }
