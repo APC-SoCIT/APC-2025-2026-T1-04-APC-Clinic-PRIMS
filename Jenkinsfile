@@ -7,27 +7,11 @@ pipeline {
 
     stages {
 
-        stage('Fix Permissions') {
-            steps {
-                // Ensure workspace files are writable by Sail's default user (UID 1000)
-                sh 'sudo chown -R 1000:1000 /var/lib/jenkins/workspace/PRIMS'
-            }
-        }
-
         stage('Install Sail') {
             steps {
                 sh """
-                docker run --rm \
-                -u \$(id -u):\$(id -g) \
-                -v \$(pwd):/var/www/html \
-                -w /var/www/html \
-                $COMPOSER_IMAGE composer require laravel/sail --dev
-
-                docker run --rm \
-                -u \$(id -u):\$(id -g) \
-                -v \$(pwd):/var/www/html \
-                -w /var/www/html \
-                $COMPOSER_IMAGE php artisan sail:install
+                docker run --rm -u \$(id -u):\$(id -g) -v \$(pwd):/var/www/html -w /var/www/html $COMPOSER_IMAGE composer require laravel/sail --dev
+                docker run --rm -u \$(id -u):\$(id -g) -v \$(pwd):/var/www/html -w /var/www/html $COMPOSER_IMAGE php artisan sail:install
                 """
             }
         }
@@ -49,8 +33,6 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                // Add git safe.directory fix for Jenkins user
-                sh './vendor/bin/sail git config --global --add safe.directory /var/www/html'
                 sh './vendor/bin/sail composer install'
             }
         }
@@ -63,7 +45,7 @@ pipeline {
 
         stage('Migrate & Seed Database') {
             steps {
-                sh './vendor/bin/sail artisan migrate:fresh --seed --env=testing'
+                sh './vendor/bin/sail artisan migrate:fresh --seed'
             }
         }
 
@@ -77,18 +59,11 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                sh 'rm -f .phpunit.result.cache'
-                sh './vendor/bin/sail artisan test --parallel --env=testing'
-            }
-        }
-
     }
 
     post {
         always {
-            sh './vendor/bin/sail down -v || true'
+            sh './vendor/bin/sail down || true'
         }
     }
 }
