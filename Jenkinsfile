@@ -7,20 +7,23 @@ pipeline {
 
     stages {
 
+        stage('Setup Environment & Permissions') {
+            steps {
+                sh """
+                if [ ! -f .env ]; then
+                  cp .env.example .env
+                fi
+                chmod -R 777 storage bootstrap/cache .env || true
+                git config --global --add safe.directory \$(pwd)
+                """
+            }
+        }
+
         stage('Install Sail') {
             steps {
                 sh """
                 docker run --rm -u \$(id -u):\$(id -g) -v \$(pwd):/var/www/html -w /var/www/html $COMPOSER_IMAGE composer require laravel/sail --dev
                 docker run --rm -u \$(id -u):\$(id -g) -v \$(pwd):/var/www/html -w /var/www/html $COMPOSER_IMAGE php artisan sail:install
-                """
-            }
-        }
-
-        stage('Setup Environment') {
-            steps {
-                sh """
-                cp .env.example .env
-                chmod -R 777 storage bootstrap/cache .env || true
                 """
             }
         }
@@ -31,9 +34,14 @@ pipeline {
             }
         }
 
+        stage('Fix Sail Ownership') {
+            steps {
+                sh './vendor/bin/sail root-shell -c "chown -R sail:sail /var/www/html"'
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
-                sh './vendor/bin/sail git config --global --add safe.directory /var/www/html'
                 sh './vendor/bin/sail composer install'
             }
         }
@@ -43,6 +51,18 @@ pipeline {
                 sh './vendor/bin/sail artisan key:generate'
             }
         }
+
+        stage('Wait for MySQL') {
+    steps {
+        sh '''
+        echo "⏳ Waiting for MySQL to be ready..."
+        until ./vendor/bin/sail mysqladmin ping -h mysql --silent; do
+          sleep 3
+        done
+        echo "✅ MySQL is ready!"
+        '''
+    }
+}
 
         stage('Migrate & Seed Database') {
             steps {
@@ -59,7 +79,6 @@ pipeline {
                 '''
             }
         }
-
     }
 
     post {
