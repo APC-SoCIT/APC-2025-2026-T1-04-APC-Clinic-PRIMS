@@ -11,13 +11,12 @@ pipeline {
             steps {
                 sh '''
                 docker run --rm \
-                -u $(id -u):$(id -g) \
-                -v /var/lib/jenkins/workspace/PRIMS:/var/www/html \
-                -v /var/lib/jenkins/composer-cache:/tmp/composer-cache \
-                -w /var/www/html \
-                laravelsail/php82-composer:latest \
-                composer install --prefer-dist --no-interaction --optimize-autoloader \
-                --no-cache-dir
+                    -u $(id -u):$(id -g) \
+                    -v $HOME/.composer:/tmp \
+                    -v $(pwd):/var/www/html \
+                    -w /var/www/html \
+                    laravelsail/php82-composer:latest \
+                    composer require laravel/sail --dev
                 '''
             }
         }
