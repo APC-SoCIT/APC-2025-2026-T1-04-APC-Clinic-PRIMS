@@ -40,7 +40,7 @@ class AddMedicalRecord extends Component
     ];
 
     public $social_history = [
-        'Vape' => null, 'Alcohol' => null, 'Medications' => null
+        'Smoke' => null, 'sticks_per_day' => null, 'packs_per_year' => null, 'Vape' => null, 'Alcohol' => null, 'Medications' => null
     ];
 
     public $obgyne_history = [
@@ -48,7 +48,7 @@ class AddMedicalRecord extends Component
     ];
 
     public $immunizations = [
-        'Hepa B' => null, 'HPV' => null, 'FLU VAC' => null, 'COVID-19 1st' => null, 'COVID-19 2nd' => null, 'Booster 1' => null, 'Booster 2' => null
+        'COVID-19 1st' => null, 'COVID-19 2nd' => null, 'Booster 1' => null, 'Booster 2' => null, 'Hepa B' => null, 'HPV' => null, 'FLU VAC' => null
     ];
 
     public function mount($appointment_id = null, $fromStaffCalendar = false)
