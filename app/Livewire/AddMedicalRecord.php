@@ -13,10 +13,11 @@ use Carbon\Carbon;
 
 class AddMedicalRecord extends Component
 {
-    public $apc_id_number, $email, $first_name, $mi, $last_name, $contact_number, $dob, $age, $gender, $street_number, $barangay, $city, $province, $zip_code, $country, $reason, $nationality, $description, $allergies, $hospitalization, $operation, $prescription;
+    public $apc_id_number, $first_name, $middle_initial, $last_name, $gender, $age, $date_of_birth, $nationality, $blood_type, $civil_status, $religion, $contact_number, $email, $house_unit_number, $street, $barangay, $city, $province, $zip_code, $country, $emergency_contact_name, $emergency_contact_number, $emergency_contact_relationship, $reason, $description, $allergies, $hospitalization, $operation, $prescription;
     public $appointment_id;
     public $fromStaffCalendar = false;
     public $diagnoses = [];
+    public $physical_examinations = [];
     public $sections = [
         'General Appearance', 'Skin', 'Head and Scalp', 'Eyes (OD)', 'Eyes (OS)', 
         'Corrected (OD)', 'Corrected (OS)', 'Pupils', 'Ears, Eardrums', 'Nose, Sinuses', 
@@ -24,7 +25,6 @@ class AddMedicalRecord extends Component
         'Heart- Cardiovascular', 'Lungs- Respiratory', 'Abdomen', 'Back, Flanks', 
         'Musculoskeletal', 'Extremities', 'Reflexes', 'Neurological'
     ];
-    public $physical_examinations = [];
     public $diagnosisOptions = [
         'Hypertension', 'BP Monitoring', 'Bradycardia', 'Hypotension', 'Angina', 'URTI', 'Pneumonia', 'PTB', 'Bronchitis', 'Lung Pathology', 'Acute Bronchitis', 'Acute Gastroenteritis', 'GERD', 'Hemorrhoids', 'Anorexia', 'Ligament Sprain', 'Muscle Strain', 'Costochondritis', 'Soft Tissue Contusion', 'Fracture', 'Gouty Arthritis', 'Plantar Fasciitis', 'Dislocation', 'Conjunctivitis', 'Stye', 'Foreign Body', 'Stomatitis', 'Epistaxis', 'Otitis Media', 'Foreign Body Removal', 'Tension Headache', 'Migraine', 'Vertigo', 'Hyperventilation Syndrome', 'Insomnia', 'Seizure', 'Bell\'s Palsy', 'Folliculitis', 'Acne', 'Burn', 'Wound Dressing', 'Infected Wound', 'Blister Wound', 'Seborrheic Dermatitis', 'Bruise/Hematoma', 'Urinary Tract Infection', 'Renal Disease', 'Urolithiasis', 'Hypoglycemia', 'Dyslipidemia', 'Diabetes Mellitus', 'Dysmenorrhea', 'Hormonal Imbalance', 'Pregnancy', 'Leukemia', 'Blood Dyscrasia', 'Anemia', 'Lacerated Wound', 'Punctured Wound', 'Animal Bite', 'Superficial Abrasions', 'Contact Dermatitis', 'Allergic Rhinitis', 'Bronchial Asthma', 'Hypersensitivity', 'Post Traumatic Stress', 'Bipolar Disorder', 'Clinical Depression', 'Major Depressive Disorder', 'Agoraphobia', 'ADHD', 'Anxiety Disorder', 'Others'
     ];
@@ -58,34 +58,41 @@ class AddMedicalRecord extends Component
     
         if ($this->appointment_id) {
             $appointment = Appointment::with('patient')->find($this->appointment_id);
-    
             if ($appointment && $appointment->patient) {
-                $patient = $appointment->patient;
-    
-                // Autofill patient details
-                $this->apc_id_number = $patient->apc_id_number;
-                $this->email = $patient->email;
-                $this->first_name = $patient->first_name;
-                $this->mi = $patient->middle_initial;
-                $this->last_name = $patient->last_name;
-                $this->dob = $patient->date_of_birth;
-                $this->age = $patient->date_of_birth ? Carbon::parse($patient->date_of_birth)->age : null;
-                $this->gender = $patient->gender;
-                $this->street_number = $patient->street_number;
-                $this->barangay = $patient->barangay;
-                $this->city = $patient->city;
-                $this->province = $patient->province;
-                $this->zip_code = $patient->zip_code;
-                $this->country = $patient->country;
-                $this->contact_number = $patient->contact_number;
-                $this->nationality = $patient->nationality;
+                $this->fillPatientDetails($appointment->patient);
             }
         }
 
         if (empty($this->diagnoses)) {
             $this->addDiagnosis();
         }
+    }
 
+    private function fillPatientDetails(Patient $patient)
+    {
+        $this->apc_id_number = $patient->apc_id_number;
+        $this->first_name = $patient->first_name;
+        $this->middle_initial = $patient->middle_initial;
+        $this->last_name = $patient->last_name;
+        $this->gender = $patient->gender;
+        $this->date_of_birth = $patient->date_of_birth;
+        $this->age = $patient->date_of_birth ? Carbon::parse($patient->date_of_birth)->age : null;
+        $this->nationality = $patient->nationality;
+        $this->blood_type = $patient->blood_type;
+        $this->civil_status = $patient->civil_status;
+        $this->religion = $patient->religion;
+        $this->contact_number = $patient->contact_number;
+        $this->email = $patient->email;
+        $this->house_unit_number = $patient->house_unit_number;
+        $this->street = $patient->street;
+        $this->barangay = $patient->barangay;
+        $this->city = $patient->city;
+        $this->province = $patient->province;
+        $this->zip_code = $patient->zip_code;
+        $this->country = $patient->country;
+        $this->emergency_contact_name = $patient->emergency_contact_name;
+        $this->emergency_contact_number = $patient->emergency_contact_number;
+        $this->emergency_contact_relationship = $patient->emergency_contact_relationship;
     }
 
     public function searchPatient()
@@ -103,38 +110,33 @@ class AddMedicalRecord extends Component
             }
         }
 
-        if ($patient) {
-            $this->email = $patient->email;
-            $this->first_name = $patient->first_name;
-            $this->mi = $patient->middle_initial;
-            $this->last_name = $patient->last_name;
-            $this->dob = $patient->date_of_birth;
-            $this->gender = $patient->gender;
-            $this->street_number = $patient->street_number;
-            $this->barangay = $patient->barangay;
-            $this->city = $patient->city;
-            $this->province = $patient->province;
-            $this->zip_code = $patient->zip_code;
-            $this->country = $patient->country;
-            $this->contact_number = $patient->contact_number;
-            $this->nationality = $patient->nationality;
-            $this->calculateAge();
-        } else {
-            $this->resetPatientFields();
-        }
+        $patient ? $this->fillPatientDetails($patient) : $this->resetPatientFields();
     }
 
     private function resetPatientFields()
     {
-        $this->email = null; $this->first_name = null; $this->mi = null; $this->last_name = null;
-        $this->dob = null; $this->age = null; $this->gender = null; $this->street_number = null;
-        $this->barangay = null; $this->city = null; $this->province = null; $this->zip_code = null;
-        $this->country = null; $this->contact_number = null; $this->nationality = null;
-    }
-
-    public function calculateAge()
-    {
-        $this->age = $this->dob ? Carbon::parse($this->dob)->age : null;
+        $this->apc_id_number = null;
+        $this->first_name = null;
+        $this->middle_initial = null;
+        $this->last_name = null;
+        $this->gender = null;
+        $this->date_of_birth = null;
+        $this->nationality = null;
+        $this->blood_type = null;
+        $this->civil_status = null;
+        $this->religion = null;
+        $this->contact_number = null;
+        $this->email = null;
+        $this->house_unit_number = null;
+        $this->street = null;
+        $this->barangay = null;
+        $this->city = null;
+        $this->province = null;
+        $this->zip_code = null;
+        $this->country = null;
+        $this->emergency_contact_name = null;
+        $this->emergency_contact_number = null;
+        $this->emergency_contact_relationship = null;
     }
 
     protected $messages = [
@@ -159,46 +161,19 @@ class AddMedicalRecord extends Component
     public function submit()
     {
         $this->validate([
-            'email' => 'required',
-            'apc_id_number' => 'required',
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'dob' => 'required|date',
-            'age' => 'required',
-            'gender' => 'required',
-            'contact_number' => 'required',
-            'street_number' => 'required',
-            'barangay' => 'required',
-            'city' => 'required',
-            'province' => 'required',
-            'zip_code' => 'required',
-            'country' => 'required',
-            'nationality' => 'required',
-            'reason' => 'required',
-            'description' => 'required',
+            'apc_id_number' => 'required|exists:patients,apc_id_number',
+            'reason' => 'required|string',
+            'description' => 'required|string',
             'diagnoses' => 'required|array|min:1',
             'diagnoses.*.diagnosis' => 'required|string',
-            'prescription' => 'required',
+            'prescription' => 'nullable|string',
         ]);
 
+        $patient = Patient::where('apc_id_number', $this->apc_id_number)->firstOrFail();
+
         $medicalRecord = MedicalRecord::create([
+            'patient_id' => $patient->id,
             'appointment_id' => $this->appointment_id,
-            'apc_id_number' => $this->apc_id_number,
-            'email' => $this->email,
-            'first_name' => $this->first_name,
-            'mi' => $this->mi,
-            'last_name' => $this->last_name,
-            'dob' => $this->dob,
-            'age' => $this->age,
-            'gender' => $this->gender,
-            'contact_number' => $this->contact_number,
-            'street_number' => $this->street_number,
-            'barangay' => $this->barangay,
-            'city' => $this->city,
-            'province' => $this->province,
-            'zip_code' => $this->zip_code,
-            'country' => $this->country,
-            'nationality' => $this->nationality,
             'reason' => $this->reason,
             'description' => $this->description,
             'allergies' => $this->allergies,
@@ -222,7 +197,6 @@ class AddMedicalRecord extends Component
                 ]);
             }
         }
-
 
         foreach ($this->physical_examinations as $section => $data) {
             PhysicalExamination::create([

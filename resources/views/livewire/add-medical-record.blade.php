@@ -17,7 +17,7 @@
             </div>
             <div>
                 <label class="text-lg">Middle Initial</label>
-                <input type="text" wire:model="mi" class="border p-2 rounded w-full bg-gray-200" readonly>
+                <input type="text" wire:model="middle_initial" class="border p-2 rounded w-full bg-gray-200" readonly>
             </div>
             <div>
                 <label class="text-lg">Last Name</label>
@@ -33,7 +33,7 @@
             </div>
             <div>
                 <label class="text-lg">Date of Birth</label>
-                <input type="text" wire:model="dob" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
+                <input type="text" wire:model="date_of_birth" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
             </div>
             <div>
                 <label class="text-lg">Nationality</label>
@@ -89,15 +89,15 @@
             </div>
             <div>
                 <label class="text-lg">Emergency Contact Person</label>
-                <input type="text" wire:model="emergency_person" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
+                <input type="text" wire:model="emergency_contact_name" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
             </div>
             <div>
                 <label class="text-lg">Emergency Contact Number</label>
-                <input type="text" wire:model="emergency_number" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
+                <input type="text" wire:model="emergency_contact_number" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
             </div>
             <div>
                 <label class="text-lg">Relationship to Patient</label>
-                <input type="text" wire:model="emergency_relationship" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
+                <input type="text" wire:model="emergency_contact_relationship" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
             </div>
         </div>
 

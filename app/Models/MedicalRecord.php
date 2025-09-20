@@ -10,24 +10,10 @@ class MedicalRecord extends Model
     use HasFactory;
 
     protected $fillable = [
-        'email',
-        'apc_id_number',
-        'first_name',
-        'mi',
-        'last_name',
-        'dob',
-        'age',
-        'gender',
-        'contact_number',
-        'street_number',
-        'barangay',
-        'city',
-        'province',
-        'zip_code',
-        'country',
-        'nationality',
+        'patient_id',
         'reason',
         'description',
+        'last_visited',
         'allergies',
         'past_medical_history',
         'family_history',
@@ -36,9 +22,7 @@ class MedicalRecord extends Model
         'hospitalization',
         'operation',
         'immunizations',
-        'physical_examination',
         'prescription',
-        'last_visited',
         'appointment_id',
         'archived_at',
     ];
@@ -52,7 +36,7 @@ class MedicalRecord extends Model
 
     public function patient()
     {
-        return $this->belongsTo(Patient::class, 'patient_id');
+        return $this->belongsTo(Patient::class);
     }
 
     public function appointment()

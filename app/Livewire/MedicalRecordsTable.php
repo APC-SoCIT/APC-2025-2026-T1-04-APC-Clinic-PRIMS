@@ -19,13 +19,14 @@ class MedicalRecordsTable extends Component
 
     public function loadRecords()
     {
-        $this->records = MedicalRecord::query()
+        // Get the latest record per patient
+        $latestRecords = MedicalRecord::query()
             ->selectRaw('MAX(id) as id')
-            ->groupBy('apc_id_number')
+            ->groupBy('patient_id')
             ->pluck('id');
 
-        $this->records = MedicalRecord::with('diagnoses')
-            ->whereIn('id', $this->records)
+        $this->records = MedicalRecord::with(['diagnoses', 'patient'])
+            ->whereIn('id', $latestRecords)
             ->orderByDesc('last_visited')
             ->get();
     }
@@ -35,11 +36,11 @@ class MedicalRecordsTable extends Component
         $this->expandedPatient = $this->expandedPatient === $apcId ? null : $apcId;
     }
 
-    public function getPatientRecords($apcId)
+    public function getPatientRecords($patientId)
     {
-        return MedicalRecord::where('apc_id_number', $apcId)
+        return MedicalRecord::where('patient_id', $patientId)
             ->orderByDesc('last_visited')
-            ->with('diagnoses')
+            ->with(['diagnoses', 'patient'])
             ->get();
     }
 

@@ -11,22 +11,7 @@ return new class extends Migration {
             $table->id();
 
             // patient info
-            $table->string('apc_id_number')->nullable();
-            $table->string('first_name');
-            $table->string('mi')->nullable();
-            $table->string('last_name');
-            $table->string('gender')->nullable();
-            $table->string('age')->nullable();
-            $table->date('dob');
-            $table->string('email')->nullable();
-            $table->string('street_number')->nullable();
-            $table->string('barangay')->nullable();
-            $table->string('city')->nullable();
-            $table->string('province')->nullable();
-            $table->string('zip_code')->nullable();
-            $table->string('country')->nullable();
-            $table->string('contact_number')->nullable();
-            $table->text('nationality')->nullable();
+            $table->foreignId('patient_id')->constrained('patients')->onDelete('cascade');
 
             // medical concern
             $table->text('reason');
