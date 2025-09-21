@@ -205,9 +205,9 @@
                 <label class="text-lg font-medium">Smoke</label>
                 <div class="flex items-center gap-4 flex-wrap">
                     <label class="text-md">Sticks/day:</label>
-                    <input type="number" wire:model="social_history.sticks_per_day" class="border rounded p-1 w-20" min="0">
+                    <input type="number" wire:model="personal_history.sticks_per_day" class="border rounded p-1 w-20" min="0">
                     <label class="text-md">Packs/year:</label>
-                    <input type="number" wire:model="social_history.packs_per_year" class="border rounded p-1 w-20" min="0">
+                    <input type="number" wire:model="personal_history.packs_per_year" class="border rounded p-1 w-20" min="0">
                 </div>
             </div>
 
@@ -215,11 +215,11 @@
                 <span class="font-medium text-lg">Vape</span>
                 <div class="flex gap-4 mt-1">
                     <label class="flex items-center space-x-1">
-                        <input type="radio" wire:model="social_history.Vape" value="Yes" class="accent-black">
+                        <input type="radio" wire:model="personal_history.Vape" value="Yes" class="accent-black">
                         <span>Yes</span>
                     </label>
                     <label class="flex items-center space-x-1">
-                        <input type="radio" wire:model="social_history.Vape" value="No" class="accent-black">
+                        <input type="radio" wire:model="personal_history.Vape" value="No" class="accent-black">
                         <span>No</span>
                     </label>
                 </div>
@@ -228,7 +228,7 @@
             <!-- Alcohol Consumption -->
             <div class="flex flex-col">
                 <label class="font-medium text-lg">Alcohol Consumption</label>
-                <select wire:model="social_history.Alcohol" class="border rounded p-1 w-full">
+                <select wire:model="personal_history.Alcohol" class="border rounded p-1 w-full">
                     <option value="">Select bottles per week</option>
                     <option value="N/A">N/A</option>
                     @for ($i = 1; $i <= 20; $i++)
@@ -317,19 +317,19 @@
             </div>
            <div>
                 <label class="block text-lg font-medium">BP <span class="text-xs text-gray-500">(mmHg)</span></label>
-                <input type="text" wire:model="bp" class="w-full border rounded px-2 py-1" min="0" step="0.01">
+                <input type="text" wire:model="blood_pressure" class="w-full border rounded px-2 py-1" min="0" step="0.01">
             </div>
             <div>
                 <label class="block text-lg font-medium">HR <span class="text-xs text-gray-500">(beats per min.)</span></label>
-                <input type="number" wire:model="hr" class="w-full border rounded px-2 py-1" min="0" step="0.01">
+                <input type="number" wire:model="heart_rate" class="w-full border rounded px-2 py-1" min="0" step="0.01">
             </div>
             <div>
                 <label class="block text-lg font-medium">RR <span class="text-xs text-gray-500">(breaths per min.)</span></label>
-                <input type="number" wire:model="rr" class="w-full border rounded px-2 py-1" min="0" step="0.01">
+                <input type="number" wire:model="respiratory_rate" class="w-full border rounded px-2 py-1" min="0" step="0.01">
             </div>
             <div>
                 <label class="block text-lg font-medium">Temp <span class="text-xs text-gray-500">(°C)</span></label>
-                <input type="number" wire:model="temp" class="w-full border rounded px-2 py-1" min="0" step="0.01">
+                <input type="number" wire:model="temperature" class="w-full border rounded px-2 py-1" min="0" step="0.01">
             </div>
             <div>
                 <label class="block text-lg font-medium">BMI</label>

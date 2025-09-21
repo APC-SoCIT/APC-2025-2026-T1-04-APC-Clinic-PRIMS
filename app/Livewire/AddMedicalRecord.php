@@ -13,7 +13,8 @@ use Carbon\Carbon;
 
 class AddMedicalRecord extends Component
 {
-    public $apc_id_number, $first_name, $middle_initial, $last_name, $gender, $age, $date_of_birth, $nationality, $blood_type, $civil_status, $religion, $contact_number, $email, $house_unit_number, $street, $barangay, $city, $province, $zip_code, $country, $emergency_contact_name, $emergency_contact_number, $emergency_contact_relationship, $reason, $description, $allergies, $hospitalization, $operation, $prescription;
+    public $apc_id_number, $first_name, $middle_initial, $last_name, $gender, $age, $date_of_birth, $nationality, $blood_type, $civil_status, $religion, $contact_number, $email, $house_unit_number, $street, $barangay, $city, $province, $zip_code, $country, $emergency_contact_name, $emergency_contact_number, $emergency_contact_relationship;
+    public $reason, $description, $allergies, $medications, $hospitalization, $operation, $weight, $height, $blood_pressure, $heart_rate, $respiratory_rate, $temperature, $bmi, $o2sat, $prescription;
     public $appointment_id;
     public $fromStaffCalendar = false;
     public $diagnoses = [];
@@ -39,8 +40,8 @@ class AddMedicalRecord extends Component
         'Cancer' => null, 'Hypertension' => null, 'Liver Disease' => null, 'Epilepsy' => null
     ];
 
-    public $social_history = [
-        'Smoke' => null, 'sticks_per_day' => null, 'packs_per_year' => null, 'Vape' => null, 'Alcohol' => null, 'Medications' => null
+    public $personal_history = [
+        'sticks_per_day' => null, 'packs_per_year' => null, 'Vape' => null, 'Alcohol' => null
     ];
 
     public $obgyne_history = [
@@ -177,13 +178,22 @@ class AddMedicalRecord extends Component
             'reason' => $this->reason,
             'description' => $this->description,
             'allergies' => $this->allergies,
+            'medications' => $this->medications,
             'past_medical_history' => json_encode($this->past_medical_history),
             'family_history' => json_encode($this->family_history),
-            'social_history' => json_encode($this->social_history),
+            'personal_history' => json_encode($this->personal_history),
             'obgyne_history' => json_encode($this->obgyne_history),
             'hospitalization' => $this->hospitalization,
             'operation' => $this->operation,
             'immunizations' => json_encode($this->immunizations),
+            'weight' => $this->weight,
+            'height' => $this->height,
+            'blood_pressure' => $this->blood_pressure,
+            'heart_rate' => $this->heart_rate,
+            'respiratory_rate' => $this->respiratory_rate,
+            'temperature' => $this->temperature,
+            'bmi' => $this->bmi,
+            'o2sat' => $this->o2sat,
             'last_visited' => now(),
             'prescription' => $this->prescription,
         ]);
