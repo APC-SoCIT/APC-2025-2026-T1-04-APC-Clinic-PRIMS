@@ -31,9 +31,9 @@ class MedicalRecordsTable extends Component
             ->get();
     }
 
-    public function toggleExpand($apcId)
+    public function toggleExpand($patientId)
     {
-        $this->expandedPatient = $this->expandedPatient === $apcId ? null : $apcId;
+        $this->expandedPatient = $this->expandedPatient === $patientId ? null : $patientId;
     }
 
     public function getPatientRecords($patientId)
