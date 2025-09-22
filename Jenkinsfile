@@ -1,5 +1,9 @@
 pipeline {
-     
+    agent any
+
+    environment {
+        COMPOSER_IMAGE = 'laravelsail/php82-composer:latest'
+    }
 
     stages {
 
