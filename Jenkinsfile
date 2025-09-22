@@ -21,21 +21,27 @@ pipeline {
 
         stage('Install Sail') {
             steps {
-                sh '''
-                docker run --rm \
-                -u $(id -u):$(id -g) \
-                -v $PWD:/var/www/html \
-                -w /var/www/html \
-                $COMPOSER_IMAGE composer require laravel/sail --dev
+                script {
+                    def uid = sh(script: "id -u", returnStdout: true).trim()
+                    def gid = sh(script: "id -g", returnStdout: true).trim()
 
-                docker run --rm \
-                -u $(id -u):$(id -g) \
-                -v $PWD:/var/www/html \
-                -w /var/www/html \
-                $COMPOSER_IMAGE php artisan sail:install
-                '''
+                    sh """
+                    docker run --rm \
+                    -u ${uid}:${gid} \
+                    -v \$(pwd):/var/www/html \
+                    -w /var/www/html \
+                    $COMPOSER_IMAGE composer require laravel/sail --dev
+
+                    docker run --rm \
+                    -u ${uid}:${gid} \
+                    -v \$(pwd):/var/www/html \
+                    -w /var/www/html \
+                    $COMPOSER_IMAGE php artisan sail:install
+                    """
+                }
             }
         }
+
 
 
         stage('Start Sail') {
