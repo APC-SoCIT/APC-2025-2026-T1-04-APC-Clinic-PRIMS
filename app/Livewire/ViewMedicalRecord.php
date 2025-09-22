@@ -10,7 +10,7 @@ class ViewMedicalRecord extends Component
     public $record;
     public $past_medical_history = [];
     public $family_history = [];
-    public $social_history = [];
+    public $personal_history = [];
     public $obgyne_history = [];
     public $immunizations = [];
 
@@ -20,7 +20,7 @@ class ViewMedicalRecord extends Component
 
         $this->past_medical_history = json_decode($record->past_medical_history ?? '[]', true);
         $this->family_history = json_decode($record->family_history ?? '[]', true);
-        $this->social_history = json_decode($record->social_history ?? '[]', true);
+        $this->personal_history = json_decode($record->personal_history ?? '[]', true);
         $this->obgyne_history = json_decode($record->obgyne_history ?? '[]', true);
         $this->immunizations = json_decode($record->immunizations ?? '[]', true);
     }

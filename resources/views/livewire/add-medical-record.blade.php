@@ -88,7 +88,7 @@
                 <input type="text" wire:model="country" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
             </div>
             <div>
-                <label class="text-lg">Emergency Contact Person</label>
+                <label class="text-lg">Emergency Contact Name</label>
                 <input type="text" wire:model="emergency_contact_name" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
             </div>
             <div>
