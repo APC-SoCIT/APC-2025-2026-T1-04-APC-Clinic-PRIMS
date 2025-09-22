@@ -22,8 +22,18 @@ pipeline {
         stage('Install Sail') {
             steps {
                 sh """
-                docker run --rm -u \$(id -u):\$(id -g) -v \$(pwd):/var/www/html -w /var/www/html $COMPOSER_IMAGE composer require laravel/sail --dev
-                docker run --rm -u \$(id -u):\$(id -g) -v \$(pwd):/var/www/html -w /var/www/html $COMPOSER_IMAGE php artisan sail:install
+                # ✅ Run Composer with Jenkins UID:GID to avoid permission issues
+                docker run --rm \
+                  -u \$(id -u):\$(id -g) \
+                  -v \$(pwd):/var/www/html \
+                  -w /var/www/html \
+                  $COMPOSER_IMAGE composer require laravel/sail --dev
+
+                docker run --rm \
+                  -u \$(id -u):\$(id -g) \
+                  -v \$(pwd):/var/www/html \
+                  -w /var/www/html \
+                  $COMPOSER_IMAGE php artisan sail:install
                 """
             }
         }
