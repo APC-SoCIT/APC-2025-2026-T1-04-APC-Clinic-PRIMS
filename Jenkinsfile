@@ -1,99 +1,34 @@
 pipeline {
-    agent any
-
-    environment {
-        COMPOSER_IMAGE = 'laravelsail/php82-composer:latest'
+    agent {
+        dockerfile {
+            filename 'Dockerfile'   // adjust if not at repo root
+            dir '.'                 // build context
+        }
     }
 
     stages {
-
-        stage('Setup Environment & Permissions') {
-            steps {
-                sh """
-                if [ ! -f .env ]; then
-                  cp .env.example .env
-                fi
-                chmod -R 777 storage bootstrap/cache .env || true
-                git config --global --add safe.directory \$(pwd)
-                """
-            }
-        }
-
-        stage('Install Sail') {
-            steps {
-                script {
-                    def uid = sh(script: "id -u", returnStdout: true).trim()
-                    def gid = sh(script: "id -g", returnStdout: true).trim()
-
-                    sh """
-                    docker run --rm \
-                    -u ${uid}:${gid} \
-                    -v \$(pwd):/var/www/html \
-                    -w /var/www/html \
-                    $COMPOSER_IMAGE composer require laravel/sail --dev
-
-                    docker run --rm \
-                    -u ${uid}:${gid} \
-                    -v \$(pwd):/var/www/html \
-                    -w /var/www/html \
-                    $COMPOSER_IMAGE php artisan sail:install
-                    """
-                }
-            }
-        }
-
-
-
-        stage('Start Sail') {
-            steps {
-                sh './vendor/bin/sail up -d'
-            }
-        }
-
-        stage('Fix Sail Ownership') {
-            steps {
-                sh './vendor/bin/sail root-shell -c "chown -R sail:sail /var/www/html"'
-            }
-        }
-
         stage('Install Dependencies') {
             steps {
-                sh './vendor/bin/sail composer install'
+                sh 'composer install --no-interaction --prefer-dist --optimize-autoloader'
             }
         }
 
         stage('Generate App Key') {
             steps {
-                sh './vendor/bin/sail artisan key:generate'
+                sh 'php artisan key:generate'
             }
         }
 
         stage('Migrate & Seed Database') {
             steps {
-                sh './vendor/bin/sail artisan migrate:fresh --seed'
-            }
-        }
-
-        stage('Build Frontend') {
-            steps {
-                sh '''
-                ./vendor/bin/sail npm install
-                ./vendor/bin/sail npm audit fix || true
-                ./vendor/bin/sail npm run build
-                '''
+                sh 'php artisan migrate:fresh --seed'
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh './vendor/bin/sail artisan test'
+                sh 'php artisan test'
             }
-        }
-    }
-
-    post {
-        always {
-            sh './vendor/bin/sail down || true'
         }
     }
 }
