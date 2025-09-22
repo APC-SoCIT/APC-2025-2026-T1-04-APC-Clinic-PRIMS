@@ -21,22 +21,22 @@ pipeline {
 
         stage('Install Sail') {
             steps {
-                sh """
-                # ✅ Run Composer with Jenkins UID:GID to avoid permission issues
+                sh '''
                 docker run --rm \
-                  -u \$(id -u):\$(id -g) \
-                  -v \$(pwd):/var/www/html \
-                  -w /var/www/html \
-                  $COMPOSER_IMAGE composer require laravel/sail --dev
+                -u $(id -u):$(id -g) \
+                -v $PWD:/var/www/html \
+                -w /var/www/html \
+                $COMPOSER_IMAGE composer require laravel/sail --dev
 
                 docker run --rm \
-                  -u \$(id -u):\$(id -g) \
-                  -v \$(pwd):/var/www/html \
-                  -w /var/www/html \
-                  $COMPOSER_IMAGE php artisan sail:install
-                """
+                -u $(id -u):$(id -g) \
+                -v $PWD:/var/www/html \
+                -w /var/www/html \
+                $COMPOSER_IMAGE php artisan sail:install
+                '''
             }
         }
+
 
         stage('Start Sail') {
             steps {
