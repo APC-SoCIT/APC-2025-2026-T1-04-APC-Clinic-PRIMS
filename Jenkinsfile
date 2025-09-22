@@ -21,10 +21,7 @@ pipeline {
 
         stage('Install Sail') {
             steps {
-                sh """
-                docker run --rm -u \$(id -u):\$(id -g) -v \$(pwd):/var/www/html -w /var/www/html $COMPOSER_IMAGE composer require laravel/sail --dev
-                docker run --rm -u \$(id -u):\$(id -g) -v \$(pwd):/var/www/html -w /var/www/html $COMPOSER_IMAGE php artisan sail:install
-                """
+                sh 'composer require laravel/sail --dev'
             }
         }
 
@@ -52,18 +49,6 @@ pipeline {
             }
         }
 
-        stage('Wait for MySQL') {
-    steps {
-        sh '''
-        echo "⏳ Waiting for MySQL to be ready..."
-        until ./vendor/bin/sail mysqladmin ping -h mysql --silent; do
-          sleep 3
-        done
-        echo "✅ MySQL is ready!"
-        '''
-    }
-}
-
         stage('Migrate & Seed Database') {
             steps {
                 sh './vendor/bin/sail artisan migrate:fresh --seed'
@@ -77,6 +62,12 @@ pipeline {
                 ./vendor/bin/sail npm audit fix || true
                 ./vendor/bin/sail npm run build
                 '''
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh './vendor/bin/sail artisan test'
             }
         }
     }
