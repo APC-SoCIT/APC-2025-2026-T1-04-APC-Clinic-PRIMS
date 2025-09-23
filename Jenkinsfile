@@ -8,51 +8,51 @@ pipeline {
     }
 
     stages {
-        stage('Install Sail') {
+        stage('Prepare Sail') {
             steps {
-                sh '''
-                    docker run --rm -u "$(id -u):$(id -g)" \
-                        -v $PWD:/var/www/html \
-                        -w /var/www/html \
-                        laravelsail/php82-composer:latest \
-                        composer require laravel/sail --dev --no-interaction
-                '''
-            }
-        }
+                sh """
+                docker run --rm -u $UID:$GID \
+                    -v \$(pwd):/var/www/html \
+                    -w /var/www/html \
+                    laravelsail/php82-composer:latest composer require laravel/sail --dev
 
-        stage('Install Dependencies') {
-            steps {
-                sh './vendor/bin/sail composer install --no-interaction --prefer-dist --optimize-autoloader'
+                cp .env.example .env
+
+                docker run --rm -u $UID:$GID \
+                    -v \$(pwd):/var/www/html \
+                    -w /var/www/html \
+                    laravelsail/php82-composer:latest php artisan sail:install
+                """
             }
         }
 
         stage('Start Sail') {
             steps {
-                sh './vendor/bin/sail up -d'
+                sh "./vendor/bin/sail up -d"
             }
         }
 
-        stage('Prepare Env') {
+        stage('Composer & Artisan') {
             steps {
-                sh '''
-                    cp .env.testing .env || cp .env.example .env
-                    chmod -R 777 storage bootstrap/cache .env
-                '''
+                sh """
+                ./vendor/bin/sail composer install
+                ./vendor/bin/sail artisan key:generate
+                ./vendor/bin/sail artisan migrate:fresh --seed
+                """
             }
         }
 
-        stage('Setup App') {
+        stage('Node Build') {
             steps {
-                sh '''
-                    ./vendor/bin/sail artisan key:generate
-                    ./vendor/bin/sail artisan migrate:fresh --seed --env=testing
-                    ./vendor/bin/sail npm install
-                    ./vendor/bin/sail npm run build
-                '''
+                sh """
+                ./vendor/bin/sail npm install
+                ./vendor/bin/sail npm audit fix || true
+                ./vendor/bin/sail npm run build
+                """
             }
         }
 
-        stage('Test') {
+        stage('Run Tests') {
             steps {
                 sh './vendor/bin/sail artisan test'
             }
