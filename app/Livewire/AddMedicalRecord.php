@@ -158,17 +158,36 @@ class AddMedicalRecord extends Component
         $this->diagnoses = array_values($this->diagnoses); // reindex
     }
 
+    public function rules()
+    {
+        return [
+            'physical_examinations.*.normal' => 'nullable|boolean',
+            'physical_examinations.*.findings' => 'nullable|string',
+        ];
+    }
+
 
     public function submit()
     {
         $this->validate([
             'apc_id_number' => 'required|exists:patients,apc_id_number',
-            'reason' => 'required|string',
-            'description' => 'required|string',
-            'diagnoses' => 'required|array|min:1',
-            'diagnoses.*.diagnosis' => 'required|string',
-            'prescription' => 'nullable|string',
+            'reason' => 'required|not_in:""',
+            'description' => 'required|string|min:10|max:1000',
+            'past_medical_history.*' => 'required|in:Yes,No',
+            'family_history.*' => 'required|in:Yes,No',
+            'personal_history.Vape' => 'required|in:Yes,No',
+            'weight' => 'required|numeric|min:1',
+            'height' => 'required|numeric|min:1',
+            'blood_pressure' => 'required|string',
+            'heart_rate' => 'required|numeric|min:1',
+            'respiratory_rate' => 'required|numeric|min:1',
+            'temperature' => 'required|numeric|min:30|max:45',
+            'bmi' => 'required|numeric|min:1',
+            'o2sat' => 'required|numeric|min:1|max:100'
         ]);
+
+        $this->personal_history['sticks_per_day'] = $this->personal_history['sticks_per_day'] ?: 'N/A';
+        $this->personal_history['packs_per_year'] = $this->personal_history['packs_per_year'] ?: 'N/A';
 
         $patient = Patient::where('apc_id_number', $this->apc_id_number)->firstOrFail();
 
