@@ -3,7 +3,6 @@ pipeline {
 
   environment {
     COMPOSER_ALLOW_SUPERUSER = "1"
-    # Set numeric defaults; override at job or node level if needed
     WWWUSER = "1000"
     WWWGROUP = "1000"
   }
@@ -48,7 +47,6 @@ pipeline {
     stage('Build Sail images & start containers') {
       steps {
         sh '''
-          # Ensure numeric build args so Dockerfile groupadd/useradd calls work
           ./vendor/bin/sail build --build-arg WWWUSER=${WWWUSER} --build-arg WWWGROUP=${WWWGROUP}
           ./vendor/bin/sail up -d
         '''
@@ -66,7 +64,7 @@ pipeline {
       }
     }
 
-    stage('Database migrations (with retries)') {
+    stage('Database migrations') {
       steps {
         sh '''
           retries=0
@@ -77,7 +75,7 @@ pipeline {
           done
 
           if [ $retries -ge 12 ]; then
-            echo "DB never became ready — continuing but migrations may have failed"
+            echo "DB never became ready — migrations may have failed"
           fi
         '''
       }
@@ -85,7 +83,7 @@ pipeline {
 
     stage('Run tests') {
       steps {
-        sh './vendor/bin/sail artisan test --parallel || ./vendor/bin/sail phpunit || true'
+        sh './vendor/bin/sail artisan test || true'
       }
     }
   }
