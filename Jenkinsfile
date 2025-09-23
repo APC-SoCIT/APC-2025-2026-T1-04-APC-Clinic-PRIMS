@@ -1,5 +1,4 @@
 pipeline {
-    agent { docker { image 'docker:27.3.1' args '-v /var/run/docker.sock:/var/run/docker.sock' } }
 
     environment {
         COMPOSER_ALLOW_SUPERUSER = "1"
