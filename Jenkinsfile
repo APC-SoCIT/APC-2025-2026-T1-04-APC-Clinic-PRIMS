@@ -1,5 +1,6 @@
 pipeline {
-
+    agent any
+    
     environment {
         COMPOSER_ALLOW_SUPERUSER = "1"
         WWWUSER = "1000"
