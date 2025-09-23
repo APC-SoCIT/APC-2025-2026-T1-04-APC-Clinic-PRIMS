@@ -1,34 +1,53 @@
 pipeline {
-    agent {
-        dockerfile {
-            filename 'Dockerfile'   // adjust if not at repo root
-            dir '.'                 // build context
-        }
+    agent { docker { image 'docker:27.3.1' args '-v /var/run/docker.sock:/var/run/docker.sock' } }
+
+    environment {
+        COMPOSER_ALLOW_SUPERUSER = "1"
+        WWWUSER = "1000"
+        WWWGROUP = "1000"
     }
 
     stages {
+        stage('Build Sail') {
+            steps {
+                sh './vendor/bin/sail build --build-arg WWWGROUP=$WWWGROUP --build-arg WWWUSER=$WWWUSER'
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
-                sh 'composer install --no-interaction --prefer-dist --optimize-autoloader'
+                sh './vendor/bin/sail composer install --no-interaction --prefer-dist --optimize-autoloader'
+                sh 'cp .env.example .env || true'
+                sh './vendor/bin/sail artisan key:generate'
             }
         }
 
-        stage('Generate App Key') {
+        stage('Frontend Build') {
             steps {
-                sh 'php artisan key:generate'
-            }
-        }
-
-        stage('Migrate & Seed Database') {
-            steps {
-                sh 'php artisan migrate:fresh --seed'
+                sh './vendor/bin/sail npm install'
+                sh './vendor/bin/sail npm run build'
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'php artisan test'
+                sh './vendor/bin/sail artisan test'
             }
+        }
+
+        stage('Deploy') {
+            when {
+                branch 'main'
+            }
+            steps {
+                echo "Deploy step here (e.g. docker push, or SSH into server to run Sail up -d)"
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
         }
     }
 }
