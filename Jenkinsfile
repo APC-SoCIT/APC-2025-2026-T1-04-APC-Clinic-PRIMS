@@ -3,22 +3,30 @@ pipeline {
 
     environment {
         COMPOSE_FILE = 'docker-compose.yml'
-        WWWUSER = '1000'
-        WWWGROUP = '1000'
     }
 
     stages {
+        stage('Detect UID/GID') {
+            steps {
+                script {
+                    env.UID = sh(script: "id -u", returnStdout: true).trim()
+                    env.GID = sh(script: "id -g", returnStdout: true).trim()
+                    echo "Using UID=${env.UID} and GID=${env.GID}"
+                }
+            }
+        }
+
         stage('Prepare Sail') {
             steps {
                 sh """
-                docker run --rm -u $UID:$GID \
+                docker run --rm -u ${env.UID}:${env.GID} \
                     -v \$(pwd):/var/www/html \
                     -w /var/www/html \
                     laravelsail/php82-composer:latest composer require laravel/sail --dev
 
                 cp .env.example .env
 
-                docker run --rm -u $UID:$GID \
+                docker run --rm -u ${env.UID}:${env.GID} \
                     -v \$(pwd):/var/www/html \
                     -w /var/www/html \
                     laravelsail/php82-composer:latest php artisan sail:install
@@ -54,14 +62,14 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                sh './vendor/bin/sail artisan test'
+                sh "./vendor/bin/sail artisan test"
             }
         }
     }
 
     post {
         always {
-            sh './vendor/bin/sail down || true'
+            sh "./vendor/bin/sail down || true"
         }
     }
 }
