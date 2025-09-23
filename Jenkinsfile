@@ -19,20 +19,30 @@ pipeline {
         stage('Prepare Sail') {
             steps {
                 sh """
+                # Install dependencies (gets artisan + vendor)
                 docker run --rm -u ${env.UID}:${env.GID} \
                     -v \$(pwd):/var/www/html \
                     -w /var/www/html \
-                    laravelsail/php82-composer:latest composer require laravel/sail --dev
+                    laravelsail/php82-composer:latest composer install --no-interaction --prefer-dist
 
+                # Require sail (safe if already there)
+                docker run --rm -u ${env.UID}:${env.GID} \
+                    -v \$(pwd):/var/www/html \
+                    -w /var/www/html \
+                    laravelsail/php82-composer:latest composer require laravel/sail --dev --no-interaction
+
+                # Copy .env
                 cp .env.example .env
 
+                # Run sail:install (now artisan exists)
                 docker run --rm -u ${env.UID}:${env.GID} \
                     -v \$(pwd):/var/www/html \
                     -w /var/www/html \
-                    laravelsail/php82-composer:latest php artisan sail:install
+                    laravelsail/php82-composer:latest php artisan sail:install --with=mysql,redis
                 """
             }
         }
+
 
         stage('Start Sail') {
             steps {
