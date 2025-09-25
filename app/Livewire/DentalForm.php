@@ -108,15 +108,20 @@ class DentalForm extends Component
         $this->closeModal();
     }
 
+    public $statusMessage = null;
+
     public function submit()
     {
-        // Example: save dental record to DB
-        // DentalExam::create([
-        //     'patient_id' => $this->apc_id_number,
-        //     'teeth' => json_encode($this->teeth),
-        // ]);
-        session()->flash('success', 'Dental record submitted successfully!');
+        // For testing: don't save to DB yet. Just set a message we can show in the UI.
+        $this->statusMessage = 'Submitted successfully';
+
+        // close modal just in case
+        $this->showModal = false;
+
+        // Optionally, you can still flash if you prefer:
+        // session()->flash('success', 'Dental record submitted successfully!');
     }
+
 
     public function render()
     {
