@@ -36,10 +36,12 @@ class StaffSummaryReportController extends Controller
             ->count();
 
         $totalAppointments = $attendedCount + $cancelledCount;
-        $totalPatients = MedicalRecord::whereMonth('created_at', $month)
-            ->whereYear('created_at', $year)
-            ->distinct('apc_id_number')
-            ->count('apc_id_number');
+        $totalPatients = MedicalRecord::whereMonth('medical_records.created_at', $month)
+            ->whereYear('medical_records.created_at', $year)
+            ->whereNull('medical_records.archived_at')
+            ->join('patients', 'medical_records.patient_id', '=', 'patients.id')
+            ->distinct('patients.apc_id_number')
+            ->count('patients.apc_id_number');
 
 
         // Most Prescribed Medications
@@ -97,10 +99,11 @@ public function generateAccomplishmentReport(Request $request)
         ->where('status', 'cancelled')
         ->count();
 
-    $totalPatients = MedicalRecord::when($month, fn($q) => $q->whereMonth('created_at', $month))
-        ->whereYear('created_at', $year)
-        ->distinct('apc_id_number')
-        ->count('apc_id_number');
+    $totalPatients = MedicalRecord::when($month, fn($q) => $q->whereMonth('medical_records.created_at', $month))
+        ->whereYear('medical_records.created_at', $year)
+        ->join('patients', 'medical_records.patient_id', '=', 'patients.id')
+        ->distinct('patients.apc_id_number')
+        ->count('patients.apc_id_number');
 
     $allDiagnoses = [
         'Cardiology' => ['Hypertension', 'BP Monitoring', 'Bradycardia', 'Hypotension', 'Angina'],
