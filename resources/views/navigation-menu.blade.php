@@ -29,6 +29,9 @@
                     <x-nav-link href="{{ route('medical-records') }}" :active="request()->routeIs('medical-records')">
                         {{ __('Medical Records') }}
                     </x-nav-link>
+                    <x-nav-link href="{{ route('dental-form') }}" :active="request()->routeIs('dental-form')">
+                        {{ __('Dental Medical Records') }}
+                    </x-nav-link>
                     <x-nav-link href="{{ route('medical-inventory') }}" :active="request()->routeIs('medical-inventory')">
                         {{ __('Medical Inventory') }}
                     </x-nav-link>
