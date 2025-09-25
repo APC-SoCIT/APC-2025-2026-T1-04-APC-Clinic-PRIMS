@@ -45,7 +45,7 @@ class MedicalRecord extends Model
 
     public function patient()
     {
-        return $this->belongsTo(Patient::class);
+        return $this->belongsTo(Patient::class, 'patient_id');
     }
 
     public function appointment()
@@ -61,7 +61,7 @@ class MedicalRecord extends Model
 
         public function diagnoses()
     {
-        return $this->hasMany(Diagnosis::class);
+        return $this->hasMany(Diagnosis::class, 'medical_record_id');
     }
 
     public function physicalExaminations()
@@ -73,4 +73,5 @@ class MedicalRecord extends Model
     {
         return $query->whereNotNull('archived_at');
     }
+
 }

@@ -8,49 +8,72 @@ use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\ClinicStaff;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class MedicalRecordController extends Controller
 {
     public $archiveRecord, $appointmentId, $appointment;
 
+    /**
+     * View a single medical record.
+     */
     public function view($id)
     {
-        $record = MedicalRecord::findOrFail($id);
+        $record = MedicalRecord::with(['patient', 'diagnoses'])->findOrFail($id);
         return view('view-medical-record', compact('record'));
     }
 
-    public function printMedicalRecord($appointmentId)
+    /**
+     * Print medical record(s) associated with an appointment.
+     */
+    public function printMedicalRecord($id)
     {
-        // Find the appointment by ID
-        $appointment = Appointment::with(['patient', 'medicalRecords'])->findOrFail($appointmentId);
-    
-        // Fetch the associated medical records (you can adjust this based on how you structure the records)
-        $medicalRecords = $appointment->medicalRecords;
-    
-        // Retrieve the patient details
-        $patient = $appointment->patient;
-    
-        // Ensure that the medical record data includes diagnosis, treatment, and notes
-        // You might need to modify the medical records model if necessary to include these attributes
-    
-        // Generate PDF using DomPDF
+        $record = MedicalRecord::with(['patient','diagnoses'])->findOrFail($id);
+
+        if (!$record->patient) {
+            abort(404, 'Patient not found for this medical record.');
+        }
+
+        // Decode family history JSON or use empty array
+        $family_history = is_array($record->family_history)
+            ? $record->family_history
+            : json_decode($record->family_history, true) ?? [];
+
+        // Ensure all default family history items are present
+        $default_family_history = [
+            'Bronchial Asthma',
+            'Diabetes Mellitus',
+            'Thyroid Disorder',
+            'Cancer',
+            'Hypertension',
+            'Liver Disease',
+            'Epilepsy'
+        ];
+
+        foreach ($default_family_history as $item) {
+            if (!isset($family_history[$item])) {
+                $family_history[$item] = 'No';
+            }
+        }
+
         $pdf = \PDF::loadView('pdf.medical-record-pdf', [
-            'patient' => $patient,
-            'medicalRecords' => $medicalRecords,
-            'appointment' => $appointment,
-        ]);
-    
-        // Return the generated PDF file for download
-        return $pdf->download('medical_record_' . $appointment->id . '.pdf');
+            'record'         => $record,
+            'diagnoses'      => $record->diagnoses,
+            'family_history' => $family_history,
+        ])->setPaper('A4', 'portrait');
+
+        return $pdf->stream('medical_record_' . $record->id . '.pdf');
     }
 
+    /**
+     * Create a new medical record from appointment.
+     */
     public function create(Request $request)
     {
         $appointmentId = $request->appointmentId;
-        $appointment = Appointment::with('patient')->find($appointmentId);
+        $appointment = Appointment::with('patient')->findOrFail($appointmentId);
 
-        return view('livewire.add-medical-record', 
-        [
+        return view('livewire.add-medical-record', [
             'patient' => $appointment->patient,
             'appointmentId' => $appointment->id,
             'email' => $appointment->patient->email,
@@ -71,5 +94,4 @@ class MedicalRecordController extends Controller
             'age' => Carbon::parse($appointment->patient->date_of_birth)->age,
         ]);
     }
-
 }
