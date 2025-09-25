@@ -40,25 +40,25 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 @foreach ($records as $record)
                     <tr>
-                        <td class="px-6 py-3 text-left text-md">{{ $record->apc_id_number }}</td>
-                        <td class="px-6 py-3 text-left text-md">{{ $record->last_name }}</td>
-                        <td class="px-6 py-3 text-left text-md">{{ $record->first_name }}</td>
-                        <td class="px-6 py-3 text-left text-md text-center">{{ $record->mi }}</td>
-                        <td class="px-6 py-3 text-left text-md">{{ $record->email }}</td>
+                        <td class="px-6 py-3 text-left text-md">{{ $record->patient->apc_id_number }}</td>
+                        <td class="px-6 py-3 text-left text-md">{{ $record->patient->last_name }}</td>
+                        <td class="px-6 py-3 text-left text-md">{{ $record->patient->first_name }}</td>
+                        <td class="px-6 py-3 text-left text-md text-center">{{ $record->patient->middle_initial }}</td>
+                        <td class="px-6 py-3 text-left text-md">{{ $record->patient->email }}</td>
                         <td class="px-6 py-3 text-left text-md">{{ $record->last_visited }}</td>
                         <td>
-                            <x-button wire:click="toggleExpand('{{ $record->apc_id_number }}')"
+                            <x-button wire:click="toggleExpand('{{ $record->patientId }}')"
                                     class="px-4 py-1">
                                 View Records
                             </x-button>
                         </td>
                     </tr>
 
-                    @if ($expandedPatient === $record->apc_id_number)
+                    @if ($expandedPatient === $record->patientId)
                         <tr>
                             <td colspan="7">
                                 <div class="flex justify-center mt-4 mb-2">
-                                    <h3 class="text-lg font-semibold">Medical Records for {{ $record->first_name }} {{ $record->mi }}. {{ $record->last_name }} ({{ $record->apc_id_number }})</h3>
+                                    <h3 class="text-lg font-semibold">Medical Records for {{ $record->patient->first_name }} {{ $record->patient->middle_initial }}. {{ $record->patient->last_name }} ({{ $record->patient->apc_id_number }})</h3>
                                 </div>
                                 <div class="flex justify-center">
                                     <table class="table-auto w-[80%] rounded mb-4 border">
@@ -72,7 +72,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($this->getPatientRecords($record->apc_id_number) as $med)
+                                            @foreach ($this->getPatientRecords($record->patient_id) as $med)
                                                 <tr>
                                                     <td class="text-center">
                                                         @if ($med->appointment_id)
