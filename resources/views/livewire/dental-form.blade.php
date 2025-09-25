@@ -1,6 +1,18 @@
 <div class="pb-5">
     <div class="bg-white rounded-md shadow-md mt-5 p-6">
 
+    @if($statusMessage)
+        <div class="mb-4 rounded-md bg-green-50 border border-green-200 p-3 text-green-800">
+            {{ $statusMessage }}
+        </div>
+    @endif
+
+    @if(session()->has('success'))
+        <div class="mb-4 rounded-md bg-green-50 border border-green-200 p-3 text-green-800">
+            {{ session('success') }}
+        </div>
+    @endif
+
         <!-- Personal Information -->
         <div class="bg-prims-yellow-1 rounded-lg p-4">
             <h2 class="text-lg font-semibold">Personal Information</h2>
@@ -97,53 +109,51 @@
         </div>
 
         <div class="ml-17 my-6 px-40 grid grid-cols-4">
-            <form>
-                <!-- Oral Hygiene -->
-                <label class="font-bold">Oral Hygiene :</label>
-                <label>
-                    <input type="radio" name="oral_hygiene" value="Good">
-                    <span class="">Good</span>
-                </label>
-                <label>
-                    <input type="radio" name="oral_hygiene" value="Fair">
-                    <span class="text-align-center">Fair</span>
-                </label>
-                <label>
-                    <input type="radio" name="oral_hygiene" value="Poor">
-                    <span class="text-align-center">Poor</span>
-                </label>
+            <!-- Oral Hygiene -->
+            <label class="font-bold">Oral Hygiene :</label>
+            <label>
+                <input type="radio" name="oral_hygiene" value="Good">
+                <span class="">Good</span>
+            </label>
+            <label>
+                <input type="radio" name="oral_hygiene" value="Fair">
+                <span class="text-align-center">Fair</span>
+            </label>
+            <label>
+                <input type="radio" name="oral_hygiene" value="Poor">
+                <span class="text-align-center">Poor</span>
+            </label>
 
-                <!-- Gingival Color -->
-                <label class="font-bold mt-4">Gingival Color :</label>
-                <label class="mt-4">
-                    <input type="radio" name="gingival_color" value="Pink">
-                    <span class="">Pink</span>
-                </label>
-                <label class="mt-4">
-                    <input type="radio" name="gingival_color" value="Pale">
-                    <span class="text-align-center">Pale</span>
-                </label>
-                <label class="mt-4">
-                    <input type="radio" name="gingival_color" value="Bright Red">
-                    <span class="text-align-center">Bright Red</span>
-                </label>
-            </form>            
+            <!-- Gingival Color -->
+            <label class="font-bold mt-4">Gingival Color :</label>
+            <label class="mt-4">
+                <input type="radio" name="gingival_color" value="Pink">
+                <span class="">Pink</span>
+            </label>
+            <label class="mt-4">
+                <input type="radio" name="gingival_color" value="Pale">
+                <span class="text-align-center">Pale</span>
+            </label>
+            <label class="mt-4">
+                <input type="radio" name="gingival_color" value="Bright Red">
+                <span class="text-align-center">Bright Red</span>
+            </label>
         </div>
         
         <div class="bg-gray-300 rounded-lg p-1 flex justify-center">
             <h3 class="text-md font-semibold">Procedures</h3>
         </div>
         <div class="my-6 justify-items-center">
-            <form>
+            <div>
                 <label>
                     <input type="checkbox" name="gingival_color" value="Oral Prophylaxis">
                     <span class="text-align-center font-bold ml-1">Oral Prophylaxis</span>
                 </label>
-            </form>
+            </div>
         </div>
 
         <div class="bg-gray-300 rounded-lg p-1 flex justify-center">
-            <h3 class="text-md font-semibold">Dental Number Chart??</h3>
+            <h3 class="text-md font-semibold">Dental Number Chart</h3>
         </div>
 
         <!-- Tooth Number Chart -->
@@ -277,8 +287,8 @@
         <!-- Submit -->
         <div class="mt-6 flex justify-end">
             <button type="submit"
-                class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition-colors duration-300">
-                Submit Dental Record
+                class="px-4 py-2 bg-prims-azure-500 text-white rounded-lg hover:bg-prims-azure-100">
+                Submit
             </button>
         </div>
         </form>
