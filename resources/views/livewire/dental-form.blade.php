@@ -26,79 +26,93 @@
             <div>
                 <label class="text-lg">First Name</label>
                 <input type="text" wire:model="first_name" class="border p-2 rounded w-full bg-gray-200" readonly>
-                <input type="hidden" wire:model="first_name">
             </div>
             <div>
                 <label class="text-lg">Middle Initial</label>
-                <input type="text" wire:model="mi" class="border p-2 rounded w-full bg-gray-200" readonly>
-                <input type="hidden" wire:model="mi">
+                <input type="text" wire:model="middle_initial" class="border p-2 rounded w-full bg-gray-200" readonly>
             </div>
             <div>
                 <label class="text-lg">Last Name</label>
                 <input type="text" wire:model="last_name" class="border p-2 rounded w-full bg-gray-200" readonly>
-                <input type="hidden" wire:model="last_name">
             </div>
             <div>
                 <label class="text-lg">Gender</label>
                 <input type="text" wire:model="gender" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
-                <input type="hidden" wire:model="gender"> 
             </div>
             <div>
                 <label class="text-lg">Age</label>
                 <input type="text" wire:model="age" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
-                <input type="hidden" wire:model="age">
             </div>
             <div>
                 <label class="text-lg">Date of Birth</label>
-                <input type="text" wire:model="dob" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
-                <input type="hidden" wire:model="dob"> 
-            </div>
-            <div>
-                <label class="text-lg">Email</label>
-                <input type="text" wire:model="email" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
-                <input type="hidden" wire:model="email">
-            </div>
-            <div>
-                <label class="text-lg">House/Unit No. & Street</label>
-                <input type="text" wire:model="street_number" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
-                <input type="hidden" wire:model="first_name"> 
-            </div>
-            <div>
-                <label class="text-lg">Barangay</label>
-                <input type="text" wire:model="barangay" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
-                <input type="hidden" wire:model="first_name"> 
-            </div>
-            <div>
-                <label class="text-lg">City/Municipality</label>
-                <input type="text" wire:model="city" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
-                <input type="hidden" wire:model="first_name">
-            </div>        
-            <div>
-                <label class="text-lg">Province</label>
-                <input type="text" wire:model="province" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
-                <input type="hidden" wire:model="first_name">
-            </div>
-            <div>
-                <label class="text-lg">ZIP Code</label>
-                <input type="text" wire:model="zip_code" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
-                <input type="hidden" wire:model="first_name">
-            </div>
-            <div>
-                <label class="text-lg">Country</label>
-                <input type="text" wire:model="country" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
-                <input type="hidden" wire:model="first_name">
-            </div>
-            <div>
-                <label class="text-lg">Contact Number</label>
-                <input type="text" wire:model="contact_number" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
-                <input type="hidden" wire:model="contact_number">
+                <input type="text" wire:model="date_of_birth" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
             </div>
             <div>
                 <label class="text-lg">Nationality</label>
                 <input type="text" wire:model="nationality" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
-                <input type="hidden" wire:model="nationality">
+            </div>
+            <div>
+                <label class="text-lg">Blood Type</label>
+                <input type="text" wire:model="blood_type" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
+            </div>
+            <div>
+                <label class="text-lg">Civil Status</label>
+                <input type="text" wire:model="civil_status" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
+            </div>
+            <div>
+                <label class="text-lg">Religion</label>
+                <input type="text" wire:model="religion" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
+            </div>
+            <div>
+                <label class="text-lg">Contact Number</label>
+                <input type="text" wire:model="contact_number" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
+            </div>
+            <div>
+                <label class="text-lg">Email Address</label>
+                <input type="text" wire:model="email" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
+            </div>
+            <div>
+                <label class="text-lg">House/Unit No.</label>
+                <input type="text" wire:model="house_unit_number" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
+            </div>
+            <div>
+                <label class="text-lg">Street</label>
+                <input type="text" wire:model="street" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
+            </div>
+            <div>
+                <label class="text-lg">Barangay</label>
+                <input type="text" wire:model="barangay" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
+            </div>
+            <div>
+                <label class="text-lg">City/Municipality</label>
+                <input type="text" wire:model="city" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
+            </div>        
+            <div>
+                <label class="text-lg">Province</label>
+                <input type="text" wire:model="province" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
+            </div>
+            <div>
+                <label class="text-lg">ZIP Code</label>
+                <input type="text" wire:model="zip_code" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
+            </div>
+            <div>
+                <label class="text-lg">Country</label>
+                <input type="text" wire:model="country" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
+            </div>
+            <div>
+                <label class="text-lg">Emergency Contact Name</label>
+                <input type="text" wire:model="emergency_contact_name" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
+            </div>
+            <div>
+                <label class="text-lg">Emergency Contact Number</label>
+                <input type="text" wire:model="emergency_contact_number" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
+            </div>
+            <div>
+                <label class="text-lg">Relationship to Patient</label>
+                <input type="text" wire:model="emergency_contact_relationship" class="border p-2 rounded w-full col-span-2 bg-gray-200" readonly>
             </div>
         </div>
+
         <!-- Dental Examination -->
         <div class="bg-prims-yellow-1 rounded-lg p-4 mt-6">
             <h2 class="text-lg font-semibold">Dental Examination</h2>

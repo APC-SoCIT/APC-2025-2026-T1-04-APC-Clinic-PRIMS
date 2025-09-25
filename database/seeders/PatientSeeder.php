@@ -49,7 +49,7 @@ class PatientSeeder extends Seeder
                 'nationality' => 'Filipino',
                 'blood_type' => 'Di niya alam',
                 'civil_status' => 'Single',
-                'religion' => 'Christian?',
+                'religion' => 'Born Again Christian',
                 'contact_number' => '09326091141',
                 'email' => 'eddaduya@student.apc.edu.ph',
                 'house_unit_number' => '905-D',

@@ -9,9 +9,10 @@ use Carbon\Carbon;
 
 class DentalForm extends Component
 {
-    public $apc_id_number, $email, $first_name, $mi, $last_name, $contact_number,
-           $dob, $age, $gender, $street_number, $barangay, $city,
-           $province, $zip_code, $country, $nationality;
+    public $apc_id_number, $first_name, $middle_initial, $last_name, $gender, $age, $date_of_birth, 
+            $nationality, $blood_type, $civil_status, $religion, $contact_number, $email, 
+            $house_unit_number, $street, $barangay, $city, $province, $zip_code, $country, $emergency_contact_name, 
+            $emergency_contact_number, $emergency_contact_relationship;
 
     public function searchPatient()
     {
