@@ -28,9 +28,13 @@ class PatientSeeder extends Seeder
                 'religion' => 'Roman Catholic',
                 'contact_number' => '09761164892',
 
+                'apc_id_number' => '2022-140224',
+                'street_number' => '60 Villa Alegre',
+
                 'email' => 'smcatingub@student.apc.edu.ph',
                 'house_unit_number' => '60',
                 'street' => 'J. Fernandez',
+
                 'barangay' => 'Pinagbuhatan',
 
                 'city' => 'Pasig',
@@ -54,9 +58,14 @@ class PatientSeeder extends Seeder
                 'religion' => 'Christian?',
                 'contact_number' => '09326091141',
 
+                'apc_id_number' => '2022-140335',
+                'street_number' => '905-D, Raya Garden Condominiums',
+
+
                 'email' => 'eddaduya@student.apc.edu.ph',
                 'house_unit_number' => '905-D',
                 'street' => 'Raya Garden Condominiums',
+
                 'barangay' => 'Merville',
 
                 'city' => 'Paranaque',
@@ -80,6 +89,9 @@ class PatientSeeder extends Seeder
                 'religion' => 'Catholic maybe',
                 'contact_number' => '09129087654',
 
+                'apc_id_number' => '2022-140267',
+                'address' => 'Taguig City',
+
                 'email' => 'cknailgas@student.apc.edu.ph',
                 'house_unit_number' => '123',
                 'street' => 'Street',
@@ -94,7 +106,7 @@ class PatientSeeder extends Seeder
 
             ],
             [
-                'apc_id_number' => '2022-140289',
+                'email' => 'barabajante3@student.apc.edu.ph',
                 'first_name' => 'Byron Louis',
                 'middle_initial' => 'A',
                 'last_name' => 'Rabajante',
@@ -106,11 +118,17 @@ class PatientSeeder extends Seeder
                 'religion' => 'Catholic maybe',
                 'contact_number' => '09456298987',
 
+                'apc_id_number' => '2022-140289',
+                'street_number' => '239 B 8th St.',
+                'barangay' => 'Katuparan',
+
+
                 'email' => 'barabajante3@student.apc.edu.ph',
                 'house_unit_number' => '123',
                 'street' => 'Street',
 
                 'barangay' => 'Barangay',
+
                 'city' => 'Taguig',
                 'province' => 'NCR',
                 'zip_code' => '0000',
@@ -132,11 +150,17 @@ class PatientSeeder extends Seeder
                 'religion' => 'Christian diba',
                 'contact_number' => '09658014225',
 
+                'apc_id_number' => '2022-140145',
+                'street_number' => 'street',
+                'barangay' => 'street',
+
+
                 'email' => 'jmmiyabe@student.apc.edu.ph',
                 'house_unit_number' => '123',
                 'street' => 'Street',
 
                 'barangay' => 'Barangay',
+
                 'city' => 'Taguig',
                 'province' => 'NCR',
                 'zip_code' => '0000',
