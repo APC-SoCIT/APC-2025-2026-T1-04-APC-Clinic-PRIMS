@@ -51,15 +51,14 @@ class PatientSeeder extends Seeder
                 'gender' => 'Female',
                 'date_of_birth' => '2003-10-27',
                 'nationality' => 'Filipino',
-                'blood_type' => 'Di niya alam',
+                'blood_type' => 'O',
                 'civil_status' => 'Single',
                 'religion' => 'Born Again Christian',
                 'contact_number' => '09326091141',
 
-
                 'email' => 'eddaduya@student.apc.edu.ph',
-                'house_unit_number' => '905-D',
-                'street' => 'Raya Garden Condominiums',
+                'house_unit_number' => 'number',
+                'street' => 'street',
 
                 'barangay' => 'Merville',
 

@@ -1,17 +1,7 @@
 <div class="pb-5">
     <div class="bg-white rounded-md shadow-md mt-5 p-6">
 
-    @if($statusMessage)
-        <div class="mb-4 rounded-md bg-green-50 border border-green-200 p-3 text-green-800">
-            {{ $statusMessage }}
-        </div>
-    @endif
-
-    @if(session()->has('success'))
-        <div class="mb-4 rounded-md bg-green-50 border border-green-200 p-3 text-green-800">
-            {{ session('success') }}
-        </div>
-    @endif
+    
 
         <!-- Personal Information -->
         <div class="bg-prims-yellow-1 rounded-lg p-4">
