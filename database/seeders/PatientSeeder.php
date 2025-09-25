@@ -27,10 +27,12 @@ class PatientSeeder extends Seeder
                 'civil_status' => 'Single',
                 'religion' => 'Roman Catholic',
                 'contact_number' => '09761164892',
+
                 'email' => 'smcatingub@student.apc.edu.ph',
                 'house_unit_number' => '60',
                 'street' => 'J. Fernandez',
                 'barangay' => 'Pinagbuhatan',
+
                 'city' => 'Pasig',
                 'province' => 'NCR',
                 'zip_code' => '1602',
@@ -51,10 +53,12 @@ class PatientSeeder extends Seeder
                 'civil_status' => 'Single',
                 'religion' => 'Christian?',
                 'contact_number' => '09326091141',
+
                 'email' => 'eddaduya@student.apc.edu.ph',
                 'house_unit_number' => '905-D',
                 'street' => 'Raya Garden Condominiums',
                 'barangay' => 'Merville',
+
                 'city' => 'Paranaque',
                 'province' => 'NCR',
                 'zip_code' => '1709',
@@ -75,6 +79,7 @@ class PatientSeeder extends Seeder
                 'civil_status' => 'Married',
                 'religion' => 'Catholic maybe',
                 'contact_number' => '09129087654',
+
                 'email' => 'cknailgas@student.apc.edu.ph',
                 'house_unit_number' => '123',
                 'street' => 'Street',
@@ -86,6 +91,7 @@ class PatientSeeder extends Seeder
                 'emergency_contact_name' => 'Emergency Name',
                 'emergency_contact_number' => '09876543210',
                 'emergency_contact_relationship' => 'Relationship',
+
             ],
             [
                 'apc_id_number' => '2022-140289',
@@ -99,9 +105,11 @@ class PatientSeeder extends Seeder
                 'civil_status' => 'Married',
                 'religion' => 'Catholic maybe',
                 'contact_number' => '09456298987',
+
                 'email' => 'barabajante3@student.apc.edu.ph',
                 'house_unit_number' => '123',
                 'street' => 'Street',
+
                 'barangay' => 'Barangay',
                 'city' => 'Taguig',
                 'province' => 'NCR',
@@ -123,9 +131,11 @@ class PatientSeeder extends Seeder
                 'civil_status' => 'Married',
                 'religion' => 'Christian diba',
                 'contact_number' => '09658014225',
+
                 'email' => 'jmmiyabe@student.apc.edu.ph',
                 'house_unit_number' => '123',
                 'street' => 'Street',
+
                 'barangay' => 'Barangay',
                 'city' => 'Taguig',
                 'province' => 'NCR',
