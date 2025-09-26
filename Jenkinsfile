@@ -1,44 +1,25 @@
 pipeline {
     agent any
 
-    environment {
-        COMPOSE_FILE = 'docker-compose.yml'
-    }
-
     stages {
-        stage('Detect UID/GID') {
-            steps {
-                script {
-                    env.UID = sh(script: "id -u", returnStdout: true).trim()
-                    env.GID = sh(script: "id -g", returnStdout: true).trim()
-                    echo "Using UID=${env.UID} and GID=${env.GID}"
-                }
-            }
-        }
 
         stage('Prepare Sail') {
             steps {
                 sh """
                 # Install dependencies (gets artisan + vendor)
-                docker run --rm -u ${env.UID}:${env.GID} \
-                    -v \$(pwd):/var/www/html \
+                docker run --rm -u "$(id -u):$(id -g)" \
+                    -v $(pwd):/var/www/html \
                     -w /var/www/html \
-                    laravelsail/php82-composer:latest composer install --no-interaction --prefer-dist
-
-                # Require sail (safe if already there)
-                docker run --rm -u ${env.UID}:${env.GID} \
-                    -v \$(pwd):/var/www/html \
-                    -w /var/www/html \
-                    laravelsail/php82-composer:latest composer require laravel/sail --dev --no-interaction
+                    laravelsail/php82-composer:latest composer require laravel/sail --dev
 
                 # Copy .env
                 cp .env.example .env
 
-                # Run sail:install (now artisan exists)
-                docker run --rm -u ${env.UID}:${env.GID} \
-                    -v \$(pwd):/var/www/html \
+                # Require sail (safe if already there)
+                docker run --rm -u "$(id -u):$(id -g)" \
+                    -v $(pwd):/var/www/html \
                     -w /var/www/html \
-                    laravelsail/php82-composer:latest php artisan sail:install --with=mysql,redis
+                    laravelsail/php82-composer:latest php artisan sail:install
                 """
             }
         }
