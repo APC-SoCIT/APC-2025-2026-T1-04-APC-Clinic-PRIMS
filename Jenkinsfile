@@ -27,7 +27,7 @@ pipeline {
 
         stage('Start Sail') {
             steps {
-                sh './vendor/bin/sail up -d -u $(id -u):$(id -g)'
+                sh './vendor/bin/sail up -d'
             }
         }
 
