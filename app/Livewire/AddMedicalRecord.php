@@ -16,6 +16,8 @@ class AddMedicalRecord extends Component
     public $apc_id_number, $first_name, $middle_initial, $last_name, $gender, $age, $date_of_birth, $nationality, $blood_type, $civil_status, $religion, $contact_number, $email, $house_unit_number, $street, $barangay, $city, $province, $zip_code, $country, $emergency_contact_name, $emergency_contact_number, $emergency_contact_relationship;
     public $reason, $description, $allergies, $medications, $hospitalization, $operation, $weight, $height, $blood_pressure, $heart_rate, $respiratory_rate, $temperature, $bmi, $o2sat, $prescription;
     public $appointment_id;
+    public $showErrorModal = false;
+    public $errorMessage = '';
     public $fromStaffCalendar = false;
     public $diagnoses = [];
     public $physical_examinations = [];
@@ -166,28 +168,65 @@ class AddMedicalRecord extends Component
         ];
     }
 
+    public function updated($property)
+    {
+        if (in_array($property, ['weight', 'height'])) {
+            $this->calculateBmi();
+        }
+    }
+
+    private function calculateBmi()
+        {
+            if ($this->weight && $this->height) {
+                $heightInMeters = $this->height / 100;
+                if ($heightInMeters > 0) {
+                    $this->bmi = round($this->weight / ($heightInMeters ** 2), 2);
+                }
+            }
+        }
 
     public function submit()
-    {
+    {   
         $this->validate([
             'apc_id_number' => 'required|exists:patients,apc_id_number',
             'reason' => 'required|not_in:""',
-            'description' => 'required|string|min:10|max:1000',
-            'past_medical_history.*' => 'required|in:Yes,No',
-            'family_history.*' => 'required|in:Yes,No',
-            'personal_history.Vape' => 'required|in:Yes,No',
+            'description' => 'required|string|min:1|max:1000',
+            // 'past_medical_history.*' => 'required|in:Yes,No',
+            // 'family_history.*' => 'required|in:Yes,No',
+            // 'personal_history.Vape' => 'required|in:Yes,No',
             'weight' => 'required|numeric|min:1',
             'height' => 'required|numeric|min:1',
             'blood_pressure' => 'required|string',
             'heart_rate' => 'required|numeric|min:1',
             'respiratory_rate' => 'required|numeric|min:1',
-            'temperature' => 'required|numeric|min:30|max:45',
+            'temperature' => 'required|numeric|min:20|max:45',
             'bmi' => 'required|numeric|min:1',
             'o2sat' => 'required|numeric|min:1|max:100'
         ]);
 
         $this->personal_history['sticks_per_day'] = $this->personal_history['sticks_per_day'] ?: 'N/A';
         $this->personal_history['packs_per_year'] = $this->personal_history['packs_per_year'] ?: 'N/A';
+
+        if (empty($this->physical_examinations) || count($this->physical_examinations) === 0) {
+            $this->errorMessage = 'Please fill out the physical examination table completely.';
+            $this->showErrorModal = true;
+            return;
+        }
+
+        foreach ($this->sections as $section) {
+            $row = $this->physical_examinations[$section] ?? ['normal' => null, 'findings' => ''];
+
+            $normal = !empty($row['normal']);
+            $findings = trim($row['findings'] ?? '');
+
+            if (!$normal && $findings === '') {
+                $this->errorMessage = 'Please fill out the physical examination table completely.';
+                $this->showErrorModal = true;
+                return;
+            }
+        }
+
+        // dd($this->physical_examinations);
 
         $patient = Patient::where('apc_id_number', $this->apc_id_number)->firstOrFail();
 

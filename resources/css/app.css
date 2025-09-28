@@ -11,3 +11,7 @@
 html {
     overflow-y: scroll;
 }
+
+input, select, textarea, textarea:focus, input:focus, select:focus {
+    scroll-margin-top: 10rem; 
+}
