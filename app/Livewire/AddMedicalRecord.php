@@ -18,8 +18,6 @@ class AddMedicalRecord extends Component
     public $appointment_id;
     public $showErrorModal = false;
     public $errorMessage = '';
-    public $showErrorModal = false;
-    public $errorMessage = '';
     public $fromStaffCalendar = false;
     public $diagnoses = [];
     public $physical_examinations = [];
@@ -186,29 +184,16 @@ class AddMedicalRecord extends Component
                 }
             }
         }
-    public function updated($property)
-    {
-        if (in_array($property, ['weight', 'height'])) {
-            $this->calculateBmi();
-        }
-    }
-
-    private function calculateBmi()
-        {
-            if ($this->weight && $this->height) {
-                $heightInMeters = $this->height / 100;
-                if ($heightInMeters > 0) {
-                    $this->bmi = round($this->weight / ($heightInMeters ** 2), 2);
-                }
-            }
-        }
 
     public function submit()
-    {   
     {   
         $this->validate([
             'apc_id_number' => 'required|exists:patients,apc_id_number',
             'reason' => 'required|not_in:""',
+            'description' => 'required|string|min:1|max:1000',
+            // 'past_medical_history.*' => 'required|in:Yes,No',
+            // 'family_history.*' => 'required|in:Yes,No',
+            // 'personal_history.Vape' => 'required|in:Yes,No',
             'description' => 'required|string|min:1|max:1000',
             // 'past_medical_history.*' => 'required|in:Yes,No',
             // 'family_history.*' => 'required|in:Yes,No',
@@ -219,12 +204,34 @@ class AddMedicalRecord extends Component
             'heart_rate' => 'required|numeric|min:1',
             'respiratory_rate' => 'required|numeric|min:1',
             'temperature' => 'required|numeric|min:20|max:45',
+            'temperature' => 'required|numeric|min:20|max:45',
             'bmi' => 'required|numeric|min:1',
             'o2sat' => 'required|numeric|min:1|max:100'
         ]);
 
         $this->personal_history['sticks_per_day'] = $this->personal_history['sticks_per_day'] ?: 'N/A';
         $this->personal_history['packs_per_year'] = $this->personal_history['packs_per_year'] ?: 'N/A';
+
+        if (empty($this->physical_examinations) || count($this->physical_examinations) === 0) {
+            $this->errorMessage = 'Please fill out the physical examination table completely.';
+            $this->showErrorModal = true;
+            return;
+        }
+
+        foreach ($this->sections as $section) {
+            $row = $this->physical_examinations[$section] ?? ['normal' => null, 'findings' => ''];
+
+            $normal = !empty($row['normal']);
+            $findings = trim($row['findings'] ?? '');
+
+            if (!$normal && $findings === '') {
+                $this->errorMessage = 'Please fill out the physical examination table completely.';
+                $this->showErrorModal = true;
+                return;
+            }
+        }
+
+        // dd($this->physical_examinations);
 
         if (empty($this->physical_examinations) || count($this->physical_examinations) === 0) {
             $this->errorMessage = 'Please fill out the physical examination table completely.';
