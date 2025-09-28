@@ -11,13 +11,7 @@ pipeline {
 
         stage('Install Composer Dependencies') {
             steps {
-                sh '''
-                docker run --rm \
-                  -v $PWD:/var/www/html \
-                  -w /var/www/html \
-                  laravelsail/php82-composer:latest \
-                  composer install
-                '''
+                sh 'docker run --rm -v $PWD:/app -w /app composer install'
             }
         }
 
