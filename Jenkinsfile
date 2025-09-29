@@ -63,4 +63,7 @@ pipeline {
 
     post {
         always {
-            sh './vendor/bin
+            sh './vendor/bin/sail down || true'
+        }
+    }
+}
