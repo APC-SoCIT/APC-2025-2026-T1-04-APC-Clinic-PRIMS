@@ -11,15 +11,21 @@ pipeline {
 
         stage('Install Composer Dependencies') {
             steps {
-                sh 'composer install'
+                sh 'docker run --rm -v $PWD:/app -w /app composer install'
+            }
+        }
+
+        stage('Start Sail') {
+            steps {
+                sh './vendor/bin/sail up -d'
             }
         }
 
         stage('App Setup') {
             steps {
                 sh '''
-                php artisan key:generate
-                php artisan migrate:fresh --seed
+                ./vendor/bin/sail artisan key:generate
+                ./vendor/bin/sail artisan migrate:fresh --seed
                 '''
             }
         }
@@ -27,9 +33,9 @@ pipeline {
         stage('NPM Build') {
             steps {
                 sh '''
-                npm install
-                npm audit fix || true
-                npm run build
+                ./vendor/bin/sail npm install
+                ./vendor/bin/sail npm audit fix || true
+                ./vendor/bin/sail npm run build
                 '''
             }
         }
@@ -37,7 +43,7 @@ pipeline {
 
     post {
         always {
-            echo 'Build finished.'
+            sh './vendor/bin/sail down || true'
         }
     }
 }
