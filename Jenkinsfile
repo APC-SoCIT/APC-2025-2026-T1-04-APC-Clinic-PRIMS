@@ -36,7 +36,7 @@ pipeline {
             }
         }
 
-        stage('Debug: Show Directory Structure') {
+        stage('Another Debug: Show Directory Structure') {
             steps {
                 sh '''
                 echo "Current working directory:"
