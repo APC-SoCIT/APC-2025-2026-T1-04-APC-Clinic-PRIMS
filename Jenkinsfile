@@ -3,58 +3,21 @@ pipeline {
 
     stages {
 
-        stage('Debug: Find composer.json with full path') {
-        steps {
-            sh '''
-            echo "Searching for composer.json with full path:"
-            find $PWD -name composer.json -type f -maxdepth 3 || true
-            '''
-        }
-    }
-
-
         stage('Copy .env') {
             steps {
                 sh 'cp .env.example .env || true'
             }
         }
 
-        stage('Debug Docker Mount') {
+        stage('Install Composer Dependencies') {
             steps {
-                sh '''
-                echo "Checking inside container..."
-                docker run --rm \
-                    -v $WORKSPACE:/app \
-                    -w /app \
-                    laravelsail/php82-composer:latest \
-                    sh -c "pwd && ls -al"
-                '''
+                sh 'docker run --rm -v $PWD:/app -w /app composer install'
             }
         }
 
-
-
-
-        stage('Another Debug: Show Directory Structure') {
+        stage('Start Sail') {
             steps {
-                sh '''
-                echo "Current working directory:"
-                pwd
-
-                echo "Listing contents of workspace root:"
-                ls -al
-
-                echo "Looking for vendor/bin/sail:"
-                find . -path "*/vendor/bin/sail" || true
-                '''
-            }
-        }
-
-        stage('Start Sail Containers') {
-            steps {
-                sh '''
-                ./vendor/bin/sail up -d
-                '''
+                sh './vendor/bin/sail up -d'
             }
         }
 
@@ -67,7 +30,7 @@ pipeline {
             }
         }
 
-        stage('NPM Install & Build') {
+        stage('NPM Build') {
             steps {
                 sh '''
                 ./vendor/bin/sail npm install
