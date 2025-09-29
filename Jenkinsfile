@@ -22,14 +22,18 @@ pipeline {
         stage('Install Composer via Docker') {
             steps {
                 sh '''
+                echo "Using WORKSPACE: $WORKSPACE"
+                ls -al $WORKSPACE
+
                 docker run --rm \
-                    -v $PWD:/app \
+                    -v $WORKSPACE:/app \
                     -w /app \
                     laravelsail/php82-composer:latest \
                     composer install --no-cache --ignore-platform-reqs --no-interaction --prefer-dist
                 '''
             }
         }
+
 
 
         stage('Another Debug: Show Directory Structure') {
