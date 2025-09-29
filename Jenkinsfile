@@ -9,33 +9,39 @@ pipeline {
             }
         }
 
-        stage('Install Composer Dependencies') {
+        stage('Install Composer & Sail') {
             steps {
-                sh 'docker run --rm -v $PWD:/app -w /app composer install'
+                sh '''
+                composer install
+                composer require laravel/sail --dev
+                php artisan sail:install --no-interaction
+                '''
             }
         }
 
-        stage('Start Sail') {
+        stage('Start Sail Containers') {
             steps {
-                sh './vendor/bin/sail up -d'
+                sh '''
+                bash vendor/bin/sail up -d
+                '''
             }
         }
 
         stage('App Setup') {
             steps {
                 sh '''
-                ./vendor/bin/sail artisan key:generate
-                ./vendor/bin/sail artisan migrate:fresh --seed
+                bash vendor/bin/sail artisan key:generate
+                bash vendor/bin/sail artisan migrate:fresh --seed
                 '''
             }
         }
 
-        stage('NPM Build') {
+        stage('NPM Install & Build') {
             steps {
                 sh '''
-                ./vendor/bin/sail npm install
-                ./vendor/bin/sail npm audit fix || true
-                ./vendor/bin/sail npm run build
+                bash vendor/bin/sail npm install
+                bash vendor/bin/sail npm audit fix || true
+                bash vendor/bin/sail npm run build
                 '''
             }
         }
@@ -43,7 +49,7 @@ pipeline {
 
     post {
         always {
-            sh './vendor/bin/sail down || true'
+            sh 'bash vendor/bin/sail down || true'
         }
     }
 }
