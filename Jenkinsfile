@@ -31,7 +31,7 @@ pipeline {
                     -v $PWD:/app \
                     -w /app \
                     laravelsail/php82-composer:latest \
-                    composer install --ignore-platform-reqs --no-interaction --prefer-dist
+                    composer install --no-cache --ignore-platform-reqs --no-interaction --prefer-dist
                 '''
             }
         }
