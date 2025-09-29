@@ -31,10 +31,20 @@ pipeline {
                     -v $PWD:/app \
                     -w /app \
                     laravelsail/php82-composer:latest \
-                    composer install --ignore-platform-reqs --no-interaction --prefer-dist --dev
+                    composer install --ignore-platform-reqs --no-interaction --prefer-dist
+
+                # Explicitly install Laravel Sail if vendor/bin/sail is still missing
+                if [ ! -f vendor/bin/sail ]; then
+                    docker run --rm \
+                        -v $PWD:/app \
+                        -w /app \
+                        laravelsail/php82-composer:latest \
+                        composer require laravel/sail --dev --no-interaction
+                fi
                 '''
             }
         }
+
 
 
 
