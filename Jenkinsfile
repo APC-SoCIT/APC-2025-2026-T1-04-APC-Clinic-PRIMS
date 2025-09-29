@@ -9,15 +9,18 @@ pipeline {
             }
         }
 
-        stage('Install Composer & Sail') {
+        stage('Install Composer via Docker') {
             steps {
                 sh '''
-                composer install
-                composer require laravel/sail --dev
-                php artisan sail:install --no-interaction
+                docker run --rm \
+                    -v $PWD:/app \
+                    -w /app \
+                    laravelsail/php82-composer:latest \
+                    composer install --ignore-platform-reqs
                 '''
             }
         }
+
 
         stage('Start Sail Containers') {
             steps {
