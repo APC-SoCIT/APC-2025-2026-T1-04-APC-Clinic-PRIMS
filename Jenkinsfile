@@ -19,20 +19,19 @@ pipeline {
             }
         }
 
-        stage('Install Composer via Docker') {
+        stage('Debug Docker Mount') {
             steps {
                 sh '''
-                echo "Using WORKSPACE: $WORKSPACE"
-                ls -al $WORKSPACE
-
+                echo "Checking inside container..."
                 docker run --rm \
                     -v $WORKSPACE:/app \
                     -w /app \
                     laravelsail/php82-composer:latest \
-                    composer install --no-cache --ignore-platform-reqs --no-interaction --prefer-dist
+                    sh -c "pwd && ls -al"
                 '''
             }
         }
+
 
 
 
