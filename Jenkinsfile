@@ -11,11 +11,7 @@ pipeline {
 
         stage('Install Composer Dependencies') {
             steps {
-                sh '''
-                composer update
-                composer install
-                
-                '''
+                sh 'composer install'
             }
         }
 
