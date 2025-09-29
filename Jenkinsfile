@@ -3,6 +3,21 @@ pipeline {
 
     stages {
 
+        stage('Debug: Show Directory Structure') {
+            steps {
+                sh '''
+                echo "Current working directory:"
+                pwd
+
+                echo "Listing contents of workspace root:"
+                ls -al
+
+                echo "Looking for composer.json files:"
+                find . -name "composer.json" || true
+                '''
+            }
+        }
+
         stage('Copy .env') {
             steps {
                 sh 'cp .env.example .env || true'
