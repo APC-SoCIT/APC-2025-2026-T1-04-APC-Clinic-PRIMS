@@ -4,8 +4,9 @@ pipeline {
     stages {
 
         stage('Debug Workspace') {
-    steps {
-        sh 'ls -la'
+            steps {
+                sh 'ls -la'
+        }
     }
 }
 
