@@ -31,10 +31,14 @@ pipeline {
                     -v $PWD:/app \
                     -w /app \
                     laravelsail/php82-composer:latest \
-                    composer install --ignore-platform-reqs
+                    sh -c "
+                        rm -f composer.lock &&
+                        composer install --no-interaction --prefer-dist
+                    "
                 '''
             }
         }
+
 
         stage('Another Debug: Show Directory Structure') {
             steps {
@@ -55,7 +59,7 @@ pipeline {
         stage('Start Sail Containers') {
             steps {
                 sh '''
-                bash vendor/bin/sail up -d
+                ./vendor/bin/sail up -d
                 '''
             }
         }
@@ -63,8 +67,8 @@ pipeline {
         stage('App Setup') {
             steps {
                 sh '''
-                bash vendor/bin/sail artisan key:generate
-                bash vendor/bin/sail artisan migrate:fresh --seed
+                ./vendor/bin/sail artisan key:generate
+                ./vendor/bin/sail artisan migrate:fresh --seed
                 '''
             }
         }
@@ -72,9 +76,9 @@ pipeline {
         stage('NPM Install & Build') {
             steps {
                 sh '''
-                bash vendor/bin/sail npm install
-                bash vendor/bin/sail npm audit fix || true
-                bash vendor/bin/sail npm run build
+                ./vendor/bin/sail npm install
+                ./vendor/bin/sail npm audit fix || true
+                ./vendor/bin/sail npm run build
                 '''
             }
         }
@@ -82,7 +86,7 @@ pipeline {
 
     post {
         always {
-            sh 'bash vendor/bin/sail down || true'
+            sh './vendor/bin/sail down || true'
         }
     }
 }
