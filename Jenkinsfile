@@ -3,20 +3,15 @@ pipeline {
 
     stages {
 
-        stage('Debug: Show Directory Structure') {
-            steps {
-                sh '''
-                echo "Current working directory:"
-                pwd
-
-                echo "Listing contents of workspace root:"
-                ls -al
-
-                echo "Looking for composer.json files:"
-                find . -name "composer.json" || true
-                '''
-            }
+        stage('Debug: Find composer.json with full path') {
+        steps {
+            sh '''
+            echo "Searching for composer.json with full path:"
+            find $PWD -name composer.json -type f -maxdepth 3 || true
+            '''
         }
+    }
+
 
         stage('Copy .env') {
             steps {
