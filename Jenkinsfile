@@ -31,13 +31,11 @@ pipeline {
                     -v $PWD:/app \
                     -w /app \
                     laravelsail/php82-composer:latest \
-                    sh -c "
-                        rm -f composer.lock &&
-                        composer install --no-interaction --prefer-dist
-                    "
+                    composer install --ignore-platform-reqs --no-interaction --prefer-dist --dev
                 '''
             }
         }
+
 
 
         stage('Another Debug: Show Directory Structure') {
