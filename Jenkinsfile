@@ -28,15 +28,13 @@ pipeline {
             steps {
                 sh '''
                 docker run --rm \
-                    -v $PWD: \
-                    -w $PWD \
+                    -v $PWD:/app \
+                    -w /app \
                     laravelsail/php82-composer:latest \
                     composer install --ignore-platform-reqs --no-interaction --prefer-dist --dev
                 '''
             }
         }
-
-
 
         stage('Another Debug: Show Directory Structure') {
             steps {
@@ -47,12 +45,11 @@ pipeline {
                 echo "Listing contents of workspace root:"
                 ls -al
 
-                echo "Looking for composer.json files:"
-                find . -name "composer.json" || true
+                echo "Looking for vendor/bin/sail:"
+                find . -path "*/vendor/bin/sail" || true
                 '''
             }
         }
-
 
         stage('Start Sail Containers') {
             steps {
