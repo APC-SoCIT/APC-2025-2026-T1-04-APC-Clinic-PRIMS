@@ -8,8 +8,8 @@
         <form wire:submit.prevent="submit">
         <div class="grid grid-cols-4 gap-4 my-4">
             <div>
-                <label class="text-lg">ID Number</label>
-                <input type="text" wire:model.lazy="apc_id_number" wire:change="searchPatient" class="border p-2 rounded w-full" placeholder="Enter an ID number">
+                <label class="text-lg">ID Number <span class="text-red-500 italic text-xs">* required</span></label>
+                <input type="text" wire:model.lazy="apc_id_number" wire:change="searchPatient" class="border p-2 rounded w-full" placeholder="Enter an ID number" required>
             </div>
             <div>
                 <label class="text-lg">First Name</label>
@@ -107,8 +107,8 @@
         </div>
 
         <div class="mt-6">
-            <label class="block text-lg font-medium">Reason for Visit</label>
-            <select wire:model="reason" class="w-full p-2 border rounded-md mb-6">
+            <label class="block text-lg font-medium">Reason for Visit <span class="text-red-500 italic text-xs">* required</span></label>
+            <select wire:model="reason" class="w-full p-2 border rounded-md mb-6" required>
                 <option value="">Select a reason</option>
                 <option value="Consultation">Consultation</option>
                 <option value="Fever">Fever</option>
@@ -117,8 +117,8 @@
                 <option value="Other">Other</option>
             </select>
 
-            <label class="font-medium text-lg">Description of Symptoms</label>
-            <textarea wire:model="description" class="w-full border p-2 rounded mb-5" placeholder="Description of symptoms..."></textarea>
+            <label class="font-medium text-lg">Description of Symptoms <span class="text-red-500 italic text-xs">* required</span></label>
+            <textarea wire:model="description" class="w-full border p-2 rounded mb-5" placeholder="Description of symptoms..." required></textarea>
         </div>
 
         <!-- Medical History -->
@@ -142,7 +142,7 @@
             @foreach ($past_medical_history as $key => $value)
                 @if ($key === 'Hepatitis')
                     <div class="flex flex-col my-2">
-                        <span class="font-bold text-lg">{{ $key }}</span>
+                        <span class="font-bold text-lg">{{ $key }} <span class="text-red-500 italic text-xs">*</span></span>
                         <div class="flex flex-wrap gap-4 mt-1">
                             @foreach (['A', 'B', 'C', 'D', 'None'] as $type)
                                 <label class="flex items-center space-x-1">
@@ -154,7 +154,7 @@
                     </div>
                 @else
                     <div class="flex flex-col my-2">
-                        <span class="font-medium text-lg">{{ $key }}</span>
+                        <span class="font-medium text-lg">{{ $key }} <span class="text-red-500 italic text-xs">*</span></span>
                         <div class="flex gap-4 mt-1">
                             <label class="flex items-center space-x-1">
                                 <input type="radio" wire:model="past_medical_history.{{ $key }}" value="Yes" class="accent-black">
@@ -178,7 +178,7 @@
         <div class="text-md grid grid-cols-2 md:grid-cols-4 gap-4">
             @foreach ($family_history as $key => $value)
                 <div class="flex flex-col my-2">
-                    <span class="font-medium text-lg">{{ $key }}</span>
+                    <span class="font-medium text-lg">{{ $key }} <span class="text-red-500 italic text-xs">*</span></span>
                     <div class="flex gap-4 mt-1">
                         <label class="flex items-center space-x-1">
                             <input type="radio" wire:model="family_history.{{ $key }}" value="Yes" class="accent-black">
@@ -205,14 +205,14 @@
                 <label class="text-lg font-medium">Smoke</label>
                 <div class="flex items-center gap-4 flex-wrap">
                     <label class="text-md">Sticks/day:</label>
-                    <input type="number" wire:model="personal_history.sticks_per_day" class="border rounded p-1 w-20" min="0">
+                    <input type="number" wire:model="personal_history.sticks_per_day" class="border rounded p-1 w-20" min="0" placeholder="N/A">
                     <label class="text-md">Packs/year:</label>
-                    <input type="number" wire:model="personal_history.packs_per_year" class="border rounded p-1 w-20" min="0">
+                    <input type="number" wire:model="personal_history.packs_per_year" class="border rounded p-1 w-20" min="0" placeholder="N/A">
                 </div>
             </div>
 
             <div class="flex flex-col">
-                <span class="font-medium text-lg">Vape</span>
+                <span class="font-medium text-lg">Vape <span class="text-red-500 italic text-xs">*</span></span>
                 <div class="flex gap-4 mt-1">
                     <label class="flex items-center space-x-1">
                         <input type="radio" wire:model="personal_history.Vape" value="Yes" class="accent-black">
@@ -227,9 +227,8 @@
 
             <!-- Alcohol Consumption -->
             <div class="flex flex-col">
-                <label class="font-medium text-lg">Alcohol Consumption</label>
+                <label class="font-medium text-lg">Alcohol Consumption <span class="text-sm">(bottles per week)</span></label>
                 <select wire:model="personal_history.Alcohol" class="border rounded p-1 w-full">
-                    <option value="">Select bottles per week</option>
                     <option value="N/A">N/A</option>
                     @for ($i = 1; $i <= 20; $i++)
                         <option value="{{ $i }}">{{ $i }} bottle(s) per week</option>
@@ -277,7 +276,9 @@
         <div class="text-md grid grid-cols-2 md:grid-cols-4 gap-4">
             @foreach ($immunizations as $key => $value)
                 <div class="flex flex-col my-2">
-                    <span class="font-medium text-lg">{{ $key }}</span>
+                    <span class="font-medium text-lg">{{ $key }} 
+                        @if (in_array($key, ['Hepa B', 'HPV', 'FLU VAC']))<span class="text-red-500 italic text-xs">*</span>@endif
+                    </span>
 
                     @if (in_array($key, ['COVID-19 1st', 'COVID-19 2nd', 'Booster 1', 'Booster 2']))
                         <input type="text" 
@@ -306,37 +307,43 @@
             <h3 class="text-lg font-semibold">Physical Examination</h3>
         </div>
 
+        <div class="-mt-3 mb-3">
+            <span class="text-red-500 italic text-xs">Everything under physical examination is required.</span>
+        </div>
+
         <div class="flex grid grid-cols-8 gap-4 justify-center mb-6">
             <div>
-                <label class="block text-lg font-medium">Weight <span class="text-xs text-gray-500">(kg)</span></label>
-                <input type="number" wire:model="weight" class="w-full border rounded px-2 py-1" min="0" step="0.01">
+                <label class="block text-lg font-medium">Weight <span class="text-xs text-gray-500">(kg)</span> <span class="text-red-500 italic text-xs">*</span></label>
+                <input type="number" wire:model.lazy="weight" class="w-full border rounded px-2 py-1" min="1" step="0.01">
             </div>
             <div>
-                <label class="block text-lg font-medium">Height <span class="text-xs text-gray-500">(cm)</span></label>
-                <input type="number" wire:model="height" class="w-full border rounded px-2 py-1" min="0" step="0.01">
+                <label class="block text-lg font-medium">Height <span class="text-xs text-gray-500">(cm)</span> <span class="text-red-500 italic text-xs">*</span></label>
+                <input type="number" wire:model.lazy="height" class="w-full border rounded px-2 py-1" min="1" step="0.01">
             </div>
            <div>
-                <label class="block text-lg font-medium">BP <span class="text-xs text-gray-500">(mmHg)</span></label>
-                <input type="text" wire:model="blood_pressure" class="w-full border rounded px-2 py-1" min="0" step="0.01">
+                <label class="block text-lg font-medium">BP <span class="text-xs text-gray-500">(mmHg)</span> <span class="text-red-500 italic text-xs">*</span></label>
+                <input type="text" wire:model="blood_pressure" class="w-full border rounded px-2 py-1">
             </div>
             <div>
-                <label class="block text-lg font-medium">HR <span class="text-xs text-gray-500">(beats per min.)</span></label>
-                <input type="number" wire:model="heart_rate" class="w-full border rounded px-2 py-1" min="0" step="0.01">
+                <label class="block text-lg font-medium">HR <span class="text-xs text-gray-500">(beats per min.)</span> <span class="text-red-500 italic text-xs">*</span></label>
+                <input type="number" wire:model="heart_rate" class="w-full border rounded px-2 py-1" min="1" step="0.01">
             </div>
             <div>
-                <label class="block text-lg font-medium">RR <span class="text-xs text-gray-500">(breaths per min.)</span></label>
-                <input type="number" wire:model="respiratory_rate" class="w-full border rounded px-2 py-1" min="0" step="0.01">
+                <label class="block text-lg font-medium">RR <span class="text-xs text-gray-500">(breaths per min.)</span> <span class="text-red-500 italic text-xs">*</span></label>
+                <input type="number" wire:model="respiratory_rate" class="w-full border rounded px-2 py-1" min="1" step="0.01">
             </div>
             <div>
-                <label class="block text-lg font-medium">Temp <span class="text-xs text-gray-500">(°C)</span></label>
-                <input type="number" wire:model="temperature" class="w-full border rounded px-2 py-1" min="0" step="0.01">
+                <label class="block text-lg font-medium">Temp <span class="text-xs text-gray-500">(°C)</span> <span class="text-red-500 italic text-xs">*</span></label>
+                <input type="number" wire:model="temperature" class="w-full border rounded px-2 py-1" min="20" step="0.01">
             </div>
             <div>
-                <label class="block text-lg font-medium">BMI</label>
-                <input type="number" wire:model="bmi" class="w-full border rounded px-2 py-1" min="0" step="0.01">
+                <label class="block text-lg font-medium">
+                    BMI <span class="text-red-500 italic text-xs">*</span>
+                </label>
+                <input type="number" wire:model="bmi" class="w-full border px-2 py-1" step="0.01" min="0" readonly>
             </div>
             <div>
-                <label class="block text-lg font-medium">O2Sat <span class="text-xs text-gray-500">(%)</span></label>
+                <label class="block text-lg font-medium">O2Sat <span class="text-xs text-gray-500">(%)</span> <span class="text-red-500 italic text-xs">*</span></label>
                 <input type="number" wire:model="o2sat" class="w-full border rounded px-2 py-1" min="0" step="0.01">
             </div>
         </div>
@@ -346,8 +353,8 @@
                 <thead>
                     <tr class="bg-gray-100">
                         <th class="border px-4 py-1">Section</th>
-                        <th class="border px-4 py-1">Normal</th>
-                        <th class="border px-4 py-1">Findings</th>
+                        <th class="border px-4 py-1">Normal <span class="text-red-500 italic text-xs">*</span></th>
+                        <th class="border px-4 py-1">Findings <span class="text-red-500 italic text-xs">*</span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -359,7 +366,8 @@
                             </td>
                             <td class="border px-4 py-1">
                                 <input type="text" wire:model="physical_examinations.{{ $section }}.findings"
-                                    class="w-full border rounded px-2 py-1 h-10">
+                                    class="w-full border rounded px-2 py-1 h-10"
+                                    wire:keydown.enter.prevent>
                             </td>
                         </tr>
                     @endforeach
@@ -433,7 +441,23 @@
             </button>
         </div>
         </form>
+        
+        @if ($showErrorModal)
+            <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                <div class="bg-white rounded-xl shadow-lg p-6 w-96">
+                    <h2 class="text-lg font-semibold text-red-600">Error</h2>
+                    <p class="mt-2 text-gray-700">{!! $errorMessage !!}</p>
 
-        </a>
+                    <div class="mt-4 flex justify-end">
+                        <button 
+                            wire:click="$set('showErrorModal', false)" 
+                            class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 </div>
