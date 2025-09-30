@@ -10,7 +10,10 @@ pipeline {
 
         stage('Install Composer Dependencies') {
             steps {
-                sh 'docker run --rm -v $PWD:/app -w /app composer install'
+                sh '''
+                docker run --rm -v $PWD:/app -w /app composer install
+                git config --global --add safe.directory /app
+                '''
             }
         }
 
