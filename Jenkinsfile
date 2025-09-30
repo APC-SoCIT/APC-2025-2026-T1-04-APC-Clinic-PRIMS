@@ -3,6 +3,12 @@ pipeline {
 
     stages {
 
+        stage('Clean Workspace') {
+            steps {
+                sh 'sudo rm -rf .git || true'
+            }
+        }
+
         stage('Fix Laravel Permissions') {
             steps {
                 sh '''
