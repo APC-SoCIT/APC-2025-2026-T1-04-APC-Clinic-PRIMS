@@ -1,16 +1,7 @@
 pipeline {
     agent any
 
-    environment {
-        WORKDIR = "${env.WORKSPACE}"
-    }
-
     stages {
-        stage('Debug Workspace') {
-            steps {
-                sh 'ls -la'
-            }
-        }
 
         stage('Copy .env') {
             steps {
@@ -18,26 +9,15 @@ pipeline {
             }
         }
 
-        stage('Check composer.json') {
-            steps {
-                sh '''
-                if [ ! -f composer.json ]; then
-                  echo "composer.json not found!"
-                  exit 1
-                fi
-                '''
-            }
-        }
-
         stage('Install Composer Dependencies') {
             steps {
-                sh 'docker run --rm -v ${WORKDIR}:/app -w /app composer:latest install'
+                sh 'docker run --rm -v $PWD:/app -w /app composer install'
             }
         }
 
         stage('Start Sail') {
             steps {
-                sh './vendor/bin/sail up -d || true'
+                sh './vendor/bin/sail up -d'
             }
         }
 
