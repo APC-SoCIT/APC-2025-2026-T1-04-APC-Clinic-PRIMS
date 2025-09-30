@@ -5,7 +5,13 @@ pipeline {
 
         stage('Clean Workspace') {
             steps {
-                sh 'sudo rm -rf .git || true'
+                sh 'rm -rf .git || true'
+            }
+        }
+        
+        stage('Copy .env') {
+            steps {
+                sh 'cp .env.example .env || true'
             }
         }
 
@@ -16,12 +22,6 @@ pipeline {
                 chmod -R 777 bootstrap/cache
                 chmod 666 .env
                 '''
-            }
-        }
-
-        stage('Copy .env') {
-            steps {
-                sh 'cp .env.example .env || true'
             }
         }
 
