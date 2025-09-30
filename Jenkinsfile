@@ -62,18 +62,17 @@ pipeline {
             }
         }
 
-        stage('Fix Node Permissions') {
+        stage('Prepare Node Modules') {
             steps {
                 dir("${env.WORKSPACE}") {
                     sh '''
-                    chmod -R 777 node_modules || true
-                    chmod -R 777 public || true
-                    chmod -R 777 resources || true
+                    mkdir -p node_modules
+                    sudo chown -R 1000:1000 node_modules
+                    chmod -R 777 node_modules
                     '''
                 }
             }
         }
-
 
         stage('NPM Build') {
             steps {
