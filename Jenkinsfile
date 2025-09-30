@@ -1,30 +1,19 @@
 pipeline {
     agent any
 
-    environment {
-        COMPOSER_IMAGE = 'laravelsail/php82-composer:latest'
-    }
-
     stages {
-
-        stage('Setup Environment & Permissions') {
+        stage('Copy .env') {
             steps {
-                sh """
-                if [ ! -f .env ]; then
-                  cp .env.example .env
-                fi
-                chmod -R 777 storage bootstrap/cache .env || true
-                git config --global --add safe.directory \$(pwd)
-                """
+                sh 'cp .env.example .env || true'
             }
         }
 
-        stage('Install Sail') {
+        stage('Install Composer Dependencies') {
             steps {
-                sh """
-                docker run --rm -u \$(id -u):\$(id -g) -v \$(pwd):/var/www/html -w /var/www/html $COMPOSER_IMAGE composer require laravel/sail --dev
-                docker run --rm -u \$(id -u):\$(id -g) -v \$(pwd):/var/www/html -w /var/www/html $COMPOSER_IMAGE php artisan sail:install
-                """
+                sh '''
+                docker run --rm -v $PWD:/app -w /app composer install
+                git config --global --add safe.directory /app
+                '''
             }
         }
 
@@ -34,48 +23,19 @@ pipeline {
             }
         }
 
-        stage('Fix Sail Ownership') {
-            steps {
-                sh './vendor/bin/sail root-shell -c "chown -R sail:sail /var/www/html"'
-            }
-        }
-
-        stage('Install Dependencies') {
-            steps {
-                sh './vendor/bin/sail composer install'
-            }
-        }
-
-        stage('Generate App Key') {
-            steps {
-                sh './vendor/bin/sail artisan key:generate'
-            }
-        }
-
-        stage('Wait for MySQL') {
-    steps {
-        sh '''
-        echo "⏳ Waiting for MySQL to be ready..."
-        until ./vendor/bin/sail mysqladmin ping -h mysql --silent; do
-          sleep 3
-        done
-        echo "✅ MySQL is ready!"
-        '''
-    }
-}
-
-        stage('Migrate & Seed Database') {
-            steps {
-                sh './vendor/bin/sail artisan migrate:fresh --seed'
-            }
-        }
-
-        stage('Build Frontend') {
+        stage('App Setup') {
             steps {
                 sh '''
-                ./vendor/bin/sail npm install
-                ./vendor/bin/sail npm audit fix || true
-                ./vendor/bin/sail npm run build
+                    ./vendor/bin/sail artisan key:generate
+                    ./vendor/bin/sail artisan migrate:fresh --seed
+                '''
+            }
+        }
+
+        stage('NPM Build') {
+            steps {
+                sh '''
+                    ./vendor/bin/sail npm run build
                 '''
             }
         }
