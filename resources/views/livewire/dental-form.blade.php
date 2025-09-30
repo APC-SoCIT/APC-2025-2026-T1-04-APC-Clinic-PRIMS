@@ -286,7 +286,10 @@
             </div>
         @endif
 
-
+        <div class="mt-6 mb-4 bg-gray-300 rounded-lg p-1 flex justify-center">
+            <h3 class="text-md font-semibold">Recommendation</h3>
+        </div>
+        <textarea wire:model="recommendation" class="w-full border p-2 rounded mb-1" placeholder="Recommendation..."></textarea>
 
         <!-- Submit -->
         <div class="mt-6 flex justify-end">

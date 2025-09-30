@@ -72,6 +72,16 @@ Route::middleware([
     })->name('dental-form');
 
 
+    // Dental records table route
+    Route::get('/staff/dental-records-table', function () {
+        $user = Auth::user();
+        if (!$user || !$user->hasRole('clinic staff')) {
+            abort(403); // Forbidden
+        }
+        return view('dental-records-table');
+    })->name('dental-records-table');
+
+
     Route::post('/appointment/notif', [AppointmentController::class, 'store'])
     ->name('appointment.notif')
     ->middleware('auth');
