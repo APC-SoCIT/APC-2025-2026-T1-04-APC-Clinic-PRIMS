@@ -35,8 +35,6 @@ pipeline {
         stage('NPM Build') {
             steps {
                 sh '''
-                    ./vendor/bin/sail npm install
-                    ./vendor/bin/sail npm audit fix || true
                     ./vendor/bin/sail npm run build
                 '''
             }
