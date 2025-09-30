@@ -61,6 +61,17 @@ Route::middleware([
         return view('patient-calendar');
     })->name('appointment');
 
+
+    // Dental form route
+    Route::get('/staff/dental-form', function () {
+        $user = Auth::user();
+        if (!$user || !$user->hasRole('clinic staff')) {
+            abort(403); // Forbidden
+        }
+        return view('dental-form');
+    })->name('dental-form');
+
+
     Route::post('/appointment/notif', [AppointmentController::class, 'store'])
     ->name('appointment.notif')
     ->middleware('auth');
@@ -165,6 +176,8 @@ Route::middleware([
         return view('about-us');
     })->name('about-us');
 
+    Route::get('staff/medical-records/{id}/print', [MedicalRecordController::class, 'printMedicalRecord'])
+        ->name('print-medical-record');
 
     // About us Button Route
     Route::get('/about-us', function () {
