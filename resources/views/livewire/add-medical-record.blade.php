@@ -314,37 +314,37 @@
         <div class="flex grid grid-cols-8 gap-4 justify-center mb-6">
             <div>
                 <label class="block text-lg font-medium">Weight <span class="text-xs text-gray-500">(kg)</span> <span class="text-red-500 italic text-xs">*</span></label>
-                <input type="number" wire:model.lazy="weight" class="w-full border rounded px-2 py-1" min="0" step="0.01" required>
+                <input type="number" wire:model.lazy="weight" class="w-full border rounded px-2 py-1" min="1" step="0.01">
             </div>
             <div>
                 <label class="block text-lg font-medium">Height <span class="text-xs text-gray-500">(cm)</span> <span class="text-red-500 italic text-xs">*</span></label>
-                <input type="number" wire:model.lazy="height" class="w-full border rounded px-2 py-1" min="0" step="0.01" required>
+                <input type="number" wire:model.lazy="height" class="w-full border rounded px-2 py-1" min="1" step="0.01">
             </div>
            <div>
                 <label class="block text-lg font-medium">BP <span class="text-xs text-gray-500">(mmHg)</span> <span class="text-red-500 italic text-xs">*</span></label>
-                <input type="text" wire:model="blood_pressure" class="w-full border rounded px-2 py-1" required>
+                <input type="text" wire:model="blood_pressure" class="w-full border rounded px-2 py-1">
             </div>
             <div>
                 <label class="block text-lg font-medium">HR <span class="text-xs text-gray-500">(beats per min.)</span> <span class="text-red-500 italic text-xs">*</span></label>
-                <input type="number" wire:model="heart_rate" class="w-full border rounded px-2 py-1" min="0" step="0.01" required>
+                <input type="number" wire:model="heart_rate" class="w-full border rounded px-2 py-1" min="1" step="0.01">
             </div>
             <div>
                 <label class="block text-lg font-medium">RR <span class="text-xs text-gray-500">(breaths per min.)</span> <span class="text-red-500 italic text-xs">*</span></label>
-                <input type="number" wire:model="respiratory_rate" class="w-full border rounded px-2 py-1" min="0" step="0.01" required>
+                <input type="number" wire:model="respiratory_rate" class="w-full border rounded px-2 py-1" min="1" step="0.01">
             </div>
             <div>
                 <label class="block text-lg font-medium">Temp <span class="text-xs text-gray-500">(°C)</span> <span class="text-red-500 italic text-xs">*</span></label>
-                <input type="number" wire:model="temperature" class="w-full border rounded px-2 py-1" min="20" step="0.01" required>
+                <input type="number" wire:model="temperature" class="w-full border rounded px-2 py-1" min="20" step="0.01">
             </div>
             <div>
                 <label class="block text-lg font-medium">
                     BMI <span class="text-red-500 italic text-xs">*</span>
                 </label>
-                <input type="number" wire:model="bmi" class="w-full border px-2 py-1" step="0.01" min="0" readonly required>
+                <input type="number" wire:model="bmi" class="w-full border px-2 py-1" step="0.01" min="0" readonly>
             </div>
             <div>
                 <label class="block text-lg font-medium">O2Sat <span class="text-xs text-gray-500">(%)</span> <span class="text-red-500 italic text-xs">*</span></label>
-                <input type="number" wire:model="o2sat" class="w-full border rounded px-2 py-1" min="0" step="0.01" required>
+                <input type="number" wire:model="o2sat" class="w-full border rounded px-2 py-1" min="0" step="0.01">
             </div>
         </div>
 
@@ -448,7 +448,7 @@
             <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                 <div class="bg-white rounded-xl shadow-lg p-6 w-96">
                     <h2 class="text-lg font-semibold text-red-600">Error</h2>
-                    <p class="mt-2 text-gray-700">{{ $errorMessage }}</p>
+                    <p class="mt-2 text-gray-700">{!! $errorMessage !!}</p>
 
                     <div class="mt-4 flex justify-end">
                         <button 
