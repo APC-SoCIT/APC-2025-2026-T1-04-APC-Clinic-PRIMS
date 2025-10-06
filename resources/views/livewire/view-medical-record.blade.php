@@ -321,38 +321,38 @@
             <h3 class="text-lg font-semibold">Physical Examination</h3>
         </div>
 
-         <div class="flex grid grid-cols-8 gap-4 justify-center mb-6">
+         <div class="flex grid grid-cols-8 gap-4 justify-center mb-6 mt-3">
             <div>
                 <label class="block text-lg font-medium">Weight <span class="text-xs text-gray-500">(kg)</span></label>
-                <input class="w-full border rounded px-2 py-1" value="{{ $record->weight }}" readonly>
+                <input class="w-full border rounded px-2 py-1 bg-gray-100" value="{{ $record->weight }}" readonly>
             </div>
             <div>
                 <label class="block text-lg font-medium">Height <span class="text-xs text-gray-500">(cm)</span></label>
-                <input class="w-full border rounded px-2 py-1" value="{{ $record->height }}" readonly>
+                <input class="w-full border rounded px-2 py-1 bg-gray-100" value="{{ $record->height }}" readonly>
             </div>
            <div>
                 <label class="block text-lg font-medium">BP <span class="text-xs text-gray-500">(mmHg)</span></label>
-                <input class="w-full border rounded px-2 py-1" value="{{ $record->blood_pressure }}" readonly>
+                <input class="w-full border rounded px-2 py-1 bg-gray-100" value="{{ $record->blood_pressure }}" readonly>
             </div>
             <div>
                 <label class="block text-lg font-medium">HR <span class="text-xs text-gray-500">(beats per min.)</span></label>
-                <input class="w-full border rounded px-2 py-1" value="{{ $record->heart_rate }}" readonly>
+                <input class="w-full border rounded px-2 py-1 bg-gray-100" value="{{ $record->heart_rate }}" readonly>
             </div>
             <div>
                 <label class="block text-lg font-medium">RR <span class="text-xs text-gray-500">(breaths per min.)</span></label>
-                <input class="w-full border rounded px-2 py-1" value="{{ $record->respiratory_rate }}" readonly>
+                <input class="w-full border rounded px-2 py-1 bg-gray-100" value="{{ $record->respiratory_rate }}" readonly>
             </div>
             <div>
                 <label class="block text-lg font-medium">Temp <span class="text-xs text-gray-500">(°C)</span></label>
-                <input class="w-full border rounded px-2 py-1" value="{{ $record->temperature }}" readonly>
+                <input class="w-full border rounded px-2 py-1 bg-gray-100" value="{{ $record->temperature }}" readonly>
             </div>
             <div>
                 <label class="block text-lg font-medium">BMI</label>
-                <input class="w-full border rounded px-2 py-1" value="{{ $record->bmi }}" readonly>
+                <input class="w-full border rounded px-2 py-1 bg-gray-100" value="{{ $record->bmi }}" readonly>
             </div>
             <div>
                 <label class="block text-lg font-medium">O2Sat <span class="text-xs text-gray-500">(%)</span></label>
-                <input class="w-full border rounded px-2 py-1" value="{{ $record->o2sat }}" readonly>
+                <input class="w-full border rounded px-2 py-1 bg-gray-100" value="{{ $record->o2sat }}" readonly>
             </div>
         </div>
 
@@ -415,7 +415,10 @@
                     <textarea class="w-full border p-2 rounded bg-gray-100" readonly>{{ $diag->diagnosis_notes ?? 'No additional notes' }}</textarea>
                 </div>
             @empty
-                <p class="text-gray-500 italic">No diagnosis data available</p>
+                <div class="my-4">
+                    <label class="text-lg font-medium">Diagnosis</label>
+                    <textarea class="w-full border p-2 rounded bg-gray-100" readonly>'No diagnosis data available'</textarea>
+                </div>
             @endforelse
         </div>
 
