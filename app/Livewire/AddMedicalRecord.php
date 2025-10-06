@@ -191,54 +191,61 @@ class AddMedicalRecord extends Component
             'apc_id_number' => 'required|exists:patients,apc_id_number',
             'reason' => 'required|not_in:""',
             'description' => 'required|string|min:1|max:1000',
-            // 'past_medical_history.*' => 'required|in:Yes,No',
-            // 'family_history.*' => 'required|in:Yes,No',
-            // 'personal_history.Vape' => 'required|in:Yes,No',
-            'description' => 'required|string|min:1|max:1000',
-            // 'past_medical_history.*' => 'required|in:Yes,No',
-            // 'family_history.*' => 'required|in:Yes,No',
-            // 'personal_history.Vape' => 'required|in:Yes,No',
-            'weight' => 'required|numeric|min:1',
-            'height' => 'required|numeric|min:1',
-            'blood_pressure' => 'required|string',
-            'heart_rate' => 'required|numeric|min:1',
-            'respiratory_rate' => 'required|numeric|min:1',
-            'temperature' => 'required|numeric|min:20|max:45',
-            'temperature' => 'required|numeric|min:20|max:45',
-            'bmi' => 'required|numeric|min:1',
-            'o2sat' => 'required|numeric|min:1|max:100'
         ]);
 
         $this->personal_history['sticks_per_day'] = $this->personal_history['sticks_per_day'] ?: 'N/A';
         $this->personal_history['packs_per_year'] = $this->personal_history['packs_per_year'] ?: 'N/A';
 
-        if (empty($this->physical_examinations) || count($this->physical_examinations) === 0) {
-            $this->errorMessage = 'Please fill out the physical examination table completely.';
-            $this->showErrorModal = true;
-            return;
-        }
-
-        foreach ($this->sections as $section) {
-            $row = $this->physical_examinations[$section] ?? ['normal' => null, 'findings' => ''];
-
-            $normal = !empty($row['normal']);
-            $findings = trim($row['findings'] ?? '');
-
-            if (!$normal && $findings === '') {
-                $this->errorMessage = 'Please fill out the physical examination table completely.';
+        // past medical history validation
+        foreach ($this->past_medical_history as $condition => $answer) {
+            if (empty($answer)) {
+                $this->errorMessage = 'Please select an option for all required <strong>Past Medical History</strong> questions.';
                 $this->showErrorModal = true;
                 return;
             }
         }
 
-        // dd($this->physical_examinations);
+        // family history validation
+        foreach ($this->family_history as $condition => $answer) {
+            if (empty($answer)) {
+                $this->errorMessage = 'Please select an option for all required <strong>Family History</strong> questions.';
+                $this->showErrorModal = true; 
+                return;
+            }
+        }
 
-        if (empty($this->physical_examinations) || count($this->physical_examinations) === 0) {
-            $this->errorMessage = 'Please fill out the physical examination table completely.';
+        // personal history validation (Vape only)
+        if (empty($this->personal_history['Vape'])) {
+            $this->errorMessage = 'Please select an option for <strong>Personal History: Vape</strong>.';
             $this->showErrorModal = true;
             return;
         }
 
+        // immunizations validation
+        foreach ($this->immunizations as $vaccine => $answer) {
+            if (in_array($vaccine, ['Hepa B', 'HPV', 'FLU VAC']) && empty($answer)) {
+                $this->errorMessage = 'Please select an option for all required <strong>Immunizations</strong> questions.';
+                $this->showErrorModal = true;
+                return;
+            }
+        }
+
+        // physical examination vitals validation
+        if (
+            empty($this->weight) ||
+            empty($this->height) ||
+            empty($this->blood_pressure) ||
+            empty($this->heart_rate) ||
+            empty($this->respiratory_rate) ||
+            empty($this->temperature) || 
+            empty($this->o2sat)
+        ) {
+            $this->errorMessage = 'Please fill out all <strong>Physical Examination vitals</strong>.';
+            $this->showErrorModal = true;
+            return;
+        }
+
+        // physical examinations table validation
         foreach ($this->sections as $section) {
             $row = $this->physical_examinations[$section] ?? ['normal' => null, 'findings' => ''];
 
@@ -246,7 +253,7 @@ class AddMedicalRecord extends Component
             $findings = trim($row['findings'] ?? '');
 
             if (!$normal && $findings === '') {
-                $this->errorMessage = 'Please fill out the physical examination table completely.';
+                $this->errorMessage = 'Please fill out the <strong>Physical Examination</strong> table completely.';
                 $this->showErrorModal = true;
                 return;
             }
