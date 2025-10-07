@@ -47,14 +47,23 @@
                         <td class="px-6 py-3 text-left text-md">{{ $record->patient->email }}</td>
                         <td class="px-6 py-3 text-left text-md">{{ $record->last_visited }}</td>
                         <td>
-                            <x-button wire:click="toggleExpand('{{ $record->patientId }}')"
-                                    class="px-4 py-1">
-                                View Records
+                            <x-button wire:click="toggleExpand({{ $record->patient_id }})" class="px-4 py-1 flex items-center gap-1">
+                                @if ($expandedPatient === $record->patient_id)
+                                    <span>Collapse</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                    </svg>
+                                @else
+                                    <span>Expand</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                @endif
                             </x-button>
                         </td>
                     </tr>
 
-                    @if ($expandedPatient === $record->patientId)
+                    @if ($expandedPatient === $record->patient_id)
                         <tr>
                             <td colspan="7">
                                 <div class="flex justify-center mt-4 mb-2">
