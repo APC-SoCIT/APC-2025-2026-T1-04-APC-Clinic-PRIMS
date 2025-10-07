@@ -417,7 +417,7 @@
             @empty
                 <div class="my-4">
                     <label class="text-lg font-medium">Diagnosis</label>
-                    <textarea class="w-full border p-2 rounded bg-gray-100" readonly>'No diagnosis data available'</textarea>
+                    <textarea class="w-full border p-2 rounded bg-gray-100" readonly>No diagnosis data available</textarea>
                 </div>
             @endforelse
         </div>
