@@ -125,6 +125,10 @@ class PatientCalendar extends Component
         $this->fullyBookedDates = []; // Store fully booked dates
     
         foreach ($doctorSchedules as $schedule) {
+            if (Carbon::parse($schedule->date)->lt(Carbon::today('Asia/Manila'))) {
+                continue;
+            }
+            
             if (empty($schedule->available_times)) { 
                 $this->fullyBookedDates[] = $schedule->date;
             } else {

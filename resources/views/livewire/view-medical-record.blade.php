@@ -429,10 +429,16 @@
             <textarea class="w-full border p-2 rounded bg-gray-100" readonly>{{ $record->prescription ?? 'No prescription available' }}</textarea>
         </div>
 
-        <div class="mt-6 flex justify-end">
+        <div class="mt-6 flex justify-end space-x-2">
             <a href="{{ route('medical-records') }}">
                 <button class="px-4 py-2 bg-prims-azure-500 text-white rounded-lg hover:bg-prims-azure-100">
                     Back
+                </button>
+            </a>
+
+            <a href="{{ route('print-medical-record', $record->id) }}" target="_blank">
+                <button class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                    Print
                 </button>
             </a>
         </div>
