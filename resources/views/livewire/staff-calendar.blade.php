@@ -150,6 +150,20 @@
         </div>
     @endif
 
+    @if($showApproveErrorModal)
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+            <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm">
+                <h3 class="text-2xl font-bold pb-3 text-center text-red-600">Cannot Approve</h3>
+                <p class="text-center mb-3">
+                    {{ $approveErrorMessage ?? 'There is already an approved appointment at this date and time.' }}
+                </p>
+                <div class="mt-4 flex justify-center">
+                    <x-button wire:click="$set('showApproveErrorModal', false)">OK</x-button>
+                </div>
+            </div>
+        </div>
+    @endif
+
     @if($showDeclineModal)
         <div class="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
             <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm">
