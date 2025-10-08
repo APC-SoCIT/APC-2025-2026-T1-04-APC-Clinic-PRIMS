@@ -56,7 +56,7 @@ class StaffCalendar extends Component
         $this->loadAppointments();
         $this->doctors = ClinicStaff::where('clinic_staff_role', 'doctor')->get();
 
-        $this->autoCancelMinutes = (int) env('APPOINTMENT_AUTOCANCEL_MINUTES', 60);
+        $this->autoCancelMinutes = (int) env('APPOINTMENT_AUTOCANCEL_MINUTES', 10);
         $this->autoCancelDueAppointments();
     }
 
@@ -378,7 +378,7 @@ class StaffCalendar extends Component
 
     public function getAutoCancelMinutes()
     {
-        return (int) ($this->autoCancelMinutes ?? env('APPOINTMENT_AUTOCANCEL_MINUTES', 30));
+        return (int) ($this->autoCancelMinutes ?? env('APPOINTMENT_AUTOCANCEL_MINUTES', 10));
     }
 
     public function autoCancelDueAppointments()
