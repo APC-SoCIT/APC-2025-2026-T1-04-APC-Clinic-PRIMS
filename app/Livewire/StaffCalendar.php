@@ -45,6 +45,8 @@ class StaffCalendar extends Component
     public $isEditingSchedule = false;
     public $stopPolling = false;
     public $autoCancelMinutes;
+    public $showApproveErrorModal = false;
+    public $approveErrorMessage = '';
 
     protected $paginationTheme = 'tailwind';
 
@@ -119,13 +121,33 @@ class StaffCalendar extends Component
     public function confirmApprove($appointmentId)
     {
         $this->selectedAppointmentId = $appointmentId;
+
+        $appointment = Appointment::find($appointmentId);
+
+        $conflict = $this->findApprovalConflict($appointment);
+            if ($conflict) {
+                $this->approveErrorMessage = "There's already an approved appointment for {$appointment->appointment_date}.";
+                $this->showApproveErrorModal = true;
+                $this->showApproveModal = false;
+                return;
+            }
+
         $this->showApproveModal = true;
+        $this->showApproveErrorModal = false;
     }
 
     public function approveAppointment()
     {
         $appointment = Appointment::find($this->selectedAppointmentId);
         if ($appointment) {
+
+            $conflict = $this->findApprovalConflict($appointment);
+            if ($conflict) {
+                $this->approveErrorMessage = "There's already an approved appointment for {$appointment->appointment_date}.";
+                $this->showApproveErrorModal = true;
+                $this->showApproveModal = false;
+                return;
+            }
 
             $appointment->status = 'approved';
             $appointment->status_updated_by = Auth::id();
@@ -157,6 +179,14 @@ class StaffCalendar extends Component
 
             Mail::to($appointment->patient->email)->send(new ApprovedAppointment($appointment));
         }
+    }
+
+    private function findApprovalConflict($appointment)
+    {
+        return Appointment::where('clinic_staff_id', $appointment->clinic_staff_id)
+            ->where('status', 'approved')
+            ->where('appointment_date', $appointment->appointment_date)
+            ->exists();
     }
 
     public function confirmDecline($appointmentId)
