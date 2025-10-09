@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 295b19a (updated ui)
 <?php
 
 namespace App\Livewire;
@@ -161,7 +156,3 @@ class DentalForm extends Component
         return view('livewire.dental-form', compact('upper','lower'));
     }
 }
-<<<<<<< HEAD
-=======
->>>>>>> a16af49 (updated ui)
->>>>>>> 295b19a (updated ui)

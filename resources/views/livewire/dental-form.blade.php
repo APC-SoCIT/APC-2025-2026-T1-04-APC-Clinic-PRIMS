@@ -1,15 +1,5 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 <div class="pb-5">
     <div class="bg-white rounded-md shadow-md mt-5 p-6">
-
-    
-=======
-=======
-<div class="pb-5">
-    <div class="bg-white rounded-md shadow-md mt-5 p-6">
-
-    
 
         <!-- Personal Information -->
         <div class="bg-prims-yellow-1 rounded-lg p-4">
@@ -294,14 +284,10 @@
             </div>
         @endif
 
-<<<<<<< HEAD
         <div class="mt-6 mb-4 bg-gray-300 rounded-lg p-1 flex justify-center">
             <h3 class="text-md font-semibold">Recommendation</h3>
         </div>
         <textarea wire:model="recommendation" class="w-full border p-2 rounded mb-1" placeholder="Recommendation..."></textarea>
-=======
-
->>>>>>> 295b19a (updated ui)
 
         <!-- Submit -->
         <div class="mt-6 flex justify-end">
@@ -311,11 +297,8 @@
             </button>
         </div>
         </form>
+        
+        
+
     </div>
 </div>
-<<<<<<< HEAD
-=======
->>>>>>> 59521b7 (dental form)
-=======
->>>>>>> a16af49 (updated ui)
->>>>>>> 295b19a (updated ui)

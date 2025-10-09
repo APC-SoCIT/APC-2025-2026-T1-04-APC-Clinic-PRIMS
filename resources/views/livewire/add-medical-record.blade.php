@@ -368,8 +368,6 @@
                                 <input type="text" wire:model="physical_examinations.{{ $section }}.findings"
                                     class="w-full border rounded px-2 py-1 h-10"
                                     wire:keydown.enter.prevent>
-                                    class="w-full border rounded px-2 py-1 h-10"
-                                    wire:keydown.enter.prevent>
                             </td>
                         </tr>
                     @endforeach

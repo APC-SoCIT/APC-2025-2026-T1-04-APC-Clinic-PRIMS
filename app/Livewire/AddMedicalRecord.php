@@ -18,8 +18,6 @@ class AddMedicalRecord extends Component
     public $appointment_id;
     public $showErrorModal = false;
     public $errorMessage = '';
-    public $showErrorModal = false;
-    public $errorMessage = '';
     public $fromStaffCalendar = false;
     public $diagnoses = [];
     public $physical_examinations = [];
@@ -186,25 +184,8 @@ class AddMedicalRecord extends Component
                 }
             }
         }
-    public function updated($property)
-    {
-        if (in_array($property, ['weight', 'height'])) {
-            $this->calculateBmi();
-        }
-    }
-
-    private function calculateBmi()
-        {
-            if ($this->weight && $this->height) {
-                $heightInMeters = $this->height / 100;
-                if ($heightInMeters > 0) {
-                    $this->bmi = round($this->weight / ($heightInMeters ** 2), 2);
-                }
-            }
-        }
 
     public function submit()
-    {   
     {   
         $this->validate([
             'apc_id_number' => 'required|exists:patients,apc_id_number',
