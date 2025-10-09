@@ -1,8 +1,6 @@
 <div class="pb-5">
     <div class="bg-white rounded-md shadow-md mt-5 p-6">
 
-    
-
         <!-- Personal Information -->
         <div class="bg-prims-yellow-1 rounded-lg p-4">
             <h2 class="text-lg font-semibold">Personal Information</h2>
@@ -286,7 +284,10 @@
             </div>
         @endif
 
-
+        <div class="mt-6 mb-4 bg-gray-300 rounded-lg p-1 flex justify-center">
+            <h3 class="text-md font-semibold">Recommendation</h3>
+        </div>
+        <textarea wire:model="recommendation" class="w-full border p-2 rounded mb-1" placeholder="Recommendation..."></textarea>
 
         <!-- Submit -->
         <div class="mt-6 flex justify-end">
@@ -296,5 +297,8 @@
             </button>
         </div>
         </form>
+        
+        
+
     </div>
 </div>

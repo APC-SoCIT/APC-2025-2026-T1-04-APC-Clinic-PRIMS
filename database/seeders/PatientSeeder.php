@@ -89,14 +89,12 @@ class PatientSeeder extends Seeder
                 'barangay' => 'Barangay',
                 'city' => 'Taguig',
                 'province' => 'NCR',
-                'zip_code' => '0000',
+                'zip_code' => '1630',
                 'country' => 'Philippines',
-                'emergency_contact_name' => 'Emergency Name',
-                'emergency_contact_number' => '09876543210',
-                'emergency_contact_relationship' => 'Relationship',
-
+>>>>>>> 59521b7 (dental form)
             ],
             [
+                'apc_id_number' => '2022-140289',
                 'apc_id_number' => '2022-140289',
                 'email' => 'barabajante3@student.apc.edu.ph',
                 'first_name' => 'Byron Louis',
