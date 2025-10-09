@@ -32,10 +32,18 @@ pipeline {
             }
         }
 
-        stage('NPM Build') {
+        stage('npm build') {
             steps {
                 sh '''
                     ./vendor/bin/sail npm run build
+                '''
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh '''
+                    ./vendor/bin/sail test
                 '''
             }
         }

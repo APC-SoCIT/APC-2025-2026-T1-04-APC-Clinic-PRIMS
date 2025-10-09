@@ -46,6 +46,10 @@ class Patient extends Model
         'emergency_contact_relationship',
     ];
 
+    protected $casts = [
+    'birthdate' => 'date',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

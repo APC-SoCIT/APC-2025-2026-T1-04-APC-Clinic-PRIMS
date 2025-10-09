@@ -15,6 +15,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.0",
+        "php-webdriver/webdriver": "^1.15",
         "spatie/laravel-permission": "^6.10",
         "symfony/mailgun-mailer": "*"
     },
