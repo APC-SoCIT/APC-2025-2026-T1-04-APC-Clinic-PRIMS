@@ -228,7 +228,15 @@ class StaffCalendar extends Component
             session()->flash('error', 'Appointment not found.');
             return;
         }
-    
+        // Mark the appointment as started and record who updated it
+        $appointment->status = 'started';
+        $appointment->status_updated_by = Auth::id();
+        $appointment->save();
+
+        // Refresh local lists so UI reflects the change (if Livewire continues running)
+        $this->loadAppointments();
+        $this->generateCalendar();
+
         return redirect()->route('addRecordmain', [
             'appointment_id' => $appointment->id,
             'fromStaffCalendar' => true
