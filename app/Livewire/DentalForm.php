@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Patient;
+use App\Models\Appointment;
 use App\Models\RfidCard;
 use Carbon\Carbon;
 
@@ -26,33 +27,34 @@ class DentalForm extends Component
             }
         }
 
-        if ($patient) {
-            $this->apc_id_number = $patient->apc_id_number;
-            $this->first_name = $patient->first_name;
-            $this->middle_initial = $patient->middle_initial;
-            $this->last_name = $patient->last_name;
-            $this->gender = $patient->gender;
-            $this->date_of_birth = $patient->date_of_birth;
-            $this->nationality = $patient->nationality;
-            $this->blood_type = $patient->blood_type;
-            $this->civil_status = $patient->civil_status;
-            $this->religion = $patient->religion;
-            $this->contact_number = $patient->contact_number;
-            $this->email = $patient->email;
-            $this->house_unit_number = $patient->house_unit_number;
-            $this->street = $patient->street;
-            $this->barangay = $patient->barangay;
-            $this->city = $patient->city;
-            $this->province = $patient->province;
-            $this->zip_code = $patient->zip_code;
-            $this->country = $patient->country;
-            $this->emergency_contact_name = $patient->emergency_contact_name;
-            $this->emergency_contact_number = $patient->emergency_contact_number;
-            $this->emergency_contact_relationship = $patient->emergency_contact_relationship;
-            $this->calculateAge();
-        } else {
-            $this->resetPatientFields();
-        }
+        $patient ? $this->fillPatientDetails($patient) : $this->resetPatientFields();
+    }
+
+    private function fillPatientDetails(Patient $patient)
+    {
+        $this->apc_id_number = $patient->apc_id_number;
+        $this->first_name = $patient->first_name;
+        $this->middle_initial = $patient->middle_initial;
+        $this->last_name = $patient->last_name;
+        $this->gender = $patient->gender;
+        $this->date_of_birth = $patient->date_of_birth;
+        $this->age = $patient->date_of_birth ? Carbon::parse($patient->date_of_birth)->age : null;
+        $this->nationality = $patient->nationality;
+        $this->blood_type = $patient->blood_type;
+        $this->civil_status = $patient->civil_status;
+        $this->religion = $patient->religion;
+        $this->contact_number = $patient->contact_number;
+        $this->email = $patient->email;
+        $this->house_unit_number = $patient->house_unit_number;
+        $this->street = $patient->street;
+        $this->barangay = $patient->barangay;
+        $this->city = $patient->city;
+        $this->province = $patient->province;
+        $this->zip_code = $patient->zip_code;
+        $this->country = $patient->country;
+        $this->emergency_contact_name = $patient->emergency_contact_name;
+        $this->emergency_contact_number = $patient->emergency_contact_number;
+        $this->emergency_contact_relationship = $patient->emergency_contact_relationship;
     }
 
     private function resetPatientFields()
@@ -81,12 +83,6 @@ class DentalForm extends Component
         $this->emergency_contact_relationship = null;
     }
 
-    public function calculateAge()
-    {
-        $this->age = $this->date_of_birth ? Carbon::parse($this->date_of_birth)->age : null;
-    }
-
-
     public $teeth = [
         'upper' => [],
         'lower' => []
@@ -99,8 +95,17 @@ class DentalForm extends Component
     public $selectedJaw = null;     // 'upper' or 'lower'
     public $selectedIndex = null;   // position index 0..15, this won't duplicate since each button has its own
 
-    public function mount()
+    public function mount($appointment_id = null)
     {
+        // Try to load appointment if coming from calendar
+        if ($appointment_id) {
+            $appointment = \App\Models\Appointment::with('patient')->find($appointment_id);
+            if ($appointment && $appointment->patient) {
+                $this->fillPatientDetails($appointment->patient);
+            }
+        }
+
+        // initialize teeth arrays (keep your original logic)
         for ($i = 0; $i < 16; $i++) {
             $this->teeth['upper'][$i] = null;
             $this->teeth['lower'][$i] = null;
@@ -136,14 +141,12 @@ class DentalForm extends Component
 
     public function submit()
     {
-        // For testing: don't save to DB yet. Just set a message we can show in the UI.
-        $this->statusMessage = 'Submitted successfully';
-
-        // close modal just in case
-        $this->showModal = false;
-
-        // Optionally, you can still flash if you prefer:
-        // session()->flash('success', 'Dental record submitted successfully!');
+        return redirect()
+            ->route('medical-records')
+            ->with('toast', [
+                'style' => 'success',
+                'message' => 'Record saved successfully!'
+            ]);
     }
 
 
