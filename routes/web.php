@@ -25,7 +25,7 @@ Route::middleware([
         $user = Auth::user();
 
         if ($user->hasRole('clinic staff')) {
-            return redirect()->route('calendar');
+            return redirect()->route('summary-report');
         } elseif ($user->hasRole('patient')) {
             return redirect()->route('patient-homepage');
         }
