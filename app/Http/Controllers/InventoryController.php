@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Inventory;
 use App\Models\Supply;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class InventoryController extends Controller
 {
@@ -58,6 +59,27 @@ class InventoryController extends Controller
     {
         $item = Inventory::findOrFail($id); // Fetch the inventory item
         return view('inventory-details', compact('item'));
+    }
+
+    public function generateReport(Request $request)
+    {
+        $reportType = $request->input('duration', 'monthly'); // 'monthly' or 'annually'
+        $sections = $request->input('sections', []); // checkbox selections (array)
+        $period = now()->format('F Y'); // e.g., "October 2025"
+
+        // Fetch inventory data (you can later filter by date)
+        $records = Inventory::with('supply')->get();
+
+        // Generate the PDF using your Blade view
+        $pdf = Pdf::loadView('pdf.inventory-report', [
+            'records' => $records,
+            'reportType' => ucfirst($reportType),
+            'period' => $period,
+            'sections' => $sections,
+        ]);
+
+        // Return PDF stream (viewable in browser)
+        return $pdf->stream("Inventory_Report_{$reportType}.pdf");
     }
 
 }
