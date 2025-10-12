@@ -23,6 +23,9 @@
                         {{ __('Appointment History') }}
                     </x-nav-link>
                     @elseif (Auth::user()->hasRole('clinic staff'))
+                    <x-nav-link href="{{ route('summary-report') }}" :active="request()->routeIs('summary-report')">
+                        {{ __('Dashboard') }}
+                    </x-nav-link>
                     <x-nav-link href="{{ route('calendar') }}" :active="request()->routeIs('calendar')">
                         {{ __('Calendar') }}
                     </x-nav-link>
@@ -34,9 +37,6 @@
                     </x-nav-link>
                     <x-nav-link href="{{ route('medical-inventory') }}" :active="request()->routeIs('medical-inventory')">
                         {{ __('Medical Inventory') }}
-                    </x-nav-link>
-                    <x-nav-link href="{{ route('summary-report') }}" :active="request()->routeIs('summary-report')">
-                        {{ __('Summary Report') }}
                     </x-nav-link>
                     @endif
                 </div>
