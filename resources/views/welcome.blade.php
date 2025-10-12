@@ -25,28 +25,31 @@
 
                 <!-- Schedule -->
                 <div class="flex flex-col rounded-[2rem] bg-prims-yellow-1 py-8 px-6">
-                    <h3 class="text-3xl font-extrabold mb-3">Schedule</h3>
-                    <h4 class="text-xl font-light mb-3">Walk-ins</h4>
-                    <h5 class="text-xl">Morning</h5>
-                    <h5 class="text-lg font-extralight mb-3">7:00 AM - 11:30 AM</h5>
-                    <h5 class="text-xl">Afternoon</h5>
-                    <h5 class="text-lg font-extralight:">1:00 PM - 5:00 PM</h5>
+                    <h3 class="text-3xl font-extrabold mb-4">Schedule</h3>
+                    <h4 class="text-md font-semibold">Medical Doctor</h4>
+                    <p class="text-sm font-light mb-4">Thursday: 2:00 PM to 5:00 PM</p>
+                    <h4 class="text-md font-semibold">Dentist</h4>
+                    <p class="text-sm font-light mb-4">Tuesday: 2:00 PM to 5:00 PM <br /> Thursday: 2:00 PM to 5:00 PM </p>
+                    <h4 class="text-md font-semibold">Nurse</h4>
+                    <p class="text-sm font-light">Mon – Thurs: 8:00 AM to 6:00 PM <br /> Friday: 8:00 AM to 5:00 PM <br /> Saturday: 8:00 AM to 12:00 NN</p>
                 </div>
 
-                <!-- Checkups -->
-                <div class="flex flex-col rounded-[2rem] rounded-[2rem] bg-prims-yellow-1 py-8 px-6">
-                    <h3 class="text-3xl font-extrabold mb-3">Checkups</h3>
-                    <h4 class="text-xl font-light mb-3">Walk-ins (Wednesdays)</h4>
-                    <h5 class="text-xl">Morning</h5>
-                    <h5 class="text-lg font-extralight mb-3">7:00 AM - 11:30 AM</h5>
-                    <h5 class="text-xl">Afternoon</h5>
-                    <h5 class="text-lg font-extralight:">1:00 PM - 5:00 PM</h5>
+                <!-- Services -->
+                <div class="flex flex-col rounded-[2rem] bg-prims-yellow-1 py-8 px-6">
+                    <h3 class="text-3xl font-extrabold mb-4">Services</h3>
+                    <h4 class="text-md font-semibold">Medical Consultation</h4>
+                    <p class="text-sm font-light mb-4">Health assessments and treatment of minor illnesses.</p>
+                    <h4 class="text-md font-semibold">Dental Services</h4>
+                    <p class="text-sm font-light mb-4">Checkups, cleaning, and basic dental care.</p>
+                    <h4 class="text-md font-semibold">First Aid and Emergency Care</h4>
+                    <p class="text-sm font-light">Immediate response for injuries or urgent health concerns.</p>
                 </div>
 
-                <!-- Patient Portal -->
+                <!-- Questions -->
                 <div class="flex flex-col rounded-[2rem] bg-prims-yellow-1 py-8 px-6">
                     <h3 class="text-3xl font-extrabold mb-3">Questions</h3>
-                    <h5 class="text-md">You can ask our chatbot any questions about health concerns or clinic services! Whether you need medical advice, appointment assistance, or general health information, we're here to help.</h5>
+                    <h5 class="text-md">If you have any questions or concerns, you may message Nurse Ana Mae Torre on Teams or simply 
+                    book an appointment to address your needs immediately.</h5>
                     <div class="flex justify-end">
                     </div>
                 </div>
