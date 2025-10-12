@@ -1,41 +1,120 @@
 <div>  
 
-    <!-- MEDICAL INVENTORY TABLE -->
-    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-lg mt-5">
-        
-    <!-- SORT ADD SEARCH -->
-        <div class="flex justify-end items-center p-3">
+        <!-- SORT ADD SEARCH -->
+        <div x-data="{ openReport: false }" class="flex justify-end items-center p-3">
             <div class="flex items-center space-x-3">
+
+                <!-- INVENTORY REPORT BUTTON -->
+                <button 
+                    @click="openReport = true"
+                    class="bg-white text-prims-azure-500 border-2 border-prims-azure-500 font-semibold px-5 py-2 rounded-lg shadow-sm hover:bg-prims-azure-50 transition-all duration-200">
+                    📊 Inventory Report
+                </button>
+
+                <!-- ADD BUTTON -->
+                <button 
+                    class="bg-prims-azure-500 hover:bg-prims-azure-600 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition-all duration-200"
+                    onclick="window.location.href='{{ route('add-medicine') }}'">
+                    ➕ Add New Supply
+                </button>
+
+                <!-- SORT DROPDOWN -->
                 <div x-data="{ open: false }" class="relative inline-block">
-                    <!-- Main Sort Button -->
-                    <button @click="open = !open" class="bg-white text-gray-700 border border-gray-300 px-4 py-1 rounded">
+                    <button 
+                        @click="open = !open" 
+                        class="bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded hover:bg-gray-50 transition">
                         Sort
                     </button>
 
-                    <!-- Dropdown Options -->
-                    <div x-show="open" @click.away="open = false" class="absolute bg-white shadow-md rounded-lg mt-2 w-48">
-                        <button wire:click="sortBy('supplies.name')" class="text-black block w-full px-4 py-2 text-left hover:bg-gray-200">
+                    <div x-show="open" @click.away="open = false" 
+                        class="absolute bg-white shadow-md rounded-lg mt-2 w-48 z-50">
+                        <button wire:click="sortBy('supplies.name')" 
+                            class="text-black block w-full px-4 py-2 text-left hover:bg-gray-200">
                             Sort Alphabetically
                         </button>
-                        <button wire:click="sortBy('expiration_date')" class="text-black block w-full px-4 py-2 text-left hover:bg-gray-200">
+                        <button wire:click="sortBy('expiration_date')" 
+                            class="text-black block w-full px-4 py-2 text-left hover:bg-gray-200">
                             Sort by Expiration
                         </button>
-                        <button wire:click="sortBy('quantity_received')" class="text-black block w-full px-4 py-2 text-left hover:bg-gray-200">
+                        <button wire:click="sortBy('quantity_received')" 
+                            class="text-black block w-full px-4 py-2 text-left hover:bg-gray-200">
                             Sort by Quantity
                         </button>
                     </div>
                 </div>
 
-                <button class="bg-white text-gray-700 border border-gray-300 px-4 py-1 rounded" 
-                    onclick="window.location.href='{{ route('add-medicine') }}'">
-                    Add
-                </button>
+                <!-- SEARCH FIELD -->
+                <input 
+                    wire:model.live="search" 
+                    type="text" 
+                    placeholder="Search..." 
+                    class="w-64 border border-gray-300 text-gray-700 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-prims-azure-400 transition" />
+            </div>
 
-                <input wire:model.live="search" type="text" placeholder="Search" 
-                    class="w-64 border border-gray-300 text-gray-700 px-4 py-1 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <!-- INVENTORY REPORT MODAL -->
+            <div 
+                x-show="openReport" 
+                class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50"
+                x-transition>
+                <div 
+                    class="bg-white rounded-xl shadow-xl p-6 w-96"
+                    @click.away="openReport = false">
+                    
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">Generate Inventory Report</h2>
+
+                    <!-- Time Frame -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Report Duration</label>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="duration" value="monthly" class="text-prims-azure-500 focus:ring-prims-azure-400">
+                                <span>Monthly</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="duration" value="annually" class="text-prims-azure-500 focus:ring-prims-azure-400">
+                                <span>Annually</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Checkboxes -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Include Sections</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" class="text-prims-azure-500 focus:ring-prims-azure-400">
+                                <span>General Stocks</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" class="text-prims-azure-500 focus:ring-prims-azure-400">
+                                <span>Delivered</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" class="text-prims-azure-500 focus:ring-prims-azure-400">
+                                <span>General Issuance</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button 
+                            @click="openReport = false"
+                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                            Cancel
+                        </button>
+                        <button 
+                            @click="openReport = false"
+                            class="px-4 py-2 bg-prims-azure-500 text-white rounded-lg hover:bg-prims-azure-600 transition">
+                            Generate
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
-        
+
+
+
         <div class="bg-white border-b border-gray-200 flex flex-wrap justify-center">
             <span class="text-prims-azure-500 uppercase font-semibold text-lg"> MEDICAL INVENTORY</span>
             <div class="bg-white rounded-b-md overflow-x-auto w-full p-2">

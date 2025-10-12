@@ -177,6 +177,10 @@ Route::middleware([
         return view('add-medicine');
     })->name('add-medicine');
 
+    // Generate Inventory Route
+    Route::get('/inventory/report', [InventoryController::class, 'generateReport'])
+    ->name('inventory.report');
+
     // About us
     Route::get('/about-us', function () {
         $user = Auth::user();
