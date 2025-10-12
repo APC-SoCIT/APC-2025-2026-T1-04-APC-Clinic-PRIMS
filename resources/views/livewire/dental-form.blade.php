@@ -1,8 +1,6 @@
 <div class="pb-5">
     <div class="bg-white rounded-md shadow-md mt-5 p-6">
 
-    
-
         <!-- Personal Information -->
         <div class="bg-prims-yellow-1 rounded-lg p-4">
             <h2 class="text-lg font-semibold">Personal Information</h2>
@@ -10,8 +8,8 @@
         <form wire:submit.prevent="submit">
         <div class="grid grid-cols-4 gap-4 my-4">
             <div>
-                <label class="text-lg">ID Number</label>
-                <input type="text" wire:model.lazy="apc_id_number" wire:change="searchPatient" class="border p-2 rounded w-full" placeholder="Enter an ID number">
+                <label class="text-lg">ID Number <span class="text-red-500 italic text-xs">* required</span></label>
+                <input type="text" wire:model.lazy="apc_id_number" wire:change="searchPatient" class="border p-2 rounded w-full" placeholder="Enter an ID number" required>
             </div>
             <div>
                 <label class="text-lg">First Name</label>
@@ -116,30 +114,30 @@
             <!-- Oral Hygiene -->
             <label class="font-bold">Oral Hygiene :</label>
             <label>
-                <input type="radio" name="oral_hygiene" value="Good">
+                <input type="radio" name="oral_hygiene" value="Good" required>
                 <span class="">Good</span>
             </label>
             <label>
-                <input type="radio" name="oral_hygiene" value="Fair">
+                <input type="radio" name="oral_hygiene" value="Fair" required>
                 <span class="text-align-center">Fair</span>
             </label>
             <label>
-                <input type="radio" name="oral_hygiene" value="Poor">
+                <input type="radio" name="oral_hygiene" value="Poor" required>
                 <span class="text-align-center">Poor</span>
             </label>
 
             <!-- Gingival Color -->
             <label class="font-bold mt-4">Gingival Color :</label>
             <label class="mt-4">
-                <input type="radio" name="gingival_color" value="Pink">
+                <input type="radio" name="gingival_color" value="Pink" required>
                 <span class="">Pink</span>
             </label>
             <label class="mt-4">
-                <input type="radio" name="gingival_color" value="Pale">
+                <input type="radio" name="gingival_color" value="Pale" required>
                 <span class="text-align-center">Pale</span>
             </label>
             <label class="mt-4">
-                <input type="radio" name="gingival_color" value="Bright Red">
+                <input type="radio" name="gingival_color" value="Bright Red" required>
                 <span class="text-align-center">Bright Red</span>
             </label>
         </div>
@@ -286,7 +284,10 @@
             </div>
         @endif
 
-
+        <div class="mt-6 mb-4 bg-gray-300 rounded-lg p-1 flex justify-center">
+            <h3 class="text-md font-semibold">Recommendation</h3>
+        </div>
+        <textarea wire:model="recommendation" class="w-full border p-2 rounded mb-1" placeholder="Recommendation..."></textarea>
 
         <!-- Submit -->
         <div class="mt-6 flex justify-end">
@@ -296,5 +297,8 @@
             </button>
         </div>
         </form>
+        
+        
+
     </div>
 </div>

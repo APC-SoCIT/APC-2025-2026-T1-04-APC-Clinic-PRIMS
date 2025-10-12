@@ -7,12 +7,12 @@
                     <
                 </a>
             </x-prims-sub-header>
-            <div class="flex-1">
-                <x-prims-sub-header>
-                    New Medical Record
-                </x-prims-sub-header>
+                <div class="flex-1">
+                    <x-prims-sub-header>
+                        New Medical Record
+                    </x-prims-sub-header>
+                </div>
             </div>
-        </div>
             <livewire:add-medical-record 
                 :appointment_id="request()->query('appointment_id')"
                 :fromStaffCalendar="(bool) request()->query('fromStaffCalendar', false)"

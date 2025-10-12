@@ -108,6 +108,23 @@
             </tbody>
         </table>
     </div>
+
+    <!-- Record Type Modal -->
+    <div id="addrecordModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 w-80 relative">
+            <button id="closeRecordModal" class="absolute top-5 right-6 text-gray-700">&times;</button>
+            <h2 class="text-lg font-semibold mb-5">Select Record Type</h2>
+            <div class="flex flex-col gap-3">
+                <button id="medicalRecordBtn" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                    Medical Record
+                </button>
+                <button id="dentalRecordBtn" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                    Dental Record
+                </button>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script>
@@ -118,6 +135,39 @@
         rows.forEach(row => {
             let text = row.textContent.toLowerCase();
             row.style.display = text.includes(filter) ? "" : "none";
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('addrecordModal');
+        const closeBtn = document.getElementById('closeRecordModal');
+        const addRecordBtn = document.getElementById('addRecordButton');
+
+        addRecordBtn.addEventListener('click', function(e) {
+            e.preventDefault(); 
+            modal.classList.remove('hidden'); 
+        });
+
+        closeBtn.addEventListener('click', function() {
+            modal.classList.add('hidden'); 
+        });
+
+        window.addEventListener('click', function(e) {
+            if (e.target === modal) modal.classList.add('hidden');
+        });
+
+        // Detect which button is clicked
+        const medicalBtn = document.getElementById('medicalRecordBtn');
+        const dentalBtn = document.getElementById('dentalRecordBtn');
+
+        medicalBtn.addEventListener('click', function() {
+            window.location.href = '/staff/add-record';
+        });
+
+        dentalBtn.addEventListener('click', function() {
+            window.location.href = '/staff/dental-form';
         });
     });
 </script>

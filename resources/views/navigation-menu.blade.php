@@ -16,12 +16,15 @@
                     <x-nav-link href="{{ route('patient-homepage') }}" :active="request()->routeIs('patient-homepage')">
                         {{ __('Home') }}
                     </x-nav-link>
+
                     <x-nav-link href="{{ route('appointment') }}" :active="request()->routeIs('appointment')">
                         {{ __('Appointment') }}
                     </x-nav-link>
+
                     <x-nav-link href="{{ route('appointment-history') }}" :active="request()->routeIs('appointment-history')">
                         {{ __('Appointment History') }}
                     </x-nav-link>
+
                     @elseif (Auth::user()->hasRole('clinic staff'))
                     <x-nav-link href="{{ route('summary-report') }}" :active="request()->routeIs('summary-report')">
                         {{ __('Dashboard') }}
@@ -29,12 +32,11 @@
                     <x-nav-link href="{{ route('calendar') }}" :active="request()->routeIs('calendar')">
                         {{ __('Calendar') }}
                     </x-nav-link>
+
                     <x-nav-link href="{{ route('medical-records') }}" :active="request()->routeIs('medical-records')">
                         {{ __('Medical Records') }}
                     </x-nav-link>
-                    <x-nav-link href="{{ route('dental-form') }}" :active="request()->routeIs('dental-form')">
-                        {{ __('Dental Medical Records') }}
-                    </x-nav-link>
+
                     <x-nav-link href="{{ route('medical-inventory') }}" :active="request()->routeIs('medical-inventory')">
                         {{ __('Medical Inventory') }}
                     </x-nav-link>

@@ -30,14 +30,14 @@ class PatientSeeder extends Seeder
 
 
                 'email' => 'smcatingub@student.apc.edu.ph',
-                'house_unit_number' => '60',
-                'street' => 'J. Fernandez',
+                'house_unit_number' => '000',
+                'street' => 'J. Street',
 
-                'barangay' => 'Pinagbuhatan',
+                'barangay' => 'Barangay',
 
                 'city' => 'Pasig',
                 'province' => 'NCR',
-                'zip_code' => '1602',
+                'zip_code' => '0000',
                 'country' => 'Philippines',
                 'emergency_contact_name' => 'Emergency Name',
                 'emergency_contact_number' => '09876543210',
@@ -54,21 +54,21 @@ class PatientSeeder extends Seeder
                 'blood_type' => 'O',
                 'civil_status' => 'Single',
                 'religion' => 'Born Again Christian',
-                'contact_number' => '09326091141',
+                'contact_number' => '09112345678',
 
                 'email' => 'eddaduya@student.apc.edu.ph',
-                'house_unit_number' => 'number',
+                'house_unit_number' => '000',
                 'street' => 'street',
 
-                'barangay' => 'Merville',
+                'barangay' => 'Barangay',
 
                 'city' => 'Paranaque',
                 'province' => 'NCR',
-                'zip_code' => '1709',
+                'zip_code' => '1111',
                 'country' => 'Philippines',
                 'emergency_contact_name' => 'Emergency Name',
                 'emergency_contact_number' => '09876543210',
-                'emergency_contact_relationship' => 'Relationship',
+                'emergency_contact_relationship' => 'Secret',
             ],
             [
                 'apc_id_number' => '2022-140267',
@@ -89,14 +89,12 @@ class PatientSeeder extends Seeder
                 'barangay' => 'Barangay',
                 'city' => 'Taguig',
                 'province' => 'NCR',
-                'zip_code' => '0000',
+                'zip_code' => '2222',
                 'country' => 'Philippines',
-                'emergency_contact_name' => 'Emergency Name',
-                'emergency_contact_number' => '09876543210',
-                'emergency_contact_relationship' => 'Relationship',
 
             ],
             [
+                'apc_id_number' => '2022-140289',
                 'apc_id_number' => '2022-140289',
                 'email' => 'barabajante3@student.apc.edu.ph',
                 'first_name' => 'Byron Louis',
