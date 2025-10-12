@@ -77,7 +77,7 @@
         </div>
             <!-- Incoming Appointments Table -->
             <div class="bg-white rounded-lg shadow-md p-4 col-span-1 md:col-span-2 mb-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3 text-center">Incoming Appointments</h3>
+                <h3 class="text-lg font-semibold text-gray-800 mb-3 text-center">Approved Upcoming Appointments</h3>
 
                 <div class="overflow-y-auto max-h-80 border rounded">
                     <table class="min-w-full text-sm text-left">
