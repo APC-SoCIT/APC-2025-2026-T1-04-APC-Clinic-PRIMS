@@ -40,11 +40,6 @@
                     <x-nav-link href="{{ route('medical-inventory') }}" :active="request()->routeIs('medical-inventory')">
                         {{ __('Medical Inventory') }}
                     </x-nav-link>
-
-                    <x-nav-link href="{{ route('summary-report') }}" :active="request()->routeIs('summary-report')">
-                        {{ __('Summary Report') }}
-                    </x-nav-link>
-                    
                     @endif
                 </div>
             </div>
