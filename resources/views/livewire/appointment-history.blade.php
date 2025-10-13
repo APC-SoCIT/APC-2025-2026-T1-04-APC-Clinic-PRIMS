@@ -187,11 +187,11 @@
                                                                         <p class="text-gray-500 italic">No diagnoses available</p>
                                                                     @endforelse
                                                                 <p class="mt-3"><strong>Prescription:</strong></p>
-                                                                @if ($appointment->medicalRecord->prescription)
-                                                                    <p>- {{ $appointment->medicalRecord->prescription }}</p>
-                                                                @else
-                                                                    <p class="text-gray-500 italic">No prescription notes available</p>
-                                                                @endif
+                                                                    @if ($appointment->medicalRecord->prescription)
+                                                                        <p>- {{ $appointment->medicalRecord->prescription }}</p>
+                                                                    @else
+                                                                        <p class="text-gray-500 italic">No prescription notes available</p>
+                                                                    @endif
                                                                 <hr class="my-3">
                                                                 <p><strong>For a comprehensive view of the medical findings, please request a copy of your medical record.</strong></p>
                                                             </div>
