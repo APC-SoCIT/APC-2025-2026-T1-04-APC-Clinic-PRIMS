@@ -411,11 +411,6 @@ class StaffCalendar extends Component
         $this->resetPage();
     }
 
-    public function getAutoCancelMinutes()
-    {
-        return (int) ($this->autoCancelMinutes ?? env('APPOINTMENT_AUTOCANCEL_MINUTES', 10));
-    }
-
     public function render()
     {
         return view('livewire.staff-calendar', [
