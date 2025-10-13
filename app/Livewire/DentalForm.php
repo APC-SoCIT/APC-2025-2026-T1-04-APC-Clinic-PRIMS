@@ -6,11 +6,18 @@ use Livewire\Component;
 use App\Models\Patient;
 use App\Models\Appointment;
 use App\Models\RfidCard;
+use App\Models\DentalRecord;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class DentalForm extends Component
 {
     public $apc_id_number, $first_name, $middle_initial, $last_name, $gender, $age, $date_of_birth, $nationality, $blood_type, $civil_status, $religion, $contact_number, $email, $house_unit_number, $street, $barangay, $city, $province, $zip_code, $country, $emergency_contact_name, $emergency_contact_number, $emergency_contact_relationship;
+
+    public $oral_hygiene = null;
+    public $gingival_color = null;
+    public $prophylaxis = false;
+    public $recommendation = null;
 
     public function searchPatient()
     {
@@ -141,12 +148,65 @@ class DentalForm extends Component
 
     public function submit()
     {
+    // Basic validation: require ID + (adjust rules as needed)
+    $this->validate([
+        'apc_id_number'  => 'required|string',
+        'oral_hygiene'   => 'nullable|string',
+        'gingival_color' => 'nullable|string',
+        'prophylaxis'    => 'boolean',
+        'recommendation' => 'nullable|string',
+    ]);
+
+    // find patient id if APC id exists
+    $patient = null;
+    if (!empty($this->apc_id_number)) {
+        $patient = Patient::where('apc_id_number', $this->apc_id_number)->first();
+    }
+
+    DB::beginTransaction();
+    try {
+        $record = DentalRecord::create([
+            'patient_id'      => $patient ? $patient->id : null,
+            'patient_apc_id'  => $this->apc_id_number,
+            'oral_hygiene'    => $this->oral_hygiene,
+            'gingival_color'  => $this->gingival_color,
+            'prophylaxis'     => (bool) $this->prophylaxis,
+            'teeth'           => $this->teeth,        // JSON cast in model
+            'recommendation'  => $this->recommendation,
+        ]);
+
+        DB::commit();
+
+        // reset selections but keep patient visible
+        $this->resetAfterSave();
+
+        // redirect with toast (keeps your current behaviour)
         return redirect()
             ->route('medical-records')
             ->with('toast', [
                 'style' => 'success',
                 'message' => 'Record saved successfully!'
             ]);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            \Log::error('DentalForm save failed: '.$e->getMessage());
+            $this->statusMessage = 'Save failed: '.$e->getMessage();
+        }
+    }
+
+    protected function resetAfterSave()
+    {
+        $this->oral_hygiene = null;
+        $this->gingival_color = null;
+        $this->prophylaxis = false;
+        $this->recommendation = null;
+        $this->showModal = false;
+
+        // clear teeth selections
+        for ($i = 0; $i < 16; $i++) {
+            $this->teeth['upper'][$i] = null;
+            $this->teeth['lower'][$i] = null;
+        }
     }
 
 
