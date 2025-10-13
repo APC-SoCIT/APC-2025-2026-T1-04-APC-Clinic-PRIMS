@@ -71,15 +71,16 @@
                         $isPastDate = \Carbon\Carbon::parse($day['date'])->lt(\Carbon\Carbon::today('Asia/Manila'));
                         $isSunday = \Carbon\Carbon::parse($day['date'])->isSunday();
                         $isAvailable = $day['isAvailable'] ?? false;
-                        $isFullyBooked = $day['isFullyBooked'] ?? false;
+                        $isSelected = ($selectedDate === $day['date']);
                     @endphp
 
-                    <div class="p-2 rounded-lg 
-                        {{ $day['isToday'] ? 'text-blue-600' : '' }} 
-                        {{ $selectedDate === $day['date'] ? 'border-2 border-prims-yellow-5 bg-prims-azure-100 text-white' : '' }} 
-                        {{ ($isPastDate || $isSunday || !$isAvailable) ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer hover:bg-prims-yellow-1' }}
-                        {{ $isFullyBooked && !$isPastDate ? 'bg-[#ff8a8a] text-black' : ($isAvailable && !$isPastDate ? 'bg-[#8aff8a] text-black' : '') }} "
-                        @if($isAvailable) wire:click="selectDate({{ $day['day'] }})" @endif>
+                    <div
+                        class="p-2 rounded-lg
+                            {{ $day['isToday'] ? 'text-blue-600' : '' }}
+                            {{ $isSelected ? 'border-2 border-prims-yellow-5 bg-prims-azure-100 text-white' : '' }}
+                            {{ ($isPastDate || $isSunday || !$isAvailable) ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer hover:bg-prims-yellow-1' }}
+                            {{ (!$isSelected && $isAvailable && !$isPastDate) ? 'bg-[#8aff8a] text-black' : '' }}"
+                        @if(!$isPastDate && !$isSunday && $isAvailable) wire:click="selectDate({{ $day['day'] }})" @endif>
                         {{ $day['day'] }}
                     </div>
                 @else

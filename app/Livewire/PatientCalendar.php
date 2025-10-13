@@ -124,15 +124,49 @@ class PatientCalendar extends Component
         $this->availableDates = [];
         $this->fullyBookedDates = []; // Store fully booked dates
     
+        $now = Carbon::now('Asia/Manila');
+    
         foreach ($doctorSchedules as $schedule) {
+            // skip past schedule dates entirely
             if (Carbon::parse($schedule->date)->lt(Carbon::today('Asia/Manila'))) {
                 continue;
             }
-            
-            if (empty($schedule->available_times)) { 
+    
+            // decode available times
+            $availableTimes = is_array($schedule->available_times)
+                ? $schedule->available_times
+                : json_decode($schedule->available_times, true) ?? [];
+    
+            // if schedule has no configured times, mark fully booked
+            if (empty($availableTimes)) {
                 $this->fullyBookedDates[] = $schedule->date;
-            } else {
+                continue;
+            }
+    
+            // get already approved booked times for that doctor/date (format to h:i A)
+            $bookedTimes = Appointment::where('clinic_staff_id', $this->selectedDoctor->id)
+                ->whereDate('appointment_date', $schedule->date)
+                ->where('status', 'approved')
+                ->pluck('appointment_date')
+                ->map(function ($dateTime) {
+                    return Carbon::parse($dateTime)->format('h:i A');
+                })
+                ->toArray();
+    
+            // determine if there's at least one slot that's not booked and not already past
+            $hasAvailableSlot = false;
+            foreach ($availableTimes as $time) {
+                $slotDateTime = Carbon::createFromFormat('Y-m-d h:i A', $schedule->date . ' ' . $time, 'Asia/Manila');
+                if ($slotDateTime->gt($now) && !in_array($time, $bookedTimes)) {
+                    $hasAvailableSlot = true;
+                    break;
+                }
+            }
+    
+            if ($hasAvailableSlot) {
                 $this->availableDates[] = $schedule->date;
+            } else {
+                $this->fullyBookedDates[] = $schedule->date;
             }
         }
     
@@ -143,7 +177,7 @@ class PatientCalendar extends Component
                 $day['isFullyBooked'] = in_array($day['date'], $this->fullyBookedDates);
             }
         }
-    }    
+    }
 
     public function selectDate($date)
     {
@@ -191,25 +225,44 @@ class PatientCalendar extends Component
                 return Carbon::parse($dateTime)->format('h:i A');
             })
             ->toArray();
+
+        $now = Carbon::now('Asia/Manila');
     
         // Store available times properly (excluding booked slots)
         $this->availableTimes = [];
         foreach ($this->allTimes as $time) {
+            $slotDateTime = Carbon::createFromFormat('Y-m-d h:i A', $this->selectedDate . ' ' . $time, 'Asia/Manila');
+
+            $isPast = $slotDateTime->lte($now);
+            $isAvailable = in_array($time, $availableTimes) && !in_array($time, $bookedTimes) && !$isPast;
+
             $this->availableTimes[] = [
                 'time' => $time,
-                'isAvailable' => in_array($time, $availableTimes) && !in_array($time, $bookedTimes) // Exclude booked slots
+                'isAvailable' => $isAvailable,
+                'isPast' => $isPast,
             ];
         }
     }
 
     public function selectTime($time)
     {
+        // prevent selecting a past time
+        if (!$this->selectedDate) {
+            return;
+        }
+
+        // silently ignore past times
+        $slotDateTime = Carbon::createFromFormat('Y-m-d h:i A', $this->selectedDate . ' ' . $time, 'Asia/Manila');
+        if ($slotDateTime->lte(Carbon::now('Asia/Manila'))) {
+            return;
+        }
+
         // If the same time is clicked again, unselect it
         if ($this->selectedTime === $time) {
             $this->selectedTime = null;
             return;
         }
-    
+
         $this->selectedTime = $time;
     }
     

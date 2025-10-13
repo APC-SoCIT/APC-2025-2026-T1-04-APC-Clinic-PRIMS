@@ -15,6 +15,9 @@ class AppointmentHistory extends Component
     public $patient;
     public $appointmentHistory;
     public $hasUpcomingAppointment;
+    public $showingWalkIns = false;
+    public $walkInRecords = [];
+    public $expandedWalkIn = null;
     public $showCancelModal = false;
     public $cancelAppointmentId;
     public $cancelReason;
@@ -45,6 +48,36 @@ class AppointmentHistory extends Component
             ->where('appointment_date', '>=', now())
             ->whereIn('status', ['approved'])
             ->first();
+
+        // Also prepare walk-in records (medical records not linked to an appointment)
+        $this->loadWalkIns();
+    }
+
+    public function loadWalkIns()
+    {
+        // Medical records that belong to this patient and are not linked to an appointment
+        $this->walkInRecords = \App\Models\MedicalRecord::with(['physicalExaminations', 'diagnoses', 'appointment.doctor'])
+            ->where('patient_id', $this->patient->id)
+            ->whereNull('appointment_id')
+            ->orderBy('last_visited', 'desc')
+            ->get();
+    }
+
+    public function showWalkIns()
+    {
+        $this->showingWalkIns = true;
+        $this->loadWalkIns();
+    }
+
+    public function showAppointments()
+    {
+        $this->showingWalkIns = false;
+        $this->expandedWalkIn = null;
+    }
+
+    public function toggleExpandWalkIn($recordId)
+    {
+        $this->expandedWalkIn = $this->expandedWalkIn === $recordId ? null : $recordId;
     }
 
     public function confirmCancel($appointmentId)
