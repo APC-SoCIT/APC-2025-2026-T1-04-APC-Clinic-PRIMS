@@ -33,6 +33,7 @@ class MedicalRecord extends Model
         'o2sat',
         'prescription',
         'appointment_id',
+        'doctor_id',
         'archived_at',
     ];
 
@@ -46,6 +47,11 @@ class MedicalRecord extends Model
     public function patient()
     {
         return $this->belongsTo(Patient::class, 'patient_id');
+    }
+
+    public function doctor()
+    {
+        return $this->belongsTo(ClinicStaff::class, 'doctor_id');
     }
 
     public function appointment()

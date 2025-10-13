@@ -48,6 +48,7 @@ return new class extends Migration {
             // appointment reference
             $table->foreignId('appointment_id')->nullable()->constrained('appointments')->onDelete('set null');
             
+            $table->foreignId('doctor_id')->nullable()->constrained('clinic_staff')->onDelete('set null');
             $table->timestamps();
             $table->timestamp('archived_at')->nullable();
         });
