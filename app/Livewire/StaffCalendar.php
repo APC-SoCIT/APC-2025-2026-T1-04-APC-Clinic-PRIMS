@@ -429,7 +429,7 @@ class StaffCalendar extends Component
 
                 // Notify patient
                 if (!empty($appointment->patient->email)) {
-                    Mail::to($appointment->patient->email)->send(new CancelledAppointment($appointment));
+                    Mail::to($appointment->patient->email)->send(new AutoCancelledAppointment($appointment));
                 }
 
                 Log::info("Auto-cancelled appointment ID {$appointment->id} scheduled at {$appointment->appointment_date}");
