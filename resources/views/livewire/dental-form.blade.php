@@ -9,7 +9,7 @@
         <div class="grid grid-cols-4 gap-4 my-4">
             <div>
                 <label class="text-lg">ID Number <span class="text-red-500 italic text-xs">* required</span></label>
-                <input type="text" wire:model.lazy="apc_id_number" wire:change="searchPatient" class="border p-2 rounded w-full" placeholder="Enter an ID number" required>
+                <input type="text" wire:model.lazy="apc_id_number" wire:change="searchPatient" wire:keydown.enter.prevent="searchPatient" class="border p-2 rounded w-full" placeholder="Enter an ID number" required>
             </div>
             <div>
                 <label class="text-lg">First Name</label>
@@ -114,30 +114,30 @@
             <!-- Oral Hygiene -->
             <label class="font-bold">Oral Hygiene :</label>
             <label>
-                <input type="radio" name="oral_hygiene" value="Good" required>
+                <input type="radio" wire:model="oral_hygiene" value="Good" required>
                 <span class="">Good</span>
             </label>
             <label>
-                <input type="radio" name="oral_hygiene" value="Fair" required>
+                <input type="radio" wire:model="oral_hygiene" value="Fair" required>
                 <span class="text-align-center">Fair</span>
             </label>
             <label>
-                <input type="radio" name="oral_hygiene" value="Poor" required>
+                <input type="radio" wire:model="oral_hygiene" value="Poor" required>
                 <span class="text-align-center">Poor</span>
             </label>
 
             <!-- Gingival Color -->
             <label class="font-bold mt-4">Gingival Color :</label>
             <label class="mt-4">
-                <input type="radio" name="gingival_color" value="Pink" required>
+                <input type="radio" wire:model="gingival_color" value="Pink" required>
                 <span class="">Pink</span>
             </label>
             <label class="mt-4">
-                <input type="radio" name="gingival_color" value="Pale" required>
+                <input type="radio" wire:model="gingival_color" value="Pale" required>
                 <span class="text-align-center">Pale</span>
             </label>
             <label class="mt-4">
-                <input type="radio" name="gingival_color" value="Bright Red" required>
+                <input type="radio" wire:model="gingival_color" value="Bright Red" required>
                 <span class="text-align-center">Bright Red</span>
             </label>
         </div>
@@ -148,7 +148,7 @@
         <div class="my-6 justify-items-center">
             <div>
                 <label>
-                    <input type="checkbox" name="gingival_color" value="Oral Prophylaxis">
+                    <input type="checkbox" wire:model="prophylaxis" value="Oral Prophylaxis">
                     <span class="text-align-center font-bold ml-1">Oral Prophylaxis</span>
                 </label>
             </div>
@@ -264,6 +264,7 @@
                             @endphp
 
                             <button
+                                type="button"
                                 wire:click="selectToothCondition('{{ $status }}')"
                                 class="py-2 px-3 rounded shadow-sm transition transform duration-150
                                     {{ $isActive ? 'scale-105 ring-2 ring-offset-1' : '' }}
@@ -275,8 +276,10 @@
                     </div>
 
                     <div class="flex justify-end mt-5">
-                        <button wire:click="closeModal"
-                                class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 transition-colors duration-200">
+                        <button
+                            type="button"
+                            wire:click="closeModal"
+                            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 transition-colors duration-200">
                             Close
                         </button>
                     </div>
@@ -297,8 +300,6 @@
             </button>
         </div>
         </form>
-        
-        
 
     </div>
 </div>
