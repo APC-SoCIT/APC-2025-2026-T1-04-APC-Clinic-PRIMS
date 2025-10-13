@@ -412,13 +412,6 @@ class StaffCalendar extends Component
         $this->resetPage();
     }
 
-<<<<<<< HEAD
-=======
-    public function getAutoCancelMinutes()
-    {
-        return (int) ($this->autoCancelMinutes ?? env('APPOINTMENT_AUTOCANCEL_MINUTES', 10));
-    }
-
 >>>>>>> 722766f (Fixed the issue auto cancel only works at calendar page)
     public function render()
     {
