@@ -12,7 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('appointments:automatic-cancellation-of-appointments')->daily();
+        $schedule->command('appointments:auto-cancel')->everyMinute();
         $schedule->command('medical:archive-old')->daily();
     }
 
@@ -22,5 +22,7 @@ class Kernel extends ConsoleKernel
     protected function commands(): void
     {
         $this->load(__DIR__.'/Commands');
+        require base_path('routes/console.php');
     }
+
 }
