@@ -262,6 +262,7 @@ class AddMedicalRecord extends Component
         // dd($this->physical_examinations);
 
         $patient = Patient::where('apc_id_number', $this->apc_id_number)->firstOrFail();
+        $clinicStaff = \App\Models\ClinicStaff::where('user_id', auth()->id())->first();
 
         $medicalRecord = MedicalRecord::create([
             'patient_id' => $patient->id,
@@ -287,6 +288,7 @@ class AddMedicalRecord extends Component
             'o2sat' => $this->o2sat,
             'last_visited' => now(),
             'prescription' => $this->prescription,
+            'doctor_id' => $clinicStaff?->id,
         ]);
 
         foreach ($this->diagnoses as $diag) {
