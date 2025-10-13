@@ -129,8 +129,16 @@
                                             <div class="flex flex-row gap-4">
                                                 <div class="w-2/5 flex flex-col gap-3">
                                                     <div class="p-3 border border-gray-200 rounded-lg bg-white shadow-md transition-all duration-150 transform">
-                                                        <p class="text-lg font-semibold mb-2">Reason for Visit:</p>    
-                                                        <p class="text-sm text-gray-700">{{ $appointment->reason_for_visit }}</p>
+                                                        <p class="text-lg font-semibold mb-2">Medical Concerns:</p>    
+                                                        @if($appointment->medicalRecord)
+                                                            <div class="mt-2 text-sm text-gray-700 -indent-5 pl-5 break-all">
+                                                                <p><strong>Reason for Visit (Category):</strong> {{ $appointment->medicalRecord->reason }}</p>
+                                                                <p><strong>Description of Symptoms:</strong> {{ $appointment->medicalRecord->description }}</p>
+                                                                <p><strong>Allergies:</strong> {{ $appointment->medicalRecord->allergies ?? 'N/A'}}</p>
+                                                            </div>
+                                                        @else
+                                                            <p class="text-sm text-gray-500 mt-2"><em>No medical concerns available yet.</em></p>
+                                                        @endif
                                                     </div>
                                                     <div class="p-3 border border-gray-200 rounded-lg bg-white shadow-md transition-all duration-150 transform">
                                                         <p class="text-lg font-semibold mb-2">Feedback:</p>
@@ -147,43 +155,29 @@
                                                             </div>
                                                             @endif
                                                         @else
-                                                        <p class="text-sm text-gray-700">Feedback is only available for completed appointments.</p>
+                                                        <p class="text-sm text-gray-500 mt-2"><em>Feedback is only available for completed appointments.</em></p>
                                                         @endif
                                                     </div>
                                                 </div>
                                                 <div class="w-3/5">
                                                     <div class="p-3 border border-gray-200 rounded-lg bg-white shadow-md transition-all duration-150 transform">
-                                                        <p class="text-lg font-semibold mb-2">Medical Concerns:</p>    
+                                                        <p class="text-lg font-semibold mb-2">Medical Findings:</p>    
                                                         @if($appointment->medicalRecord)
                                                             <div class="mt-2 text-sm text-gray-700 -indent-5 pl-5 break-all">
-                                                                <p><strong>Reason for Visit (Category):</strong> {{ $appointment->medicalRecord->reason }}</p>
-                                                                <p><strong>Description of Symptoms:</strong> {{ $appointment->medicalRecord->description }}</p>
-                                                                <p><strong>Allergies:</strong> {{ $appointment->medicalRecord->allergies }}</p>
-                                                            </div>
-                                                        @else
-                                                            <p class="text-sm text-gray-500 mt-2"><em>No medical concerns available yet.</em></p>
-                                                        @endif
-                                                        <p class="text-lg font-semibold my-2">Medical Findings:</p>    
-                                                        @if($appointment->medicalRecord)
-                                                            <div class="mt-2 text-sm text-gray-700 -indent-5 pl-5 break-all">
-                                                                <p><strong>Physical Examination:</strong> 
-                                                                    @forelse ($appointment->medicalRecord->physicalExaminations as $exam)
-                                                                        <p>- {{ $exam->section }}: 
-                                                                            {{ $exam->normal ? 'Normal' : 'Not Normal' }} 
-                                                                            @if($exam->findings)
-                                                                                (Findings: {{ $exam->findings }})
-                                                                            @endif
-                                                                        </p>
-                                                                    @empty
-                                                                        <p class="text-gray-500 italic">No physical exam records</p>
-                                                                    @endforelse</p>
-                                                                <p><strong>Diagnosis:</strong></p>
+                                                                <p ><strong>Diagnosis:</strong></p>
                                                                     @forelse ($appointment->medicalRecord->diagnoses as $diagnosis)
                                                                         <p>- {{ $diagnosis->diagnosis }} @if($diagnosis->diagnosis_notes) (Notes: {{ $diagnosis->diagnosis_notes }}) @endif</p>
                                                                     @empty
                                                                         <p class="text-gray-500 italic">No diagnoses available</p>
                                                                     @endforelse
-                                                                <p><strong>Prescription:</strong> {{ $appointment->medicalRecord->prescription ?? 'No prescription available' }}</p>
+                                                                <p class="mt-3"><strong>Prescription:</strong></p>
+                                                                @if ($appointment->medicalRecord->prescription)
+                                                                    <p>- {{ $appointment->medicalRecord->prescription }}</p>
+                                                                @else
+                                                                    <p class="text-gray-500 italic">No prescription notes available</p>
+                                                                @endif
+                                                                <hr class="my-3">
+                                                                <p><strong>For a comprehensive view of the medical findings, please request a copy of your medical record.</strong></p>
                                                             </div>
                                                         @else
                                                             <p class="text-sm text-gray-500 mt-2"><em>No medical findings available yet.</em></p>
