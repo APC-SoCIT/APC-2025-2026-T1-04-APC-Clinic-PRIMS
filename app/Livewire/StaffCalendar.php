@@ -57,6 +57,7 @@ class StaffCalendar extends Component
         $this->generateCalendar();
         $this->loadAppointments();
         $this->doctors = ClinicStaff::where('clinic_staff_role', 'doctor')->get();
+
     }
 
     public function changeMonth($offset)
@@ -411,6 +412,14 @@ class StaffCalendar extends Component
         $this->resetPage();
     }
 
+<<<<<<< HEAD
+=======
+    public function getAutoCancelMinutes()
+    {
+        return (int) ($this->autoCancelMinutes ?? env('APPOINTMENT_AUTOCANCEL_MINUTES', 10));
+    }
+
+>>>>>>> 722766f (Fixed the issue auto cancel only works at calendar page)
     public function render()
     {
         return view('livewire.staff-calendar', [
