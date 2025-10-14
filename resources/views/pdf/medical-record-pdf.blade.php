@@ -200,7 +200,7 @@
     </table>
 
     <!-- Diagnosis -->
-    <div class="section-title">Diagnosis</div>
+    <div class="section-title">Diagnosis & Notes</div>
     <table>
         @foreach($record->diagnoses as $diag)
         <tr>
@@ -209,6 +209,10 @@
         </tr>
         @endforeach
     </table>
+
+    <!-- Prescription -->
+    <div class="section-title">Prescription</div>
+   
 
     <!-- Authorization -->
     <p>
