@@ -57,7 +57,6 @@ class StaffCalendar extends Component
         $this->generateCalendar();
         $this->loadAppointments();
         $this->doctors = ClinicStaff::where('clinic_staff_role', 'doctor')->get();
-        $this->autoCancelDueAppointments();
     }
 
     public function changeMonth($offset)
