@@ -52,4 +52,8 @@
         
         
     </body>
+    <footer class="text-center text-xs text-gray-500 py-2">
+        Version 1.0.0 | Build 8f9e2f1
+    </footer>
+
 </html>
