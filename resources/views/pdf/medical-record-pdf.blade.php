@@ -301,64 +301,18 @@
     <div class="section-title">Prescription</div>
     @php
         $prescription = $record->prescription;
-        $prescriptionData = null;
         $prescriptionLines = [];
-
         if ($prescription) {
-            // Try to decode structured prescription (JSON)
-            $decoded = json_decode($prescription, true);
-            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-                $prescriptionData = $decoded;
-            } else {
-                // Fallback: split plain-text prescriptions by newlines
-                $prescriptionLines = preg_split('/\r\n|\r|\n/', trim($prescription));
-            }
+            $prescriptionLines = preg_split('/\r\n|\r|\n/', trim($prescription));
         }
     @endphp
 
-    @if($prescription)
-        @if($prescriptionData && count($prescriptionData) > 0)
-            <table>
-                <thead>
-                    <tr>
-                        <th>Medicine</th>
-                        <th>Dose</th>
-                        <th>Frequency</th>
-                        <th>Duration</th>
-                        <th>Notes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($prescriptionData as $item)
-                        @php
-                            // Support multiple shapes: associative or simple strings
-                            $name = $item['medicine'] ?? $item['name'] ?? $item['med'] ?? ($item[0] ?? '');
-                            $dose = $item['dose'] ?? $item['dosage'] ?? '';
-                            $freq = $item['frequency'] ?? $item['freq'] ?? '';
-                            $duration = $item['duration'] ?? $item['days'] ?? '';
-                            $notes = $item['notes'] ?? $item['note'] ?? '';
-                        @endphp
-                        <tr>
-                            <td>{{ $name }}</td>
-                            <td>{{ $dose }}</td>
-                            <td>{{ $freq }}</td>
-                            <td>{{ $duration }}</td>
-                            <td>{{ $notes }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @else
-            @if(count($prescriptionLines) > 0)
-                @foreach($prescriptionLines as $line)
-                    @if(trim($line) !== '')
-                        <p>- {{ trim($line) }}</p>
-                    @endif
-                @endforeach
-            @else
-                <p>- {{ $prescription }}</p>
+    @if($prescription && count($prescriptionLines) > 0)
+        @foreach($prescriptionLines as $line)
+            @if(trim($line) !== '')
+                <p>- {{ trim($line) }}</p>
             @endif
-        @endif
+        @endforeach
     @else
         <p class="text-gray-500 italic">No prescription available</p>
     @endif

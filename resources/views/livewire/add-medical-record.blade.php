@@ -431,46 +431,8 @@
         </div>
 
         <div class="mb-4">
-            <p class="text-sm text-gray-600 mb-2">Add prescribed medicines. If you prefer, you may also enter free-text below.</p>
-            <div class="space-y-3">
-                @foreach($prescriptions as $index => $item)
-                    <div class="grid grid-cols-12 gap-2 items-end">
-                        <div class="col-span-4">
-                            <label class="text-sm">Medicine</label>
-                            <input type="text" wire:model.defer="prescriptions.{{ $index }}.medicine" class="w-full border rounded px-2 py-1" placeholder="e.g. Paracetamol">
-                        </div>
-                        <div class="col-span-2">
-                            <label class="text-sm">Dose</label>
-                            <input type="text" wire:model.defer="prescriptions.{{ $index }}.dose" class="w-full border rounded px-2 py-1" placeholder="e.g. 500mg">
-                        </div>
-                        <div class="col-span-2">
-                            <label class="text-sm">Frequency</label>
-                            <input type="text" wire:model.defer="prescriptions.{{ $index }}.frequency" class="w-full border rounded px-2 py-1" placeholder="e.g. 3x/day">
-                        </div>
-                        <div class="col-span-2">
-                            <label class="text-sm">Duration</label>
-                            <input type="text" wire:model.defer="prescriptions.{{ $index }}.duration" class="w-full border rounded px-2 py-1" placeholder="e.g. 5 days">
-                        </div>
-                        <div class="col-span-1">
-                            <label class="text-sm"> </label>
-                            <button type="button" class="text-red-600" wire:click="removePrescription({{ $index }})">✕</button>
-                        </div>
-                        <div class="col-span-12">
-                            <label class="text-sm">Notes (optional)</label>
-                            <input type="text" wire:model.defer="prescriptions.{{ $index }}.notes" class="w-full border rounded px-2 py-1" placeholder="e.g. after meals">
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-
-            <div class="mt-3">
-                <button type="button" wire:click.prevent="addPrescription" class="px-3 py-1 bg-prims-azure-100 text-white rounded-md">+ Add Medicine</button>
-            </div>
-
-            <div class="mt-4">
-                <label class="text-md font-medium">Free-text Prescription (optional fallback)</label>
-                <textarea wire:model="prescription" class="w-full border p-2 rounded mt-1" placeholder="Free-text prescription... (this will be used if structured items are empty)"></textarea>
-            </div>
+            <label class="text-md font-medium">Prescription</label>
+            <textarea wire:model="prescription" class="w-full border p-2 rounded mt-1" placeholder="Enter prescription notes or instructions..."></textarea>
         </div>
 
         <div class="mt-6 flex justify-end">
