@@ -114,17 +114,38 @@
     <table>
         <tr>
             <th>Past Medical History</th>
-            <td>
-                {{ $record->allergies ? "Allergies: $record->allergies" : '' }}<br>
-                @php $pmh = json_decode($record->past_medical_history, true) ?? []; @endphp
-                @foreach($pmh as $condition => $value)
-                    @if($value === 'Yes')
-                        {{ $condition }}<br>
-                    @elseif($condition === 'Hepatitis' && $value)
-                        Hepatitis {{ $value }}<br>
-                    @endif
-                @endforeach
-            </td>
+                <td>
+                    {{ $record->allergies ? "Allergies: $record->allergies" : '' }}<br>
+                    Medications: {{ $record->medications ?? 'N/A' }}<br>
+                    @php
+                        $pmh = json_decode($record->past_medical_history, true) ?? [];
+                        $pmh_items = [
+                            'Mumps', 'Dengue', 'Covid-19', 'Chicken Pox',
+                            'Heart Disorder', 'Kidney Disease', 'Bleeding Problem', 'Hepatitis'
+                        ];
+                    @endphp
+
+                    @foreach($pmh_items as $item)
+                        @php
+                            // try several key formats: exact, underscored lowercase, lowercase
+                            $key1 = $item;
+                            $key2 = str_replace(' ', '_', strtolower($item));
+                            $key3 = strtolower($item);
+                            $value = $pmh[$key1] ?? $pmh[$key2] ?? $pmh[$key3] ?? null;
+                            if (is_bool($value)) {
+                                $value = $value ? 'Yes' : 'No';
+                            }
+                        @endphp
+
+                        @if($item === 'Hepatitis')
+                            {{-- Print with colon like other items --}}
+                            Hepatitis: {{ (!empty($value) && strtolower($value) !== 'no') ? $value : 'No' }}<br>
+                        @else
+                            {{ $item }}: {{ $value ?? 'No' }}<br>
+                        @endif
+
+                    @endforeach
+                </td>
         </tr>
         <tr>
             <th>Family History</th>
@@ -160,8 +181,24 @@
                 Smoking: {{ $ph['Smoke'] ?? 'N/A' }}<br>
                 Alcohol: {{ $ph['Alcohol'] ?? 'N/A' }}<br>
                 Vape: {{ $ph['Vape'] ?? 'N/A' }}<br>
-                Medications: {{ $record->medications ?? 'N/A' }}
             </td>
+        </tr>
+        <tr>
+            <th>OB-GYNE History</th>
+            <td>
+                @php $ob = json_decode($record->obgyne_history, true) ?? []; @endphp
+                LNMP: {{ $ob['LNMP'] ?? 'N/A' }}<br>
+                OB Score: {{ $ob['OB Score'] ?? 'N/A' }}<br>
+                Date of Last Delivery: {{ $ob['Date of Last Delivery'] ?? 'N/A' }}
+            </td>
+        </tr>
+        <tr>
+            <th>Hospitalization</th>
+            <td>{{ $record->hospitalization ?? 'N/A' }}</td>
+        </tr>
+        <tr>
+            <th>Operation</th>
+            <td>{{ $record->operation ?? 'N/A' }}</td>
         </tr>
     </table>
 
@@ -178,7 +215,7 @@
             <td>{{ $immunizations['FLU VAC'] ?? 'N/A' }}</td>
         </tr>
         <tr>
-            <th>Covid-19 (1st, 2nd, Booster)</th>
+            <th>Covid-19 (1st, 2nd, Booster 1, Booster 2)</th>
             <td colspan="5">{{ $immunizations['COVID-19 1st'] ?? 'N/A' }} / {{ $immunizations['COVID-19 2nd'] ?? 'N/A' }} / {{ $immunizations['Booster 1'] ?? 'N/A' }} / {{ $immunizations['Booster 2'] ?? 'N/A' }}</td>
         </tr>
     </table>
@@ -224,79 +261,45 @@
     <!-- Diagnosis -->
     <div class="section-title">Diagnosis & Notes</div>
     <table>
-        @foreach($record->diagnoses as $diag)
-        <tr>
-            <td>{{ $diag->diagnosis }}</td>
-            <td>{{ $diag->diagnosis_notes ?? '' }}</td>
-        </tr>
-        @endforeach
+        @if($record->diagnoses && count($record->diagnoses) > 0)
+            @foreach($record->diagnoses as $diag)
+            <tr>
+                <td>{{ $diag->diagnosis }}</td>
+                <td>{{ $diag->diagnosis_notes ?? '' }}</td>
+            </tr>
+            @endforeach
+        @else
+            <tr>
+                <td colspan="2"><em>No diagnosis data available</em></td>
+            </tr>
+        @endif
     </table>
 
     <!-- Prescription -->
     <div class="section-title">Prescription</div>
     @php
         $prescription = $record->prescription;
-        $prescriptionData = null;
         $prescriptionLines = [];
-
         if ($prescription) {
-            // Try to decode structured prescription (JSON)
-            $decoded = json_decode($prescription, true);
-            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-                $prescriptionData = $decoded;
-            } else {
-                // Fallback: split plain-text prescriptions by newlines
-                $prescriptionLines = preg_split('/\r\n|\r|\n/', trim($prescription));
-            }
+            $prescriptionLines = preg_split('/\r\n|\r|\n/', trim($prescription));
         }
     @endphp
 
-    @if($prescription)
-        @if($prescriptionData && count($prescriptionData) > 0)
-            <table>
-                <thead>
-                    <tr>
-                        <th>Medicine</th>
-                        <th>Dose</th>
-                        <th>Frequency</th>
-                        <th>Duration</th>
-                        <th>Notes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($prescriptionData as $item)
-                        @php
-                            // Support multiple shapes: associative or simple strings
-                            $name = $item['medicine'] ?? $item['name'] ?? $item['med'] ?? ($item[0] ?? '');
-                            $dose = $item['dose'] ?? $item['dosage'] ?? '';
-                            $freq = $item['frequency'] ?? $item['freq'] ?? '';
-                            $duration = $item['duration'] ?? $item['days'] ?? '';
-                            $notes = $item['notes'] ?? $item['note'] ?? '';
-                        @endphp
-                        <tr>
-                            <td>{{ $name }}</td>
-                            <td>{{ $dose }}</td>
-                            <td>{{ $freq }}</td>
-                            <td>{{ $duration }}</td>
-                            <td>{{ $notes }}</td>
-                        </tr>
+    <table>
+        <tr>
+            <td>
+                @if($prescription && count($prescriptionLines) > 0)
+                    @foreach($prescriptionLines as $line)
+                        @if(trim($line) !== '')
+                            {{ trim($line) }}<br>
+                        @endif
                     @endforeach
-                </tbody>
-            </table>
-        @else
-            @if(count($prescriptionLines) > 0)
-                @foreach($prescriptionLines as $line)
-                    @if(trim($line) !== '')
-                        <p>- {{ trim($line) }}</p>
-                    @endif
-                @endforeach
-            @else
-                <p>- {{ $prescription }}</p>
-            @endif
-        @endif
-    @else
-        <p class="text-gray-500 italic">No prescription available</p>
-    @endif
+                @else
+                    <em>No prescription available</em>
+                @endif
+            </td>
+        </tr>
+    </table>
 
     <!-- Authorization -->
     <p>
