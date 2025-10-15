@@ -19,7 +19,8 @@ class MedicalRecordController extends Controller
      */
     public function view($id)
     {
-        $record = MedicalRecord::with(['patient', 'diagnoses'])->findOrFail($id);
+        // Eager-load relations used in the view (patient, diagnoses, physical examinations, doctor)
+        $record = MedicalRecord::with(['patient', 'diagnoses', 'physicalExaminations', 'doctor'])->findOrFail($id);
         return view('view-medical-record', compact('record'));
     }
 
@@ -28,7 +29,8 @@ class MedicalRecordController extends Controller
      */
     public function printMedicalRecord($id)
     {
-        $record = MedicalRecord::with(['patient','diagnoses'])->findOrFail($id);
+    // Eager-load patient, diagnoses, physical examinations and doctor so the PDF has all needed data
+    $record = MedicalRecord::with(['patient', 'diagnoses', 'physicalExaminations', 'doctor'])->findOrFail($id);
 
         if (!$record->patient) {
             abort(404, 'Patient not found for this medical record.');
