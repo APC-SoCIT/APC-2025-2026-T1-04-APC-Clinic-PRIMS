@@ -14,7 +14,10 @@
                 </div>
             </div>
 
-            @livewire('dental-form')
+            <livewire:dental-form
+                :appointment_id="request()->query('appointment_id')"
+                :fromStaffCalendar="(bool) request()->query('fromStaffCalendar', false)"
+            />
 
         </div>
     </div>

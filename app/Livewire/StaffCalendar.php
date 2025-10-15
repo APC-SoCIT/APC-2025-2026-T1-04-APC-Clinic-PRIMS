@@ -233,10 +233,21 @@ class StaffCalendar extends Component
         $this->loadAppointments();
         $this->generateCalendar();
 
-        return redirect()->route('addRecordmain', [
-            'appointment_id' => $appointment->id,
-            'fromStaffCalendar' => true
-        ]);
+        // Get the doctor's category from the related clinic staff
+        $staff = $appointment->doctor;
+
+        // Redirect based on doctor category
+        if ($staff->doctor_category === 'Medical') {
+            return redirect()->route('addRecordmain', [
+                'appointment_id' => $appointment->id,
+                'fromStaffCalendar' => true
+            ]);
+        } else {
+            return redirect()->route('dental-form', [
+                'appointment_id' => $appointment->id,
+                'fromStaffCalendar' => true
+            ]);
+        }
     }
 
     public function reapproveAppointment($appointmentId)
@@ -415,7 +426,7 @@ class StaffCalendar extends Component
         return view('livewire.staff-calendar', [
             'currentMonthYear' => $this->currentDate->format('F Y'),
             'approvedAppointments' => Appointment::whereDate('appointment_date', $this->selectedDate)
-                ->where('status', 'approved')
+                ->whereIn('status', ['approved', 'started'])
                 ->orderBy('appointment_date', 'asc')
                 ->paginate(2)
         ]);

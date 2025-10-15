@@ -63,12 +63,24 @@ Route::middleware([
 
 
     // Dental form route
-    Route::get('/staff/dental-form', function () {
+    // Route::get('/staff/dental-form', function () {
+    //     $user = Auth::user();
+    //     if (!$user || !$user->hasRole('clinic staff')) {
+    //         abort(403); // Forbidden
+    //     }
+    //     return view('dental-form');
+    // })->name('dental-form');
+
+    Route::get('/staff/dental-form', function (Illuminate\Http\Request $request) {
         $user = Auth::user();
         if (!$user || !$user->hasRole('clinic staff')) {
-            abort(403); // Forbidden
+            abort(403);
         }
-        return view('dental-form');
+    
+        return view('dental-form', [
+            'appointment_id' => $request->query('appointment_id'),
+            'fromStaffCalendar' => $request->query('fromStaffCalendar', false)
+        ]);
     })->name('dental-form');
 
 
