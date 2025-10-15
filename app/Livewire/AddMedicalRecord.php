@@ -15,8 +15,6 @@ class AddMedicalRecord extends Component
 {
     public $apc_id_number, $first_name, $middle_initial, $last_name, $gender, $age, $date_of_birth, $nationality, $blood_type, $civil_status, $religion, $contact_number, $email, $house_unit_number, $street, $barangay, $city, $province, $zip_code, $country, $emergency_contact_name, $emergency_contact_number, $emergency_contact_relationship;
     public $reason, $description, $allergies, $medications, $hospitalization, $operation, $weight, $height, $blood_pressure, $heart_rate, $respiratory_rate, $temperature, $bmi, $o2sat, $prescription;
-    // Structured prescriptions: array of ['medicine','dose','frequency','duration','notes']
-    public $prescriptions = [];
     public $appointment_id;
     public $showErrorModal = false;
     public $errorMessage = '';
@@ -71,10 +69,7 @@ class AddMedicalRecord extends Component
         if (empty($this->diagnoses)) {
             $this->addDiagnosis();
         }
-        // Initialize a single prescription row for convenience
-        if (empty($this->prescriptions)) {
-            $this->addPrescription();
-        }
+        // no-op for prescriptions (text notes)
     }
 
     private function fillPatientDetails(Patient $patient)
@@ -162,19 +157,12 @@ class AddMedicalRecord extends Component
 
     public function addPrescription()
     {
-        $this->prescriptions[] = [
-            'medicine' => '',
-            'dose' => '',
-            'frequency' => '',
-            'duration' => '',
-            'notes' => '',
-        ];
+        // structured prescription support removed
     }
 
     public function removePrescription($index)
     {
-        unset($this->prescriptions[$index]);
-        $this->prescriptions = array_values($this->prescriptions);
+        // structured prescription support removed
     }
 
     public function removeDiagnosis($index)
@@ -361,31 +349,11 @@ class AddMedicalRecord extends Component
     /**
      * Build the prescription payload to save in the medical_records.prescription field.
      * If structured prescriptions have at least one medicine name, return JSON array.
-     * Otherwise return the free-text prescription as-is (or null).
+     * Otherwise return null (no free-text fallback supported).
      */
     private function buildPrescriptionPayload()
     {
-        $hasStructured = false;
-        $clean = [];
-
-        foreach ($this->prescriptions as $item) {
-            $name = trim($item['medicine'] ?? '');
-            if ($name !== '') {
-                $hasStructured = true;
-                $clean[] = [
-                    'medicine' => $name,
-                    'dose' => trim($item['dose'] ?? ''),
-                    'frequency' => trim($item['frequency'] ?? ''),
-                    'duration' => trim($item['duration'] ?? ''),
-                    'notes' => trim($item['notes'] ?? ''),
-                ];
-            }
-        }
-
-        if ($hasStructured) {
-            return json_encode($clean);
-        }
-
+        // Plain-text prescription notes saved directly.
         return $this->prescription ?: null;
     }
 }
