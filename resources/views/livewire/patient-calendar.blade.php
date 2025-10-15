@@ -94,7 +94,7 @@
             <div class="flex justify-center mt-6 bg-prims-yellow-1">
                 <h1 class="text-xl font-bold">Choose a Time</h1>
             </div>
-            <div class="grid grid-cols-5 gap-4 px-4 py-4 font-bold text-center">
+            <div class="grid grid-cols-4 gap-4 px-4 py-4 font-bold text-center">
             @foreach($allTimes as $time)
                 @php
                     $isSelectionMade = $selectedDoctor && $selectedDate;
