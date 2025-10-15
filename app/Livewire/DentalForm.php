@@ -12,7 +12,7 @@ use Carbon\Carbon;
 
 class DentalForm extends Component
 {
-    public $apc_id_number, $first_name, $middle_initial, $last_name, $gender, $age, $date_of_birth, $nationality, $blood_type, $civil_status, $religion, $contact_number, $email, $house_unit_number, $street, $barangay, $city, $province, $zip_code, $country, $emergency_contact_name, $emergency_contact_number, $emergency_contact_relationship;
+    public $appointment_id, $fromStaffCalendar, $apc_id_number, $first_name, $middle_initial, $last_name, $gender, $age, $date_of_birth, $nationality, $blood_type, $civil_status, $religion, $contact_number, $email, $house_unit_number, $street, $barangay, $city, $province, $zip_code, $country, $emergency_contact_name, $emergency_contact_number, $emergency_contact_relationship;
 
     public $oral_hygiene = null;
     public $gingival_color = null;
@@ -102,9 +102,12 @@ class DentalForm extends Component
     public $selectedJaw = null;     // 'upper' or 'lower'
     public $selectedIndex = null;   // position index 0..15, this won't duplicate since each button has its own
 
-    public function mount($appointment_id = null)
+    public function mount($appointment_id = null, $fromStaffCalendar = false)
     {
         // Try to load appointment if coming from calendar
+        $this->appointment_id = $appointment_id;
+        $this->fromStaffCalendar = in_array($fromStaffCalendar, [1, "1", true], true);
+
         if ($appointment_id) {
             $appointment = \App\Models\Appointment::with('patient')->find($appointment_id);
             if ($appointment && $appointment->patient) {
