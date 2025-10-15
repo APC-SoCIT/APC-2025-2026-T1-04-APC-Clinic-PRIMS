@@ -305,15 +305,21 @@
         }
     @endphp
 
-    @if($prescription && count($prescriptionLines) > 0)
-        @foreach($prescriptionLines as $line)
-            @if(trim($line) !== '')
-                <p>- {{ trim($line) }}</p>
-            @endif
-        @endforeach
-    @else
-        <p class="text-gray-500 italic">No prescription available</p>
-    @endif
+    <table>
+        <tr>
+            <td>
+                @if($prescription && count($prescriptionLines) > 0)
+                    @foreach($prescriptionLines as $line)
+                        @if(trim($line) !== '')
+                            {{ trim($line) }}<br>
+                        @endif
+                    @endforeach
+                @else
+                    <em>No prescription available</em>
+                @endif
+            </td>
+        </tr>
+    </table>
 
     <!-- Authorization -->
     <p>
