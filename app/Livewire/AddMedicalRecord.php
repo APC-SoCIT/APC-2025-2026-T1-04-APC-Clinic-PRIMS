@@ -15,6 +15,8 @@ class AddMedicalRecord extends Component
 {
     public $apc_id_number, $first_name, $middle_initial, $last_name, $gender, $age, $date_of_birth, $nationality, $blood_type, $civil_status, $religion, $contact_number, $email, $house_unit_number, $street, $barangay, $city, $province, $zip_code, $country, $emergency_contact_name, $emergency_contact_number, $emergency_contact_relationship;
     public $reason, $description, $allergies, $medications, $hospitalization, $operation, $weight, $height, $blood_pressure, $heart_rate, $respiratory_rate, $temperature, $bmi, $o2sat, $prescription;
+    // Structured prescriptions: array of ['medicine','dose','frequency','duration','notes']
+    public $prescriptions = [];
     public $appointment_id;
     public $showErrorModal = false;
     public $errorMessage = '';
