@@ -180,7 +180,7 @@
                                                                         <p class="text-gray-500 italic">No prescription notes available</p>
                                                                     @endif
                                                                 <hr class="my-3">
-                                                                <p><strong>For a comprehensive view of the medical findings, please request a copy of your medical record.</strong></p>
+                                                                <p><strong><em>For a comprehensive view of the medical findings, please request a copy of your medical record.</em></strong></p>
                                                             </div>
                                                         @else
                                                             <p class="text-sm text-gray-500 mt-2"><em>No medical findings available yet.</em></p>
@@ -261,7 +261,7 @@
                                                                         <p class="text-gray-500 italic">No prescription notes available</p>
                                                                     @endif
                                                                 <hr class="my-3">
-                                                                <p><strong>For a comprehensive view of the medical findings, please request a copy of your medical record.</strong></p>
+                                                                <p><strong><em>For a comprehensive view of the medical findings, please request a copy of your medical record.</em></strong></p>
                                                             </div>
                                                         <div class="flex justify-end mt-2">
                                                             <x-button class="px-3 py-1 text-sm" 

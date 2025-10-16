@@ -37,23 +37,28 @@ class UserSeeder extends Seeder
                 'role' => 'patient',
             ],
             [
-                'email' => 'anamaet@apc.edu.ph',
-                'password' => 'anamaet',
-                'role' => 'clinic staff',
-            ],
-            [
-                'email' => 'smcatingub@apc.edu.ph',
-                'password' => 'smcatingub',
-                'role' => 'clinic staff',
-            ],
-            [
                 'email' => 'jmmiyabe@student.apc.edu.ph',
                 'password' => 'jmmiyabe',
                 'role' => 'patient',
             ],
             [
+                'email' => 'anamaet@apc.edu.ph',
+                'password' => 'anamaet',
+                'role' => 'clinic staff',
+            ],
+            [
                 'email' => 'junavendano@apc.edu.ph',
                 'password' => 'junavendano',
+                'role' => 'clinic staff',
+            ],
+            [
+                'email' => 'sallysamoza@apc.edu.ph',
+                'password' => 'sallysamoza',
+                'role' => 'clinic staff',
+            ],
+            [
+                'email' => 'winniesy@apc.edu.ph',
+                'password' => 'winniesy',
                 'role' => 'clinic staff',
             ],
         ];

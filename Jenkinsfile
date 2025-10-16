@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'wonderpets' }
 
     stages {
         stage('Copy .env') {
@@ -35,6 +35,7 @@ pipeline {
         stage('npm build') {
             steps {
                 sh '''
+                    ./vendor/bin/sail npm install
                     ./vendor/bin/sail npm run build
                 '''
             }
@@ -46,12 +47,6 @@ pipeline {
                     ./vendor/bin/sail test
                 '''
             }
-        }
-    }
-
-    post {
-        always {
-            sh './vendor/bin/sail down || true'
         }
     }
 }
