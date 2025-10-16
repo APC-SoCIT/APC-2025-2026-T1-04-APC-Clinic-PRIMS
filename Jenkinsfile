@@ -48,10 +48,4 @@ pipeline {
             }
         }
     }
-
-    post {
-        always {
-            sh './vendor/bin/sail down || true'
-        }
-    }
 }
