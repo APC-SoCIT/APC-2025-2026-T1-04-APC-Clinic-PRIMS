@@ -35,6 +35,7 @@ pipeline {
         stage('npm build') {
             steps {
                 sh '''
+                    ./vendor/bin/sail npm install
                     ./vendor/bin/sail npm run build
                 '''
             }
