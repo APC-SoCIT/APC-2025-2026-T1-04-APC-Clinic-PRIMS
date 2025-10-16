@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'wonderpets' }
 
     stages {
         stage('Copy .env') {
