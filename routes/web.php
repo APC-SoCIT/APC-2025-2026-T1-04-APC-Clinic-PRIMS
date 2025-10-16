@@ -220,3 +220,5 @@ Route::middleware([
         [App\Http\Controllers\StaffSummaryReportController::class, 'generateAccomplishmentReport']
     )->name('generate.accomplishment.report');
 });
+
+Route::get('/staff/dental-records/{id}', [\App\Http\Controllers\DentalRecordController::class, 'view'])->name('view-dental-record');
