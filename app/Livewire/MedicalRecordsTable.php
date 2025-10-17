@@ -27,28 +27,40 @@ class MedicalRecordsTable extends Component
 
     public function loadRecords()
     {
-        // Get the latest record per patient
+        // Latest medical record per patient
         $latestMedicalRecords = MedicalRecord::query()
             ->selectRaw('MAX(id) as id')
             ->groupBy('patient_id')
             ->pluck('id');
 
-        $this->records = MedicalRecord::with(['diagnoses', 'patient'])
+        $medicalRecords = MedicalRecord::with(['diagnoses', 'patient'])
             ->whereIn('id', $latestMedicalRecords)
-            ->orderByDesc('last_visited')
             ->get();
 
+        // Latest dental record per patient
         $latestDentalRecords = DentalRecord::query()
             ->selectRaw('MAX(id) as id')
             ->groupBy('patient_id')
             ->pluck('id');
 
-        $this->dentalRecords = DentalRecord::with(['patient'])
+        $dentalRecords = DentalRecord::with(['patient'])
             ->whereIn('id', $latestDentalRecords)
-            ->orderByDesc('created_at')
             ->get();
-        
+
+        // Combine unique patient IDs from both medical & dental
+        $patientIds = $medicalRecords->pluck('patient_id')
+            ->merge($dentalRecords->pluck('patient_id'))
+            ->unique();
+
+        // Load patients that have at least one type of record
+        $this->records = Patient::whereIn('id', $patientIds)
+            ->with(['medicalRecords.diagnoses', 'dentalRecords'])
+            ->get();
+
+        // Keep both for expanded display
+        $this->dentalRecords = $dentalRecords;
     }
+
 
     public function searchPatient()
     {
