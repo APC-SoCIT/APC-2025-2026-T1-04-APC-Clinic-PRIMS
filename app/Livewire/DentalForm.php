@@ -9,10 +9,14 @@ use App\Models\RfidCard;
 use App\Models\DentalRecord;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Models\ClinicStaff;
 
 class DentalForm extends Component
 {
     public $appointment_id, $fromStaffCalendar, $apc_id_number, $first_name, $middle_initial, $last_name, $gender, $age, $date_of_birth, $nationality, $blood_type, $civil_status, $religion, $contact_number, $email, $house_unit_number, $street, $barangay, $city, $province, $zip_code, $country, $emergency_contact_name, $emergency_contact_number, $emergency_contact_relationship;
+
+    public $showErrorModal = false;
+    public $errorMessage = '';
 
     public $oral_hygiene = null;
     public $gingival_color = null;
@@ -151,48 +155,49 @@ class DentalForm extends Component
 
     public function submit()
     {
-    // Basic validation: require ID + (adjust rules as needed)
-    $this->validate([
-        'oral_hygiene'   => 'nullable|string',
-        'gingival_color' => 'nullable|string',
-        'prophylaxis'    => 'boolean',
-        'recommendation' => 'nullable|string',
-    ]);
 
-    // find patient id if APC id exists
-    $patient = null;
-    if (!empty($this->apc_id_number)) {
-        $patient = Patient::where('apc_id_number', $this->apc_id_number)->first();
-    }
+        try {
+            $this->validate([
+                'oral_hygiene'   => 'required|string',
+                'gingival_color' => 'required|string',
+                'prophylaxis'    => 'required|boolean',
+                'recommendation' => 'nullable|string',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Show your modal when any field is missing
+            $this->errorMessage = 'Please fill out all <strong>The required parts of the form</strong>.';
+            $this->showErrorModal = true;
+            return;
+        }
 
-    DB::beginTransaction();
-    try {
+
+        $patient = Patient::where('apc_id_number', $this->apc_id_number)->firstOrFail();
+        $clinicStaff = \App\Models\ClinicStaff::where('user_id', auth()->id())->first();
+        
         $record = DentalRecord::create([
-            'patient_id'      => $patient ? $patient->id : null,
+            'patient_id' => $patient->id,
             'oral_hygiene'    => $this->oral_hygiene,
             'gingival_color'  => $this->gingival_color,
             'prophylaxis'     => (bool) $this->prophylaxis,
-            'teeth'           => $this->teeth,        // JSON cast in model
+            'teeth'           => $this->teeth,
             'recommendation'  => $this->recommendation,
+            'appointment_id' => $this->appointment_id,
+            'doctor_id' => $clinicStaff?->id,
         ]);
 
-        DB::commit();
+        if ($this->fromStaffCalendar && $this->appointment_id) {
+                Appointment::where('id', $this->appointment_id)->update(['status' => 'completed']);
+            }
 
-        // reset selections but keep patient visible
-        $this->resetAfterSave();
-
-        // redirect with toast (keeps your current behaviour)
+        $this->reset();
+        
         return redirect()
             ->route('medical-records')
             ->with('toast', [
                 'style' => 'success',
                 'message' => 'Record saved successfully!'
             ]);
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            \Log::error('DentalForm save failed: '.$e->getMessage());
-            $this->statusMessage = 'Save failed: '.$e->getMessage();
-        }
+
     }
 
     protected function resetAfterSave()
