@@ -4,10 +4,12 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\MedicalRecord;
+use App\Models\DentalRecord;
 
 class MedicalRecordsTable extends Component
 {
     public $records;
+    public $dentalRecords; 
     public $expandedPatient = null;
 
     protected $listeners = ['recordAdded' => 'loadRecords'];
@@ -28,6 +30,11 @@ class MedicalRecordsTable extends Component
         $this->records = MedicalRecord::with(['diagnoses', 'patient'])
             ->whereIn('id', $latestRecords)
             ->orderByDesc('last_visited')
+            ->get();
+
+        // load dental records (no schema change needed)
+        $this->dentalRecords = DentalRecord::with('patient')
+            ->orderByDesc('created_at') // adjust if dental has a date field
             ->get();
     }
 
