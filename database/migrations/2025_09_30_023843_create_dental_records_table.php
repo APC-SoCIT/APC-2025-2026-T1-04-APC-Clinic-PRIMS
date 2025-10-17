@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('dental_records', function (Blueprint $table) {
             $table->id();
             $table->foreignId('patient_id')->constrained('patients')->onDelete('cascade');
-            $table->string('patient_apc_id')->nullable()->index(); // original APC id string
             $table->string('oral_hygiene')->nullable();
             $table->string('gingival_color')->nullable();
             $table->boolean('prophylaxis')->default(false);
