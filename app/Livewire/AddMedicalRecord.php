@@ -300,8 +300,6 @@ class AddMedicalRecord extends Component
             'last_visited' => now(),
             // If structured prescriptions have meaningful data, prefer saving them as JSON.
             'prescription' => $this->buildPrescriptionPayload(),
-            // If structured prescriptions have meaningful data, prefer saving them as JSON.
-            'prescription' => $this->buildPrescriptionPayload(),
             'doctor_id' => $clinicStaff?->id,
         ]);
 

@@ -108,7 +108,6 @@
         </tr>
     </table>
 
-
     <!-- Medical Concern -->
     <div class="section-title">Medical Concern</div>
     <table>
@@ -129,7 +128,6 @@
             <td>{{ $record->doctor?->full_name ?? ($record->doctor?->clinic_staff_fname ? $record->doctor->clinic_staff_fname . ' ' . ($record->doctor->clinic_staff_minitial ? $record->doctor->clinic_staff_minitial . '. ' : '') . $record->doctor->clinic_staff_lname : 'N/A') }}</td>
         </tr>
     </table>
-
 
     <!-- Medical History -->
     <div class="section-title">I. MEDICAL HISTORY</div>
