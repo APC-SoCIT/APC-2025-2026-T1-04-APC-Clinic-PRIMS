@@ -9,7 +9,7 @@
         <div class="grid grid-cols-4 gap-4 my-4">
             <div>
                 <label class="text-lg">ID Number <span class="text-red-500 italic text-xs">* required</span></label>
-                <input type="text" wire:model.lazy="apc_id_number" wire:change="searchPatient" class="border p-2 rounded w-full" placeholder="Enter an ID number" required>
+                <input type="text" wire:model.lazy="apc_id_number" wire:change="searchPatient" wire:keydown.enter.prevent="searchPatient" class="border p-2 rounded w-full" placeholder="Enter an ID number" required>
             </div>
             <div>
                 <label class="text-lg">First Name</label>
