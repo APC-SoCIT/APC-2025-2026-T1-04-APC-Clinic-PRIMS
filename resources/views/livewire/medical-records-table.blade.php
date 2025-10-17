@@ -39,7 +39,7 @@
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 @foreach ($records as $record)
-                    <tr>
+                    <tr class="record-row"> <!-- added class for search -->
                         <td class="px-6 py-3 text-left text-md">{{ $record->patient->apc_id_number }}</td>
                         <td class="px-6 py-3 text-left text-md">{{ $record->patient->last_name }}</td>
                         <td class="px-6 py-3 text-left text-md">{{ $record->patient->first_name }}</td>
@@ -66,8 +66,10 @@
                     @if ($expandedPatient === $record->patient_id)
                         <tr>
                             <td colspan="7">
+
+                                <!-- Medical Records -->
                                 <div class="flex justify-center mt-4 mb-2">
-                                    <h3 class="text-lg font-semibold">Medical Records for {{ $record->patient->first_name }} {{ $record->patient->middle_initial }}. {{ $record->patient->last_name }} ({{ $record->patient->apc_id_number }})</h3>
+                                    <h3 class="text-lg font-semibold">Medical Record(s)</h3>
                                 </div>
                                 <div class="flex justify-center">
                                     <table class="table-auto w-[80%] rounded mb-4 border">
@@ -98,6 +100,45 @@
                                                     </td>
                                                 </tr>
                                             @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Dental Records -->
+                                <div class="flex justify-center mb-2">
+                                    <h3 class="text-lg font-semibold">Dental Record(s)</h3>
+                                </div>
+                                <div class="flex justify-center">
+                                    <table class="table-auto w-[80%] rounded mb-4 border">
+                                        <thead>
+                                            <tr class="border border-gray-300 bg-gray-200">
+                                                <th></th>
+                                                <th>Date</th>
+                                                <th>Recommenation</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse ($dentalRecords ?? collect() as $dent)
+                                                <tr class="record-row">
+                                                    <td class="text-center">
+                                                        @if (isset($dent->appointment_id) && $dent->appointment_id)
+                                                            <span class="px-2 bg-green-100 text-green-700 rounded-2xl text-xs">Appointment</span>
+                                                        @else
+                                                            <span class="px-2 bg-blue-100 text-blue-700 rounded-2xl text-xs">Walk-in</span>
+                                                        @endif
+                                                    </td>
+                                                    <td class="text-center">{{ \Carbon\Carbon::parse($dent->last_visited ?? $dent->created_at)->format('M j, Y') }}</td>
+                                                    <td class="text-center">{{ \Illuminate\Support\Str::words($dent->recommendation ?? $dent->recommendations ?? '-', 15, '...') }}</td>
+                                                    <td class="text-center">
+                                                        <a href="{{ route('view-dental-record', $dent->id) }}" class="text-blue-600">View</a>
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="4" class="px-6 py-3 text-center text-sm text-gray-500">No dental records found.</td>
+                                                </tr>
+                                            @endforelse
                                         </tbody>
                                     </table>
                                 </div>
