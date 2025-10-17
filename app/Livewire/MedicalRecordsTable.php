@@ -45,10 +45,6 @@ class MedicalRecordsTable extends Component
 
     public function searchPatient()
     {
-        if (empty($this->apc_id_number)) {
-            return $this->resetPatientFields();
-        }
-
         $patient = Patient::where('apc_id_number', $this->apc_id_number)->first();
 
         if (!$patient) {
