@@ -108,6 +108,26 @@
         </tr>
     </table>
 
+    <!-- Medical Concern -->
+    <div class="section-title">Medical Concern</div>
+    <table>
+        <tr>
+            <th style="width:20%">Reason for Visit</th>
+            <td>{{ $record->reason ?? 'N/A' }}</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>{{ $record->description ?? 'N/A' }}</td>
+        </tr>
+        <tr>
+            <th>Date</th>
+            <td>{{ optional($record->last_visited) ? \Carbon\Carbon::parse($record->last_visited)->format('F j, Y') : (optional($record->created_at) ? \Carbon\Carbon::parse($record->created_at)->format('F j, Y') : 'N/A') }}</td>
+        </tr>
+        <tr>
+            <th>Attending Doctor</th>
+            <td>{{ $record->doctor?->full_name ?? ($record->doctor?->clinic_staff_fname ? $record->doctor->clinic_staff_fname . ' ' . ($record->doctor->clinic_staff_minitial ? $record->doctor->clinic_staff_minitial . '. ' : '') . $record->doctor->clinic_staff_lname : 'N/A') }}</td>
+        </tr>
+    </table>
 
     <!-- Medical History -->
     <div class="section-title">I. MEDICAL HISTORY</div>
