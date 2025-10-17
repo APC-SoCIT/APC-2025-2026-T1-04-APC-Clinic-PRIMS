@@ -5,12 +5,17 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\MedicalRecord;
 use App\Models\DentalRecord;
+use App\Models\Patient;
+use App\Models\RfidCard;
 
 class MedicalRecordsTable extends Component
 {
     public $records;
     public $dentalRecords; 
     public $expandedPatient = null;
+
+    public $apc_id_number;
+    public $patient;
 
     protected $listeners = ['recordAdded' => 'loadRecords'];
 
@@ -36,6 +41,26 @@ class MedicalRecordsTable extends Component
         $this->dentalRecords = DentalRecord::with('patient')
             ->orderByDesc('created_at') // adjust if dental has a date field
             ->get();
+    }
+
+    public function searchPatient()
+    {
+        if (empty($this->apc_id_number)) {
+            return $this->resetPatientFields();
+        }
+
+        $patient = Patient::where('apc_id_number', $this->apc_id_number)->first();
+
+        if (!$patient) {
+            $card = RfidCard::with('patient')
+                ->where('rfid_uid', $this->apc_id_number)
+                ->first();
+
+            if ($card && $card->patient) {
+                $patient = $card->patient;
+                $this->apc_id_number = $patient->apc_id_number;
+            }
+        }
     }
 
     public function toggleExpand($patientId)
