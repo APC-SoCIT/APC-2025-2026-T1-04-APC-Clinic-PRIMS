@@ -112,7 +112,7 @@
 
         <div class="ml-17 my-6 px-40 grid grid-cols-4">
             <!-- Oral Hygiene -->
-            <label class="font-bold">Oral Hygiene :</label>
+            <label class="font-bold">Oral Hygiene <span class="text-red-500 italic text-xs">* required</span> :</label>
             <label>
                 <input type="radio" wire:model="oral_hygiene" value="Good" required>
                 <span class="">Good</span>
@@ -127,7 +127,7 @@
             </label>
 
             <!-- Gingival Color -->
-            <label class="font-bold mt-4">Gingival Color :</label>
+            <label class="font-bold mt-4">Gingival Color <span class="text-red-500 italic text-xs">* required</span> :</label>
             <label class="mt-4">
                 <input type="radio" wire:model="gingival_color" value="Pink" required>
                 <span class="">Pink</span>
@@ -300,6 +300,22 @@
             </button>
         </div>
         </form>
-
     </div>
+    @if ($showErrorModal)
+            <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                <div class="bg-white rounded-xl shadow-lg p-6 w-96">
+                    <h2 class="text-lg font-semibold text-red-600">Error</h2>
+                    <p class="mt-2 text-gray-700">{!! $errorMessage !!}</p>
+
+                    <div class="mt-4 flex justify-end">
+                        <button 
+                            wire:click="$set('showErrorModal', false)" 
+                            class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+    @endif
 </div>
