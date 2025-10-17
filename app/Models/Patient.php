@@ -65,6 +65,11 @@ class Patient extends Model
         return $this->hasMany(MedicalRecord::class);
     }
 
+    public function dentalRecords()
+    {
+        return $this->hasMany(DentalRecord::class);
+    }
+
     public function rfidCards()
     {
         return $this->hasMany(RfidCard::class);

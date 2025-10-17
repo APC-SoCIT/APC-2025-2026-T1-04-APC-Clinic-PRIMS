@@ -7,6 +7,7 @@ use App\Models\MedicalRecord;
 use App\Models\DentalRecord;
 use App\Models\Patient;
 use App\Models\RfidCard;
+use Illuminate\Support\Facades\DB;
 
 class MedicalRecordsTable extends Component
 {
@@ -26,22 +27,40 @@ class MedicalRecordsTable extends Component
 
     public function loadRecords()
     {
-        // Get the latest record per patient
-        $latestRecords = MedicalRecord::query()
+        // Latest medical record per patient
+        $latestMedicalRecords = MedicalRecord::query()
             ->selectRaw('MAX(id) as id')
             ->groupBy('patient_id')
             ->pluck('id');
 
-        $this->records = MedicalRecord::with(['diagnoses', 'patient'])
-            ->whereIn('id', $latestRecords)
-            ->orderByDesc('last_visited')
+        $medicalRecords = MedicalRecord::with(['diagnoses', 'patient'])
+            ->whereIn('id', $latestMedicalRecords)
             ->get();
 
-        // load dental records (no schema change needed)
-        $this->dentalRecords = DentalRecord::with('patient')
-            ->orderByDesc('created_at') // adjust if dental has a date field
+        // Latest dental record per patient
+        $latestDentalRecords = DentalRecord::query()
+            ->selectRaw('MAX(id) as id')
+            ->groupBy('patient_id')
+            ->pluck('id');
+
+        $dentalRecords = DentalRecord::with(['patient'])
+            ->whereIn('id', $latestDentalRecords)
             ->get();
+
+        // Combine unique patient IDs from both medical & dental
+        $patientIds = $medicalRecords->pluck('patient_id')
+            ->merge($dentalRecords->pluck('patient_id'))
+            ->unique();
+
+        // Load patients that have at least one type of record
+        $this->records = Patient::whereIn('id', $patientIds)
+            ->with(['medicalRecords.diagnoses', 'dentalRecords'])
+            ->get();
+
+        // Keep both for expanded display
+        $this->dentalRecords = $dentalRecords;
     }
+
 
     public function searchPatient()
     {
@@ -71,6 +90,12 @@ class MedicalRecordsTable extends Component
             ->with(['diagnoses', 'patient'])
             ->get();
     }
+
+    public function getPatientDentalRecords($patientId)
+    {
+        return $this->dentalRecords->where('patient_id', $patientId);
+    }
+
 
     public function render()
     {
