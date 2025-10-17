@@ -153,7 +153,6 @@ class DentalForm extends Component
     {
     // Basic validation: require ID + (adjust rules as needed)
     $this->validate([
-        'apc_id_number'  => 'required|string',
         'oral_hygiene'   => 'nullable|string',
         'gingival_color' => 'nullable|string',
         'prophylaxis'    => 'boolean',
@@ -170,7 +169,6 @@ class DentalForm extends Component
     try {
         $record = DentalRecord::create([
             'patient_id'      => $patient ? $patient->id : null,
-            'patient_apc_id'  => $this->apc_id_number,
             'oral_hygiene'    => $this->oral_hygiene,
             'gingival_color'  => $this->gingival_color,
             'prophylaxis'     => (bool) $this->prophylaxis,

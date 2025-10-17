@@ -8,6 +8,7 @@ use App\Http\Controllers\StaffSummaryReportController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\DentalRecordController;
 
 $url = config('app.url');
 URL::forceRootUrl($url);
@@ -93,6 +94,8 @@ Route::middleware([
         return view('dental-records-table');
     })->name('dental-records-table');
 
+    Route::get('/staff/dental-records/{id}', [DentalRecordController::class, 'view'])
+    ->name('view-dental-record');
 
     Route::post('/appointment/notif', [AppointmentController::class, 'store'])
     ->name('appointment.notif')
@@ -220,5 +223,3 @@ Route::middleware([
         [App\Http\Controllers\StaffSummaryReportController::class, 'generateAccomplishmentReport']
     )->name('generate.accomplishment.report');
 });
-
-Route::get('/staff/dental-records/{id}', [\App\Http\Controllers\DentalRecordController::class, 'view'])->name('view-dental-record');
