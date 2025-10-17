@@ -20,6 +20,12 @@ return new class extends Migration
             $table->json('teeth')->nullable(); // store your $teeth array as JSON
             $table->text('recommendation')->nullable();
             $table->timestamps();
+
+            // appointment reference
+            $table->foreignId('appointment_id')->nullable()->constrained('appointments')->onDelete('set null');
+            
+            $table->foreignId('doctor_id')->nullable()->constrained('clinic_staff')->onDelete('set null');
+            $table->timestamp('archived_at')->nullable();
         });
     }
 
