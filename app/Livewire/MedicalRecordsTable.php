@@ -7,6 +7,7 @@ use App\Models\MedicalRecord;
 use App\Models\DentalRecord;
 use App\Models\Patient;
 use App\Models\RfidCard;
+use Illuminate\Support\Facades\DB;
 
 class MedicalRecordsTable extends Component
 {
@@ -27,20 +28,26 @@ class MedicalRecordsTable extends Component
     public function loadRecords()
     {
         // Get the latest record per patient
-        $latestRecords = MedicalRecord::query()
+        $latestMedicalRecords = MedicalRecord::query()
             ->selectRaw('MAX(id) as id')
             ->groupBy('patient_id')
             ->pluck('id');
 
         $this->records = MedicalRecord::with(['diagnoses', 'patient'])
-            ->whereIn('id', $latestRecords)
+            ->whereIn('id', $latestMedicalRecords)
             ->orderByDesc('last_visited')
             ->get();
 
-        // load dental records (no schema change needed)
-        $this->dentalRecords = DentalRecord::with('patient')
-            ->orderByDesc('created_at') // adjust if dental has a date field
+        $latestDentalRecords = DentalRecord::query()
+            ->selectRaw('MAX(id) as id')
+            ->groupBy('patient_id')
+            ->pluck('id');
+
+        $this->dentalRecords = DentalRecord::with(['patient'])
+            ->whereIn('id', $latestDentalRecords)
+            ->orderByDesc('created_at')
             ->get();
+        
     }
 
     public function searchPatient()
@@ -71,6 +78,12 @@ class MedicalRecordsTable extends Component
             ->with(['diagnoses', 'patient'])
             ->get();
     }
+
+    public function getPatientDentalRecords($patientId)
+    {
+        return $this->dentalRecords->where('patient_id', $patientId);
+    }
+
 
     public function render()
     {

@@ -108,28 +108,28 @@
                                 <div class="flex justify-center mb-2">
                                     <h3 class="text-lg font-semibold">Dental Record(s)</h3>
                                 </div>
-                                <div class="flex justify-center">
+                                <div class="flex justify-center mb-4">
                                     <table class="table-auto w-[80%] rounded mb-4 border">
                                         <thead>
                                             <tr class="border border-gray-300 bg-gray-200">
                                                 <th></th>
                                                 <th>Date</th>
-                                                <th>Recommenation</th>
+                                                <th>Recommendation</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @forelse ($dentalRecords ?? collect() as $dent)
+                                            @forelse ($this->getPatientDentalRecords($record->patient_id) as $dent)
                                                 <tr class="record-row">
                                                     <td class="text-center">
-                                                        @if (isset($dent->appointment_id) && $dent->appointment_id)
+                                                        @if ($dent->appointment_id)
                                                             <span class="px-2 bg-green-100 text-green-700 rounded-2xl text-xs">Appointment</span>
                                                         @else
                                                             <span class="px-2 bg-blue-100 text-blue-700 rounded-2xl text-xs">Walk-in</span>
                                                         @endif
                                                     </td>
                                                     <td class="text-center">{{ \Carbon\Carbon::parse($dent->last_visited ?? $dent->created_at)->format('M j, Y') }}</td>
-                                                    <td class="text-center">{{ \Illuminate\Support\Str::words($dent->recommendation ?? $dent->recommendations ?? '-', 15, '...') }}</td>
+                                                    <td class="text-center">{{ \Illuminate\Support\Str::words($dent->recommendation ?? '-', 15, '...') }}</td>
                                                     <td class="text-center">
                                                         <a href="{{ route('view-dental-record', $dent->id) }}" class="text-blue-600">View</a>
                                                     </td>
