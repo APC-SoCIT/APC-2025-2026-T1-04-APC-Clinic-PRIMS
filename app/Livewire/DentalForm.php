@@ -147,9 +147,24 @@ class DentalForm extends Component
     {
         if (!$this->selectedJaw || $this->selectedIndex === null) return;
 
-        $this->teeth[$this->selectedJaw][$this->selectedIndex] = $status;
-        $this->closeModal();
+        // If the same status is clicked, deselect it
+        if ($this->teeth[$this->selectedJaw][$this->selectedIndex] === $status) {
+            $this->teeth[$this->selectedJaw][$this->selectedIndex] = null;
+        } else {
+            $this->teeth[$this->selectedJaw][$this->selectedIndex] = $status;
+        }
+
     }
+
+    public $toothColors = [
+        'C'  => 'bg-red-500 text-white',       // Caries
+        'M'  => 'bg-gray-500 text-white',      // Missing
+        'E'  => 'bg-yellow-500 text-white',    // Extraction
+        'LC' => 'bg-orange-500 text-white',    // Lesion/Cavity
+        'CR' => 'bg-purple-500 text-white',    // Crown
+        'UE' => 'bg-blue-500 text-white',      // Unerupted
+    ];
+
 
     public $statusMessage = null;
 
