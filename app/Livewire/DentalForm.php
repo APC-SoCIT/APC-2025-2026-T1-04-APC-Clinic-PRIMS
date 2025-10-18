@@ -185,11 +185,7 @@ class DentalForm extends Component
 
     public function closeModalWithSave()
     {
-        // Close the modal
         $this->showModal = false;
-
-        // Keep the current selection intact, so if a tooth condition was selected, it's saved
-        // $this->selectedJaw and $this->selectedIndex stay as they are
     }
 
     public $statusMessage = null;
