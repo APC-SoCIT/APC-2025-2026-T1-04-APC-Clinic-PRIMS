@@ -307,11 +307,11 @@
             </a>
 
             <!-- palitan na lang yung route nito -->
-            <a href="{{ route('print-medical-record', $record->id) }}" target="_blank">
-                <button class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
-                    Print
-                </button>
-            </a>
+        <a href="{{ route('print-dental-record', $record->id) }}" target="_blank">
+            <button class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+            Print
+            </button>
+        </a>    
         </div>
 
     </div>
