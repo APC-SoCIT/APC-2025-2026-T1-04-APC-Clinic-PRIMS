@@ -169,7 +169,7 @@
                         type="button"
                         wire:click="openModal('upper', {{ $idx }})"
                         class="w-10 h-10 rounded-full border border-gray-400 transition-colors duration-300
-                            @if($teeth['upper'][$idx]) bg-blue-600 text-white @else bg-white hover:bg-gray-200 @endif"
+                            {{ $teeth['upper'][$idx] ? $toothColors[$teeth['upper'][$idx]] : 'bg-white hover:bg-gray-200' }}"
                         title="Upper Left {{ $label }} (pos {{ $idx }})"
                     >
                         {{ $label }}
@@ -186,7 +186,7 @@
                         type="button"
                         wire:click="openModal('upper', {{ $pos }})"
                         class="w-10 h-10 rounded-full border border-gray-400 transition-colors duration-300
-                            @if($teeth['upper'][$pos]) bg-blue-600 text-white @else bg-white hover:bg-gray-200 @endif"
+                            {{ $teeth['upper'][$pos] ? $toothColors[$teeth['upper'][$pos]] : 'bg-white hover:bg-gray-200' }}"
                         title="Upper Right {{ $label }} (pos {{ $pos }})"
                     >
                         {{ $label }}
@@ -201,7 +201,7 @@
                         type="button"
                         wire:click="openModal('lower', {{ $idx }})"
                         class="w-10 h-10 rounded-full border border-gray-400 transition-colors duration-300
-                            @if($teeth['lower'][$idx]) bg-green-600 text-white @else bg-white hover:bg-gray-200 @endif"
+                            {{ $teeth['lower'][$idx] ? $toothColors[$teeth['lower'][$idx]] : 'bg-white hover:bg-gray-200' }}"
                         title="Lower Left {{ $label }} (pos {{ $idx }})"
                     >
                         {{ $label }}
@@ -218,7 +218,7 @@
                         type="button"
                         wire:click="openModal('lower', {{ $pos }})"
                         class="w-10 h-10 rounded-full border border-gray-400 transition-colors duration-300
-                            @if($teeth['lower'][$pos]) bg-green-600 text-white @else bg-white hover:bg-gray-200 @endif"
+                            {{ $teeth['lower'][$pos] ? $toothColors[$teeth['lower'][$pos]] : 'bg-white hover:bg-gray-200' }}"
                         title="Lower Right {{ $label }} (pos {{ $pos }})"
                     >
                         {{ $label }}
@@ -229,29 +229,24 @@
 
         <!-- Pop-up Modal -->
         @if($showModal)
-            <div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 transition-opacity duration-200">
-                <div class="bg-white rounded-lg shadow-lg p-6 w-96 transform transition-transform duration-300 scale-100">
+            <div id="dentalModalBackdrop" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50" onclick="@this.closeModalWithSave()"> <!-- click anywhere on backdrop -->
+    <div id="dentalModal" class="bg-white rounded-lg shadow-lg p-6 w-96" onclick="event.stopPropagation()"> <!-- stops clicks inside modal from closing -->
                     <h3 class="text-lg font-semibold mb-4 text-gray-800">
-                        Tooth
-                        <span class="text-blue-600">
-                            @if($selectedJaw === 'upper')
-                                {{ ($upper[$selectedIndex] ?? $selectedIndex) }}
-                            @else
-                                {{ ($lower[$selectedIndex] ?? $selectedIndex) }}
-                            @endif
+                        Tooth 
+                        <span>
+                            {{ $this->getSelectedToothLabel() }}
                         </span>
-                        ({{ ucfirst($selectedJaw) }})
                     </h3>
 
                     <div class="grid grid-cols-3 gap-3">
                         @php
-                            $colors = [
-                                'C'  => 'bg-red-500 hover:bg-red-600 text-white',
-                                'M'  => 'bg-gray-500 hover:bg-gray-600 text-white',
-                                'E'  => 'bg-yellow-500 hover:bg-yellow-600 text-white',
-                                'LC' => 'bg-orange-500 hover:bg-orange-600 text-white',
-                                'CR' => 'bg-purple-500 hover:bg-purple-600 text-white',
-                                'UE' => 'bg-blue-500 hover:bg-blue-600 text-white',
+                            $statusLabels = [
+                                'C'  => 'Caries',
+                                'M'  => 'Missing',
+                                'E'  => 'Extraction',
+                                'LC' => 'Lesion/Cavity',
+                                'CR' => 'Crown',
+                                'UE' => 'Unerupted',
                             ];
                             $statuses = ['C','M','E','LC','CR','UE'];
                         @endphp
@@ -260,7 +255,7 @@
                             @php
                                 $isActive = ($selectedJaw && $selectedIndex !== null)
                                     && ($teeth[$selectedJaw][$selectedIndex] === $status);
-                                $baseClass = $colors[$status] ?? 'bg-gray-200 text-gray-800';
+                                $baseClass = $toothColors[$status] ?? 'bg-gray-200 text-gray-800';
                             @endphp
 
                             <button
@@ -269,6 +264,14 @@
                                 class="py-2 px-3 rounded shadow-sm transition transform duration-150
                                     {{ $isActive ? 'scale-105 ring-2 ring-offset-1' : '' }}
                                     {{ $baseClass }}"
+                                    title="@switch($status)
+                                            @case('C') Caries @break
+                                            @case('M') Missing @break
+                                            @case('E') Extraction @break
+                                            @case('LC') Lesion/Cavity @break
+                                            @case('CR') Crown @break
+                                            @case('UE') Unerupted @break
+                                        @endswitch"
                             >
                                 {{ $status }}
                             </button>
