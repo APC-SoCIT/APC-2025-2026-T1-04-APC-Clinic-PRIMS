@@ -112,7 +112,7 @@
 
         <div class="ml-17 my-6 px-40 grid grid-cols-4">
             <!-- Oral Hygiene -->
-            <label class="font-bold">Oral Hygiene <span class="text-red-500 italic text-xs">* required</span> :</label>
+            <label class="font-bold">Oral Hygiene :<span class="text-red-500 italic text-xs">* required</span></label> 
             <label>
                 <input type="radio" wire:model="oral_hygiene" value="Good" required>
                 <span class="">Good</span>
@@ -127,7 +127,7 @@
             </label>
 
             <!-- Gingival Color -->
-            <label class="font-bold mt-4">Gingival Color <span class="text-red-500 italic text-xs">* required</span> :</label>
+            <label class="font-bold mt-4">Gingival Color :<span class="text-red-500 italic text-xs">* required</span></label>
             <label class="mt-4">
                 <input type="radio" wire:model="gingival_color" value="Pink" required>
                 <span class="">Pink</span>
