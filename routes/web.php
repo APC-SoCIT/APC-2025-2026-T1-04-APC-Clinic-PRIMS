@@ -222,4 +222,8 @@ Route::middleware([
     Route::get('/generate-accomplishment-report', 
         [App\Http\Controllers\StaffSummaryReportController::class, 'generateAccomplishmentReport']
     )->name('generate.accomplishment.report');
+
+    // Print dental record route
+    Route::get('/dental-records/{id}/print', [DentalRecordController::class, 'printPDF'])
+    ->name('print-dental-record');
 });
