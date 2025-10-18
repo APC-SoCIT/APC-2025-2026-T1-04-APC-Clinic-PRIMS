@@ -93,9 +93,10 @@ class MedicalRecordsTable extends Component
 
     public function getPatientDentalRecords($patientId)
     {
-        return $this->dentalRecords->where('patient_id', $patientId);
+        return DentalRecord::where('patient_id', $patientId)
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
-
 
     public function render()
     {
