@@ -158,13 +158,39 @@ class DentalForm extends Component
 
     public $toothColors = [
         'C'  => 'bg-red-500 text-white',       // Caries
-        'M'  => 'bg-gray-500 text-white',      // Missing
-        'E'  => 'bg-yellow-500 text-white',    // Extraction
+        'M'  => 'bg-blue-500 text-white',      // Missing
+        'E'  => 'bg-green-500 text-white',     // Extraction
         'LC' => 'bg-orange-500 text-white',    // Lesion/Cavity
         'CR' => 'bg-purple-500 text-white',    // Crown
-        'UE' => 'bg-blue-500 text-white',      // Unerupted
+        'UE' => 'bg-yellow-500 text-white',    // Unerupted
     ];
 
+    public function getSelectedToothLabel()
+    {
+        if ($this->selectedJaw === null || $this->selectedIndex === null) return '';
+
+        // Determine side
+        $side = $this->selectedIndex < count($this->leftLabels) ? 'Left' : 'Right';
+
+        // Adjust index for side
+        $indexInSide = $side === 'Left' ? $this->selectedIndex : $this->selectedIndex - count($this->leftLabels);
+
+        // Pick the label
+        $label = $side === 'Left' 
+            ? $this->leftLabels[$indexInSide] 
+            : $this->rightLabels[$indexInSide];
+
+        return $label . ' (' . ucfirst($this->selectedJaw) . ' ' . $side . ')';
+    }
+
+    public function closeModalWithSave()
+    {
+        // Close the modal
+        $this->showModal = false;
+
+        // Keep the current selection intact, so if a tooth condition was selected, it's saved
+        // $this->selectedJaw and $this->selectedIndex stay as they are
+    }
 
     public $statusMessage = null;
 
