@@ -50,6 +50,11 @@ class Appointment extends Model
         return $this->hasOne(MedicalRecord::class, 'appointment_id');
     }
 
+    public function dentalRecord()
+    {
+        return $this->hasOne(DentalRecord::class, 'appointment_id');
+    }
+
     public function updatedBy()
     {
         return $this->belongsTo(User::class, 'status_updated_by');

@@ -130,6 +130,61 @@
                                     <tr class="bg-gray-50">
                                         <td colspan="7" class="px-6 py-4 border-b">
                                             <div class="flex flex-row gap-4">
+
+                                                @if ($appointment->doctor && $appointment->doctor->doctor_category == 'Dentist')
+                                                <div class="w-2/5 flex flex-col gap-3">
+                                                    <div class="p-3 border border-gray-200 rounded-lg bg-white shadow-md transition-all duration-150 transform">
+                                                        <p class="text-lg font-semibold mb-2">Feedback:</p>
+                                                        @if($appointment->status == 'completed')    
+                                                            @if($appointment->consultationFeedback)
+                                                                <p class="text-sm text-gray-700">You have already submitted feedback for this appointment. Thank you!</p>
+                                                            @else
+                                                            <p class="text-sm text-gray-700">Help us improve our services! Answering will only take around 1-2 minutes.</p>
+                                                            <div class="flex justify-end mt-2">
+                                                                <x-button class="px-3 py-1 text-sm" 
+                                                                    wire:click="openFeedbackModal({{ $appointment->id }})">
+                                                                    Submit Feedback
+                                                                </x-button>
+                                                            </div>
+                                                            @endif
+                                                        @else
+                                                        <p class="text-sm text-gray-500 mt-2"><em>Feedback is only available for completed appointments.</em></p>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                <div class="w-3/5">
+                                                    <div class="p-3 border border-gray-200 rounded-lg bg-white shadow-md transition-all duration-150 transform">
+                                                        <p class="text-lg font-semibold mb-2">Dental Examination:</p>  
+                                                        <div class="flex flex-row gap-2">
+                                                        @if($appointment->dentalRecord)
+                                                            <div class="w-1/2 border border-gray-200 bg-white p-3 rounded">
+                                                                <p class="text-sm text-gray-700 -indent-5 pl-5 break-all">
+                                                                    <strong>Intraoral Examination Findings:</strong><br>
+                                                                    <strong>Oral Hygiene:</strong> {{ $appointment->dentalRecord->oral_hygiene }}<br>
+                                                                    <strong>Gingival Color:</strong> {{ $appointment->dentalRecord->gingival_color }}<br>
+                                                                </p>
+                                                            </div>
+                                                            <div class="w-1/2 border border-gray-200 bg-white p-3 rounded">
+                                                                <p class="text-sm text-gray-700 -indent-5 pl-5 break-all">
+                                                                    <strong>Procedures:</strong><br>
+                                                                    <strong>Oral Prophylaxis:</strong> {{ $appointment->dentalRecord->oral_hygiene ? 'Yes' : 'No' }}<br>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <hr class="my-3">
+                                                        <p class="mt-2 text-sm text-gray-700 -indent-5 pl-5 break-word"><strong><em>For a comprehensive view of the medical findings, please request a copy of your medical record.</em></strong></p>
+                                                        <div class="flex justify-end mt-2">
+                                                            <x-button class="px-3 py-1 text-sm" 
+                                                                wire:click="requestMedicalRecord({{ $appointment->id }})">
+                                                                Request for Medical Record
+                                                            </x-button>
+                                                        </div>
+                                                        @else
+                                                            <p class="text-sm text-gray-500 mt-2"><em>No dental examination available yet.</em></p>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                @elseif ($appointment->doctor && $appointment->doctor->doctor_category == 'Medical')
                                                 <div class="w-2/5 flex flex-col gap-3">
                                                     <div class="p-3 border border-gray-200 rounded-lg bg-white shadow-md transition-all duration-150 transform">
                                                         <p class="text-lg font-semibold mb-2">Medical Concerns:</p>    
@@ -195,6 +250,7 @@
                                                         @endif
                                                     </div>
                                                 </div>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>

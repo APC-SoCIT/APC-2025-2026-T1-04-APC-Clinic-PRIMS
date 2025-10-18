@@ -13,6 +13,9 @@ class DentalRecord extends Model
         'prophylaxis',
         'teeth',
         'recommendation',
+        'appointment_id',
+        'doctor_id',
+        'archived_at',
     ];
 
     protected $casts = [
