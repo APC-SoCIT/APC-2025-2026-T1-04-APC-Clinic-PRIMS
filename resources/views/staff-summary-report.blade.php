@@ -57,6 +57,11 @@
                 </div>
             </div>
 
+            <div>
+                <h2 class="text-lg font-semibold text-blue-700 mb-2">Predictive Hint (AI)</h2>
+                <p class="text-gray-700 whitespace-pre-line">{{ $predictiveHint }}</p>
+            </div>
+
             <!-- Charts Row (1 + 2) -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <!-- Chart 1 -->
@@ -164,75 +169,85 @@
                 </div>
             </div>
 
+            <div>
+                <h2 class="text-lg font-semibold text-blue-700 mb-2">Admin Insights (AI)</h2>
+                <p class="text-gray-700 whitespace-pre-line">{{ $adminInsights }}</p>
+            </div>
+
                <!-- 💛 Patient Satisfaction / Feedback Summary -->
 
-             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
-    <!-- LEFT: Summary (1/3 width) -->
-    <div class="bg-white rounded-2xl shadow p-6 col-span-1 flex flex-col justify-between">
-        <div>
-            <!-- Title -->
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-semibold text-gray-800">
-                    Patient Satisfaction / Feedback Summary
-                </h2>
-            </div>
-
-            <!-- Stars + Percent -->
-            <div class="flex items-center justify-between mb-2">
-                <div id="average-stars" class="flex text-yellow-400 text-2xl"></div>
-                <span class="text-gray-700 text-lg font-semibold">
-                    {{ number_format($satisfactionScore, 0) }}%
-                </span>
-            </div>
-
-            <!-- Average rating and total feedback -->
-            <p class="text-sm text-gray-600 mb-3">
-                Average Rating: <strong>{{ $averageRating }}/5</strong><br>
-                Total Feedback: <strong>{{ $totalFeedback }}</strong>
-            </p>
-
-            <!-- Rating Distribution -->
-            <div class="space-y-2">
-                @foreach($ratingDistribution as $stars => $count)
-                    <div class="flex items-center justify-between text-sm text-gray-700">
-                        <div class="flex items-center space-x-1">
-                            <span class="w-8">{{ $stars }}★</span>
-                            <div class="w-24 bg-gray-100 rounded-full h-2">
-                                <div class="bg-yellow-400 h-2 rounded-full transition-all duration-500"
-                                    style="width: {{ $totalFeedback > 0 ? ($count / $totalFeedback) * 100 : 0 }}%;">
-                                </div>
-                            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+                <!-- LEFT: Summary (1/3 width) -->
+                <div class="bg-white rounded-2xl shadow p-6 col-span-1 flex flex-col justify-between">
+                    <div>
+                        <!-- Title -->
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-lg font-semibold text-gray-800">
+                                Patient Satisfaction / Feedback Summary
+                            </h2>
                         </div>
-                        <span>{{ $count }}</span>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
 
-    <!-- RIGHT: Comments (2/3 width) -->
-    <div class="bg-white rounded-2xl shadow p-6 col-span-2">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">Recent Feedback</h2>
+                        <!-- Stars + Percent -->
+                        <div class="flex items-center justify-between mb-2">
+                            <div id="average-stars" class="flex text-yellow-400 text-2xl"></div>
+                            <span class="text-gray-700 text-lg font-semibold">
+                                {{ number_format($satisfactionScore, 0) }}%
+                            </span>
+                        </div>
 
-        <div class="space-y-4 max-h-96 overflow-y-auto pr-2">
-            @forelse($recentFeedback as $feedback)
-                <div class="border-b border-gray-100 pb-3">
-                    <div class="flex justify-between text-sm text-gray-500 mb-1">
-                        <span>{{ $feedback->created_at->format('M d, Y') }}</span>
-                        <span>
-                            @for($i = 1; $i <= 5; $i++)
-                                <i class="fas fa-star {{ $i <= $feedback->rating ? 'text-yellow-400' : 'text-gray-300' }}"></i>
-                            @endfor
-                        </span>
+                        <!-- Average rating and total feedback -->
+                        <p class="text-sm text-gray-600 mb-3">
+                            Average Rating: <strong>{{ $averageRating }}/5</strong><br>
+                            Total Feedback: <strong>{{ $totalFeedback }}</strong>
+                        </p>
+
+                        <!-- Rating Distribution -->
+                        <div class="space-y-2">
+                            @foreach($ratingDistribution as $stars => $count)
+                                <div class="flex items-center justify-between text-sm text-gray-700">
+                                    <div class="flex items-center space-x-1">
+                                        <span class="w-8">{{ $stars }}★</span>
+                                        <div class="w-24 bg-gray-100 rounded-full h-2">
+                                            <div class="bg-yellow-400 h-2 rounded-full transition-all duration-500"
+                                                style="width: {{ $totalFeedback > 0 ? ($count / $totalFeedback) * 100 : 0 }}%;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span>{{ $count }}</span>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
-                    <p class="text-gray-700 text-sm italic">"{{ $feedback->comment }}"</p>
                 </div>
-            @empty
-                <p class="text-gray-500 text-sm">No feedback available.</p>
-            @endforelse
-        </div>
-    </div>
-</div>
+
+                <!-- RIGHT: Comments (2/3 width) -->
+                <div class="bg-white rounded-2xl shadow p-6 col-span-2">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Recent Feedback</h2>
+
+                    <div class="space-y-4 max-h-96 overflow-y-auto pr-2">
+                        @forelse($recentFeedback as $feedback)
+                            <div class="border-b border-gray-100 pb-3">
+                                <div class="flex justify-between text-sm text-gray-500 mb-1">
+                                    <span>{{ $feedback->created_at->format('M d, Y') }}</span>
+                                    <span>
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="fas fa-star {{ $i <= $feedback->rating ? 'text-yellow-400' : 'text-gray-300' }}"></i>
+                                        @endfor
+                                    </span>
+                                </div>
+                                <p class="text-gray-700 text-sm italic">"{{ $feedback->comment }}"</p>
+                            </div>
+                        @empty
+                            <p class="text-gray-500 text-sm">No feedback available.</p>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-lg font-semibold text-blue-700 mb-2">Feedback Summary (AI)</h2>
+                <p class="text-gray-700 whitespace-pre-line">{{ $feedbackSummary }}</p>
+            </div>
 
             <div class="flex justify-end mt-4">
                 <button id="generateReport" 

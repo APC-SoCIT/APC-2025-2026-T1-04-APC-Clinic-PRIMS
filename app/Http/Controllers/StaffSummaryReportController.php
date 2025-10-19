@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB; // <- used for raw queries
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
 
 class StaffSummaryReportController extends Controller
 {
@@ -174,6 +175,65 @@ class StaffSummaryReportController extends Controller
             ->get();
 
         // ------------------------------------------------------
+        // AI Insights (using Gemini)
+        // ------------------------------------------------------
+        try {
+            // Convert collections to plain arrays
+            $topReasons = $commonDiagnoses->pluck('diagnosis')->toArray();
+            $topMedications = $medications->pluck('name')->toArray();
+            $feedbackTexts = $recentFeedback->pluck('message')->toArray(); // adjust if your column is named differently
+
+            // Create prompt for all 3 sections
+            $prompt = "
+            You are an AI assistant generating monthly clinic report insights.
+            Provide your output in this exact format:
+            FEEDBACK SUMMARY:
+            [summary of feedback in 2-3 sentences]
+
+            ADMIN INSIGHTS:
+            [overall analysis for clinic admin in 2-3 sentences, use data like the total counts, top reasons, top medications only]
+
+            PREDICTIVE HINT:
+            [prediction or recommendation for next month in 1-2 sentences based on trends. also only use the data for the patients provided.]
+
+            Data:
+            - Total patients: {$totalPatients}
+            - Attended: {$attendedCount}
+            - Cancelled: {$cancelledCount}
+            - Top reasons for visit: " . implode(', ', $topReasons) . "
+            - Top prescribed medications: " . implode(', ', $topMedications) . "
+            - Average satisfaction rating: {$averageRating} / 5
+            - Feedback examples: " . implode(' | ', $feedbackTexts) . "
+            ";
+
+            $response = Http::post("https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=" . env('GEMINI_API_KEY'), [
+                'contents' => [[
+                    'parts' => [[ 'text' => $prompt ]]
+                ]]
+            ]);
+
+            \Log::info('Gemini raw response', ['body' => $response->json()]);
+
+            $body = $response->json();
+            $aiText = $body['candidates'][0]['content']['parts'][0]['text'] ?? null;
+
+            if (!$aiText) {
+                \Log::error('Gemini response error', ['body' => $body]);
+                $feedbackSummary = $adminInsights = $predictiveHint = 'AI could not generate a response.';
+            }
+
+
+            // Split the AI response into sections
+            $feedbackSummary = $this->extractSection($aiText, 'FEEDBACK SUMMARY', 'ADMIN INSIGHTS');
+            $adminInsights = $this->extractSection($aiText, 'ADMIN INSIGHTS', 'PREDICTIVE HINT');
+            $predictiveHint = $this->extractSection($aiText, 'PREDICTIVE HINT');
+        } catch (\Exception $e) {
+            $feedbackSummary = 'AI summary unavailable.';
+            $adminInsights = 'AI insights unavailable.';
+            $predictiveHint = 'Prediction unavailable.';
+        }
+
+        // ------------------------------------------------------
         // Return view with all expected variables
         // ------------------------------------------------------
         return view('staff-summary-report', [
@@ -199,7 +259,25 @@ class StaffSummaryReportController extends Controller
                 'total' => $totalEmojiRows,
             ],
             'satisfactionScore'    => $satisfactionScore,    // 0-100 % (derived from rating avg)
+
+            // AI-generated insights
+            'feedbackSummary'      => $feedbackSummary,
+            'adminInsights'        => $adminInsights,
+            'predictiveHint'       => $predictiveHint,
         ]);
+    }
+
+    private function extractSection($text, $startLabel, $endLabel = null)
+    {
+        $pattern = $endLabel
+            ? "/{$startLabel}\s*:?\s*(.*?)(?={$endLabel}\s*:|$)/is"
+            : "/{$startLabel}\s*:?\s*(.*)/is";
+
+        if (preg_match($pattern, $text, $matches)) {
+            return trim($matches[1]);
+        }
+
+        return 'No data generated.';
     }
 
     public function generateAccomplishmentReport(Request $request)
@@ -267,4 +345,6 @@ class StaffSummaryReportController extends Controller
 
         return $pdf->stream('accomplishment-report.pdf');
     }
+
+
 }
