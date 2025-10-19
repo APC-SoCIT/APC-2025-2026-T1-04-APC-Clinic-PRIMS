@@ -7,7 +7,13 @@ use App\Models\Appointment;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\DoctorSchedule;
+use App\Models\ClinicStaff;
 use App\Models\Feedback;
+use App\Models\MedicalRecord;
+use App\Models\DentalRecord;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\RecordRequestMail;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class AppointmentHistory extends Component
@@ -200,6 +206,54 @@ class AppointmentHistory extends Component
         return response()->streamDownload(function() use ($pdf) {
             echo $pdf->output();
         }, 'Medical_Record_' . $patient->first_name . '_' . $patient->last_name . '_' . Carbon::now()->format('Ymd_His') . '.pdf');
+    }
+
+    public $requested_record_id;
+    
+    public function requestMedicalRecord($recordId)
+    {
+        \Log::info('Received request to send med record email for ID: ' . $recordId);
+
+        $record = \App\Models\MedicalRecord::where('appointment_id', $recordId)->first();
+
+        if (!$record) {
+            \Log::info('Record not found for email!');
+            return;
+        }
+
+        \Log::info('Preparing to send mail for record ID: ' . $record->id);
+        
+        Mail::to('primsapcclinic@gmail.com')->send(new RecordRequestMail($record, 'medical'));
+
+        \Log::info('Mail sent successfully (or queued).');
+        
+        $this->showRequestPrompt = true;
+
+        // optional success flash message
+        session()->flash('success', 'An email has been sent to the nurse.');
+    }
+
+    public function requestDentalRecord($recordId)
+    {
+        \Log::info('Received request to send dental record email for ID: ' . $recordId);
+
+        $record = DentalRecord::where('appointment_id', $recordId)->first();
+
+        if (!$record) {
+            \Log::info('Dental record not found for email!');
+            return;
+        }
+
+        \Log::info('Preparing to send mail for dental record ID: ' . $record->id);
+
+        Mail::to('primsapcclinic@gmail.com')->send(new RecordRequestMail($record, 'dental'));
+
+        \Log::info('Dental appointment IDs in DB: ' . implode(',', DentalRecord::pluck('appointment_id')->toArray()));
+
+        \Log::info('Mail sent successfully (or queued).');
+
+        $this->showRequestPrompt = true;
+        session()->flash('success', 'An email has been sent to the nurse.');
     }
 
 

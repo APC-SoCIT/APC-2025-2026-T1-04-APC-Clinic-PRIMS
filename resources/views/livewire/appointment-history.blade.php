@@ -175,8 +175,8 @@
                                                         <p class="mt-2 text-sm text-gray-700 -indent-5 pl-5 break-word"><strong><em>For a comprehensive view of the medical findings, please request a copy of your medical record.</em></strong></p>
                                                         <div class="flex justify-end mt-2">
                                                             <x-button class="px-3 py-1 text-sm" 
-                                                                wire:click="requestMedicalRecord({{ $appointment->id }})">
-                                                                Request for Medical Record
+                                                                wire:click="requestDentalRecord({{ $appointment->id }})">
+                                                                Request for Dental Record
                                                             </x-button>
                                                         </div>
                                                         @else
@@ -326,6 +326,20 @@
                                                                 Request for Medical Record
                                                             </x-button>
                                                         </div>
+                                                        @if ($showRequestPrompt)
+                                                            <div class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+                                                                <div class="bg-white rounded-lg p-6 shadow-lg">
+                                                                    <h2 class="text-lg font-semibold mb-3">Email Sent</h2>
+                                                                    <p class="text-gray-700">An email has been sent to the nurse regarding your medical record request.</p>
+                                                                    <div class="mt-4 text-right">
+                                                                        <button wire:click="$set('showRequestPrompt', false)" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                                                            OK
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endif
+
                                                     </div>
                                                 </div>
                                             </div>
