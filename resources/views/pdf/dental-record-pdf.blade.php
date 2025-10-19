@@ -38,6 +38,22 @@
             margin-bottom: 5px;
             font-size: 14px;
         }
+    
+        .teeth-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 12px;
+        }
+        .teeth-table td {
+            width: 15px;
+            height: 25px;
+            border: 1px solid #000;
+        }
+        .teeth-gap {
+            width: 30px; 
+            border: none !important;
+        }
     </style>
 </head>
 <body>
@@ -73,7 +89,7 @@
         </tr>
     </table>
 
-    <!-- Dental Examination -->
+    <!-- I. Dental Examination -->
     <div class="section-title">I. DENTAL EXAMINATION</div>
     <table>
         <tr>
@@ -82,9 +98,13 @@
             <th>Gingival Color</th>
             <td>{{ $record->gingival_color ?? 'N/A' }}</td>
         </tr>
+    </table>
+
+    <!-- II. Procedures -->
+    <div class="section-title">II. PROCEDURES</div>
+    <table>
         <tr>
-            <th>Procedures</th>
-            <td colspan="3">
+            <td colspan="3" style="text-align: center; font-weight: bold;">
                 @if ($record->prophylaxis)
                     Oral Prophylaxis
                 @else
@@ -94,39 +114,88 @@
         </tr>
     </table>
 
-    <!-- Selected Tooth Numbers -->
-    <div class="section-title">II. SELECTED TOOTH NUMBERS</div>
-    <table>
+    <!-- III. Selected Tooth Numbers -->
+    <div class="section-title">III. SELECTED TOOTH NUMBERS</div>
+
+    <!-- Upper Teeth -->
+    <p><strong>Upper Teeth</strong></p>
+    <table class="teeth-table">
         <tr>
-            <th>Upper Teeth</th>
-            <td>
-                @php
-                    $upperTeeth = collect($record->teeth['upper'] ?? [])->filter(fn($v) => $v);
-                @endphp
-                {{ $upperTeeth->isNotEmpty() ? implode(', ', array_keys($upperTeeth->toArray())) : 'None selected' }}
-            </td>
+            @foreach (range(8, 1) as $num)
+                <td>{{ $num }}</td>
+            @endforeach
+            <td class="teeth-gap"></td> <!-- Center gap -->
+            @foreach (range(1, 8) as $num)
+                <td>{{ $num }}</td>
+            @endforeach
         </tr>
         <tr>
-            <th>Lower Teeth</th>
-            <td>
-                @php
-                    $lowerTeeth = collect($record->teeth['lower'] ?? [])->filter(fn($v) => $v);
-                @endphp
-                {{ $lowerTeeth->isNotEmpty() ? implode(', ', array_keys($lowerTeeth->toArray())) : 'None selected' }}
-            </td>
+            @foreach (range(0, 7) as $index)
+                <td>{{ $record->teeth['upper'][$index] ?? '' }}</td>
+            @endforeach
+            <td class="teeth-gap"></td>
+            @foreach (range(8, 15) as $index)
+                <td>{{ $record->teeth['upper'][$index] ?? '' }}</td>
+            @endforeach
         </tr>
     </table>
 
-    <!-- Recommendation -->
-    <div class="section-title">III. RECOMMENDATION</div>
+    <!-- Gap between upper and lower -->
+    <div style="height: 30px;"></div>
+
+    <!-- Lower Teeth -->
+    <p><strong>Lower Teeth</strong></p>
+    <table class="teeth-table">
+        <tr>
+            @foreach (range(8, 1) as $num)
+                <td>{{ $num }}</td>
+            @endforeach
+            <td class="teeth-gap"></td>
+            @foreach (range(1, 8) as $num)
+                <td>{{ $num }}</td>
+            @endforeach
+        </tr>
+        <tr>
+            @foreach (range(0, 7) as $index)
+                <td>{{ $record->teeth['lower'][$index] ?? '' }}</td>
+            @endforeach
+            <td class="teeth-gap"></td>
+            @foreach (range(8, 15) as $index)
+                <td>{{ $record->teeth['lower'][$index] ?? '' }}</td>
+            @endforeach
+        </tr>
+    </table>
+
+    <!-- Legend for Tooth Conditions -->
+    <div class="section-title">Legend</div>
+    <table>
+        <tr>
+            <td><strong>C:</strong> Caries</td>
+            <td><strong>M:</strong> Missing</td>
+            <td><strong>E:</strong> Extraction</td>
+        </tr>
+        <tr>
+            <td><strong>LC:</strong> Lost Crown</td>
+            <td><strong>CR:</strong> Crown</td>
+            <td><strong>UE:</strong> Unerupted</td>
+        </tr>
+    </table>
+
+    <!-- IV. Recommendation -->
+    <div class="section-title">IV. RECOMMENDATION</div>
     <table>
         <tr>
             <td>{{ $record->recommendation ?? 'No recommendation provided.' }}</td>
         </tr>
     </table>
 
-    <!-- Signature Section -->
+    <!-- Authorization -->
     <br><br>
+    <p>
+    I hereby authorize this clinic and its officially designated examining physician to furnish information that the school may need pertaining to my health status and other pertinent medical findings and to hereby release them from all legal responsibility.
+    </p>
+
+    <!-- Signature Section -->
     <table>
         <tr>
             <td>(Signature over printed name)<br>Date: _____________</td>
