@@ -173,7 +173,7 @@ class StaffCalendar extends Component
 
             session()->flash('success', 'Appointment approved. Email notification sent.');
 
-            Mail::to($appointment->patient->email)->send(new ApprovedAppointment($appointment));
+            Mail::to($appointment->patient->email)->queue(new ApprovedAppointment($appointment));
         }
     }
 
@@ -212,7 +212,7 @@ class StaffCalendar extends Component
             $this->loadAppointments();
             $this->generateCalendar();
 
-            Mail::to($appointment->patient->email)->send(new DeclinedAppointment($appointment));
+            Mail::to($appointment->patient->email)->queue(new DeclinedAppointment($appointment));
         }
     }
 
@@ -301,7 +301,7 @@ class StaffCalendar extends Component
                 $schedule->update(['available_times' => json_encode($availableTimes)]);
             }
 
-            Mail::to($appointment->patient->email)->send(new CancelledAppointment($appointment));
+            Mail::to($appointment->patient->email)->queue(new CancelledAppointment($appointment));
 
             // Reset values and close modal
             $this->showCancelModal = false;

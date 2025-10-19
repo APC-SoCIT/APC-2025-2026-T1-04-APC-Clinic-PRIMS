@@ -10,7 +10,7 @@ use App\Models\Appointment;
 use App\Models\Patient;
 use Carbon\Carbon;
 
-class ApprovedAppointment extends Mailable
+class ApprovedAppointment extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
