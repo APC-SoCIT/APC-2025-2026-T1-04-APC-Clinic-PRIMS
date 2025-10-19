@@ -185,16 +185,24 @@ class StaffSummaryReportController extends Controller
 
             // Create prompt for all 3 sections
             $prompt = "
-            You are an AI assistant generating monthly clinic report insights.
-            Provide your output in this exact format:
+            You are a helpful assistant creating an easy-to-read monthly clinic report.
+            Write in a friendly and professional tone that a school nurse can easily understand.
+            Highlight key phrases in bold HTML tags (use <b>, don't use **), and return plain HTML text only for those highlighted points. You are only allowed to return <b> tags for emphasis, don't use paragraph or heading tags.
+
+            Use this exact format:
+
             FEEDBACK SUMMARY:
-            [summary of feedback in 2-3 sentences]
+            Give a short summary (2-3 sentences) of what students or patients said in their feedback. 
+            Point out common comments and simple suggestions for how the clinic can improve.
 
             ADMIN INSIGHTS:
-            [overall analysis for clinic admin in 2-3 sentences, use data like the total counts, top reasons, top medications only]
+            Give a quick overview (2-3 sentences) using the data below. 
+            Mention the total patients, top reasons for visits, and top medicines. 
+            Share what went well this month and what could be improved or continued.
 
             PREDICTIVE HINT:
-            [prediction or recommendation for next month in 1-2 sentences based on trends. also only use the data for the patients provided.]
+            Based on the data and time of year, give a short prediction or reminder (2-3 sentences) for what might happen next month. 
+            For example, expected health concerns or things to prepare for.
 
             Data:
             - Total patients: {$totalPatients}
@@ -205,6 +213,7 @@ class StaffSummaryReportController extends Controller
             - Average satisfaction rating: {$averageRating} / 5
             - Feedback examples: " . implode(' | ', $feedbackTexts) . "
             ";
+
 
             $response = Http::post("https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=" . env('GEMINI_API_KEY'), [
                 'contents' => [[

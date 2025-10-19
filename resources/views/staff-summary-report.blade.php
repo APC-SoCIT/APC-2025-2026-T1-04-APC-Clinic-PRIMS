@@ -37,7 +37,7 @@
                 </div>
             </form>
 
-            <div class="grid grid-cols-3 gap-3 mb-4">
+            <div class="grid grid-cols-3 gap-3 mb-6">
                 <div class="p-3 bg-white rounded-lg shadow-md flex flex-col items-center justify-center transition-transform duration-200 hover:scale-105">
                     <x-heroicon-s-users class="h-5 w-5 text-blue-500 mb-1" />
                     <h3 class="text-sm font-semibold text-gray-700">Patients</h3>
@@ -57,9 +57,9 @@
                 </div>
             </div>
 
-            <div>
-                <h2 class="text-lg font-semibold text-blue-700 mb-2">Predictive Hint (AI)</h2>
-                <p class="text-gray-700 whitespace-pre-line">{{ $predictiveHint }}</p>
+            <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+                <p class="text-lg text-blue-700 mb-2"><em>💡 <strong>Predictive Hint</strong> - by Gemini </em></p>
+                <p class="text-gray-700 text-md whitespace-pre-line">{!! $predictiveHint !!}</p>
             </div>
 
             <!-- Charts Row (1 + 2) -->
@@ -169,14 +169,14 @@
                 </div>
             </div>
 
-            <div>
-                <h2 class="text-lg font-semibold text-blue-700 mb-2">Admin Insights (AI)</h2>
-                <p class="text-gray-700 whitespace-pre-line">{{ $adminInsights }}</p>
+            <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+                <p class="text-lg text-blue-700 mb-2"><em>💡 <strong>Admin Insights</strong> - by Gemini </em></p>
+                <p class="text-gray-700 text-md whitespace-pre-line">{!! $adminInsights !!}</p>
             </div>
 
                <!-- 💛 Patient Satisfaction / Feedback Summary -->
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- LEFT: Summary (1/3 width) -->
                 <div class="bg-white rounded-2xl shadow p-6 col-span-1 flex flex-col justify-between">
                     <div>
@@ -244,9 +244,9 @@
                 </div>
             </div>
 
-            <div>
-                <h2 class="text-lg font-semibold text-blue-700 mb-2">Feedback Summary (AI)</h2>
-                <p class="text-gray-700 whitespace-pre-line">{{ $feedbackSummary }}</p>
+            <div class="bg-white rounded-lg shadow-md p-4 my-6">
+                <p class="text-lg text-blue-700 mb-2"><em>💡 <strong>Feedback Summary</strong> - by Gemini </em></p>
+                <p class="text-gray-700 text-md whitespace-pre-line">{!! $feedbackSummary !!}</p>
             </div>
 
             <div class="flex justify-end mt-4">
