@@ -34,4 +34,14 @@ class DentalRecord extends Model
             ->latestOfMany('last_visited');
     }
 
+    public function doctor()
+    {
+        return $this->belongsTo(ClinicStaff::class, 'doctor_id');
+    }
+
+    public function appointment()
+    {
+        return $this->belongsTo(Appointment::class, 'appointment_id');
+    }
+
 }

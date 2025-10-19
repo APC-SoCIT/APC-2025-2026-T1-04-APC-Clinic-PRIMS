@@ -16,7 +16,8 @@ class AppointmentHistory extends Component
     public $appointmentHistory;
     public $hasUpcomingAppointment;
     public $showingWalkIns = false;
-    public $walkInRecords = [];
+    public $walkInMedicalRecords;
+    public $walkInDentalRecords;
     public $expandedWalkIn = null;
     public $showCancelModal = false;
     public $cancelAppointmentId;
@@ -56,10 +57,17 @@ class AppointmentHistory extends Component
     public function loadWalkIns()
     {
         // Medical records that belong to this patient and are not linked to an appointment
-        $this->walkInRecords = \App\Models\MedicalRecord::with(['physicalExaminations', 'diagnoses', 'appointment.doctor'])
+        $this->walkInMedicalRecords = \App\Models\MedicalRecord::with(['physicalExaminations', 'diagnoses', 'appointment.doctor'])
             ->where('patient_id', $this->patient->id)
             ->whereNull('appointment_id')
             ->orderBy('last_visited', 'desc')
+            ->get();
+
+        // Dental records that belong to this patient and are not linked to an appointment
+        $this->walkInDentalRecords = \App\Models\DentalRecord::with(['appointment.doctor'])
+            ->where('patient_id', $this->patient->id)
+            ->whereNull('appointment_id')
+            ->orderBy('created_at', 'desc')
             ->get();
     }
 
