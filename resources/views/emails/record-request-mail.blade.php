@@ -30,9 +30,9 @@
                             <p style="font-size:16px; margin-bottom:15px;">
                                 Dear <strong>Nurse Ana</strong>,
                             </p>
-                            <br>
                             <p style="font-size:16px; margin-bottom:10px;">
                                 Patient <strong>{{ $record->appointment->patient->first_name }} {{ $record->appointment->patient->last_name }}</strong> has requested a printed copy of their {{ $type }} record.
+                                <br>
                                 <br>
                                 You can view the requested record by clicking the button below:
                             </p>
