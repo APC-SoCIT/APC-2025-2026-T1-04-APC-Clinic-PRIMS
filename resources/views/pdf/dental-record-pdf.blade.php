@@ -139,9 +139,8 @@
             @endforeach
         </tr>
     </table>
-
     <!-- Gap between upper and lower -->
-    <div style="height: 30px;"></div>
+    <div style="height: 20px;"></div>
 
     <!-- Lower Teeth -->
     <p><strong>Lower Teeth</strong></p>
@@ -167,21 +166,19 @@
     </table>
 
     <!-- Legend for Tooth Conditions -->
-    <div class="section-title">Legend</div>
-    <table>
-        <tr>
-            <td><strong>C:</strong> Caries</td>
-            <td><strong>M:</strong> Missing</td>
-            <td><strong>E:</strong> Extraction</td>
-        </tr>
-        <tr>
-            <td><strong>LC:</strong> Lost Crown</td>
-            <td><strong>CR:</strong> Crown</td>
-            <td><strong>UE:</strong> Unerupted</td>
-        </tr>
-    </table>
+    <p style="font-size: 11px; line-height: 1.5; margin-left: 10px; text-align: center;;">
+        <br></br>
+        <strong>C</strong> – Caries,&nbsp;
+        <strong>M</strong> – Missing,&nbsp;
+        <strong>E</strong> – Extraction,<br>
+        <strong>LC</strong> – Lost Crown,&nbsp;
+        <strong>CR</strong> – Crown,&nbsp;
+        <strong>UE</strong> – Unerupted
+        <br></br>
+    </p>
 
     <!-- IV. Recommendation -->
+    <br></br>
     <div class="section-title">IV. RECOMMENDATION</div>
     <table>
         <tr>
