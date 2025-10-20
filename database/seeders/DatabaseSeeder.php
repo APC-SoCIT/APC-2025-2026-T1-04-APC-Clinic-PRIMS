@@ -9,6 +9,9 @@ use Database\Seeders\UserSeeder;
 use Database\Seeders\RolesSeeder;
 use Database\Seeders\PatientSeeder;
 use Database\Seeders\ClinicStaffSeeder;
+use Database\Seeders\RfidCardsTableSeeder;
+use App\Models\Appointment;
+use App\Models\MedicalRecord;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,8 +20,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         $this->call([
             RolesSeeder::class,
             UserSeeder::class,
@@ -26,5 +27,8 @@ class DatabaseSeeder extends Seeder
             ClinicStaffSeeder::class,
             RfidCardsTableSeeder::class,
         ]);
+
+        Appointment::factory(200)->create();
+        MedicalRecord::factory(200)->create();
     }
 }

@@ -183,5 +183,8 @@ class PatientSeeder extends Seeder
                 ]);
             }
         }
+
+        \App\Models\Patient::factory()->count(200)->create();
+
     }
 }
