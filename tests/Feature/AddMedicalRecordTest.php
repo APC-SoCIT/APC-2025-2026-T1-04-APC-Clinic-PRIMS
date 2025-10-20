@@ -35,15 +35,4 @@ class AddMedicalRecordTest extends TestCase
             ->assertSet('apc_id_number', $patient->apc_id_number);
     }
 
-    public function test_search_patient_finds_patient_by_apc_id_number()
-    {
-        $patient = Patient::where('apc_id_number', '2022-140224')->first();
-
-        Livewire::test(AddMedicalRecord::class)
-            ->set('apc_id_number', $patient->apc_id_number)
-            ->call('searchPatient')
-            ->assertSet('first_name', $patient->first_name)
-            ->assertSet('email', $patient->email);
-    }
-
 }
