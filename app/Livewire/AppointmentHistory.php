@@ -208,6 +208,8 @@ class AppointmentHistory extends Component
         }, 'Medical_Record_' . $patient->first_name . '_' . $patient->last_name . '_' . Carbon::now()->format('Ymd_His') . '.pdf');
     }
 
+    public $showRequestPrompt = false;
+    public $requestMessage = '';
     public $requested_record_id;
     
     public function requestMedicalRecord($recordId)
@@ -223,14 +225,12 @@ class AppointmentHistory extends Component
 
         \Log::info('Preparing to send mail for record ID: ' . $record->id);
         
-        Mail::to('primsapcclinic@gmail.com')->send(new RecordRequestMail($record, 'medical'));
+        Mail::to('primsapcclinic@gmail.com')->queue(new RecordRequestMail($record, 'medical'));
 
         \Log::info('Mail sent successfully (or queued).');
-        
-        $this->showRequestPrompt = true;
 
-        // optional success flash message
-        session()->flash('success', 'An email has been sent to the nurse.');
+        $this->requestMessage = 'An email has been sent to the clinic regarding your medical record request.';
+        $this->showRequestPrompt = true;
     }
 
     public function requestDentalRecord($recordId)
@@ -246,14 +246,14 @@ class AppointmentHistory extends Component
 
         \Log::info('Preparing to send mail for dental record ID: ' . $record->id);
 
-        Mail::to('primsapcclinic@gmail.com')->send(new RecordRequestMail($record, 'dental'));
+        Mail::to('primsapcclinic@gmail.com')->queue(new RecordRequestMail($record, 'dental'));
 
         \Log::info('Dental appointment IDs in DB: ' . implode(',', DentalRecord::pluck('appointment_id')->toArray()));
 
         \Log::info('Mail sent successfully (or queued).');
 
+        $this->requestMessage = 'An email has been sent to the clinic regarding your dental record request.';
         $this->showRequestPrompt = true;
-        session()->flash('success', 'An email has been sent to the nurse.');
     }
 
 
