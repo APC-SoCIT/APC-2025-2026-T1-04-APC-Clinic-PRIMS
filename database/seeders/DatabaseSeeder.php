@@ -15,6 +15,7 @@ use App\Models\MedicalRecord;
 use App\Models\Supply;
 use App\Models\Inventory;
 use App\Models\Dispensed;
+use App\Models\Feedback;
 
 class DatabaseSeeder extends Seeder
 {
@@ -36,5 +37,6 @@ class DatabaseSeeder extends Seeder
         Supply::factory(10)->create();
         Inventory::factory(20)->create();
         Dispensed::factory(15)->create();
+        Feedback::factory(30)->create();
     }
 }
