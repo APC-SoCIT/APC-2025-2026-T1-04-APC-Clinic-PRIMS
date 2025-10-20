@@ -24,7 +24,7 @@ class CancelledAppointment extends Mailable implements ShouldQueue
         $this->appointment = $appointment;
         $this->selectedDate = Carbon::parse($appointment->appointment_date)->format('F d, Y');
         $this->selectedTime = Carbon::parse($appointment->appointment_date)->format('h:i A');
-        $this->reason = $appointment->cancellation_reason;
+        $this->reason = $appointment->cancellation_reason ?? 'No reason provided';
     }
 
     public function build()

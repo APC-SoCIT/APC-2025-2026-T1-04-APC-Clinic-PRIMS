@@ -174,6 +174,7 @@ class StaffCalendar extends Component
             session()->flash('success', 'Appointment approved. Email notification sent.');
 
             Mail::to($appointment->patient->email)->queue(new ApprovedAppointment($appointment));
+
         }
     }
 
