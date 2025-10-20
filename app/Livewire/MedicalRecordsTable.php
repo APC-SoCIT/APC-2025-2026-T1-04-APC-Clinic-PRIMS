@@ -3,79 +3,30 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Models\MedicalRecord;
 use App\Models\DentalRecord;
 use App\Models\Patient;
-use App\Models\RfidCard;
-use Illuminate\Support\Facades\DB;
 
 class MedicalRecordsTable extends Component
 {
-    public $records;
-    public $dentalRecords; 
+    use WithPagination;
+
+    protected $paginationTheme = 'tailwind';
+
+    public $apc_id_number = ''; 
     public $expandedPatient = null;
 
-    public $apc_id_number;
-    public $patient;
+    protected $listeners = ['recordAdded' => '$refresh'];
 
-    protected $listeners = ['recordAdded' => 'loadRecords'];
-
-    public function mount()
+    public function updatingApcIdNumber()
     {
-        $this->loadRecords();
+        $this->resetPage();
     }
-
-    public function loadRecords()
-    {
-        // Latest medical record per patient
-        $latestMedicalRecords = MedicalRecord::query()
-            ->selectRaw('MAX(id) as id')
-            ->groupBy('patient_id')
-            ->pluck('id');
-
-        $medicalRecords = MedicalRecord::with(['diagnoses', 'patient'])
-            ->whereIn('id', $latestMedicalRecords)
-            ->get();
-
-        // Latest dental record per patient
-        $latestDentalRecords = DentalRecord::query()
-            ->selectRaw('MAX(id) as id')
-            ->groupBy('patient_id')
-            ->pluck('id');
-
-        $dentalRecords = DentalRecord::with(['patient'])
-            ->whereIn('id', $latestDentalRecords)
-            ->get();
-
-        // Combine unique patient IDs from both medical & dental
-        $patientIds = $medicalRecords->pluck('patient_id')
-            ->merge($dentalRecords->pluck('patient_id'))
-            ->unique();
-
-        // Load patients that have at least one type of record
-        $this->records = Patient::whereIn('id', $patientIds)
-            ->with(['medicalRecords.diagnoses', 'dentalRecords'])
-            ->get();
-
-        // Keep both for expanded display
-        $this->dentalRecords = $dentalRecords;
-    }
-
 
     public function searchPatient()
     {
-        $patient = Patient::where('apc_id_number', $this->apc_id_number)->first();
-
-        if (!$patient) {
-            $card = RfidCard::with('patient')
-                ->where('rfid_uid', $this->apc_id_number)
-                ->first();
-
-            if ($card && $card->patient) {
-                $patient = $card->patient;
-                $this->apc_id_number = $patient->apc_id_number;
-            }
-        }
+        $this->resetPage(); // Make sure it starts from page 1
     }
 
     public function toggleExpand($patientId)
@@ -94,13 +45,51 @@ class MedicalRecordsTable extends Component
     public function getPatientDentalRecords($patientId)
     {
         return DentalRecord::where('patient_id', $patientId)
-            ->orderBy('created_at', 'desc')
+            ->orderByDesc('created_at')
             ->get();
     }
 
     public function render()
     {
-        return view('livewire.medical-records-table');
+        $latestMedicalRecords = MedicalRecord::query()
+            ->selectRaw('MAX(id) as id')
+            ->groupBy('patient_id')
+            ->pluck('id');
+
+        $medicalRecords = MedicalRecord::with(['diagnoses', 'patient'])
+            ->whereIn('id', $latestMedicalRecords)
+            ->get();
+
+        $latestDentalRecords = DentalRecord::query()
+            ->selectRaw('MAX(id) as id')
+            ->groupBy('patient_id')
+            ->pluck('id');
+
+        $dentalRecords = DentalRecord::with(['patient'])
+            ->whereIn('id', $latestDentalRecords)
+            ->get();
+
+        $patientIds = $medicalRecords->pluck('patient_id')
+            ->merge($dentalRecords->pluck('patient_id'))
+            ->unique();
+
+        $query = Patient::whereIn('id', $patientIds)
+            ->with(['medicalRecords.diagnoses', 'dentalRecords']);
+
+        if (!empty($this->apc_id_number)) {
+            $term = '%' . str_replace(' ', '%', $this->apc_id_number) . '%';
+            $query->where(function ($q) use ($term) {
+                $q->where('apc_id_number', 'like', $term)
+                  ->orWhere('first_name', 'like', $term)
+                  ->orWhere('last_name', 'like', $term)
+                  ->orWhere('email', 'like', $term);
+            });
+        }
+
+        $records = $query->orderBy('last_name')->paginate(10);
+
+        return view('livewire.medical-records-table', [
+            'records' => $records,
+        ]);
     }
 }
-
