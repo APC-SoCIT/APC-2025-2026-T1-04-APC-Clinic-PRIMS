@@ -27,7 +27,6 @@ pipeline {
             steps {
                 sh '''
                     ./vendor/bin/sail artisan key:generate
-                    ./vendor/bin/sail artisan migrate:fresh --seed
                 '''
             }
         }
@@ -41,10 +40,11 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
+        stage('Run Tests and migrate') {
             steps {
                 sh '''
                     ./vendor/bin/sail test
+                    ./vendor/bin/sail artisan migrate:fresh --seed
                 '''
             }
         }
