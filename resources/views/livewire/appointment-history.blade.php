@@ -252,6 +252,17 @@
                                                 </div>
                                                 @endif
                                             </div>
+                                            @if($showRequestPrompt)
+                                                <div class="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+                                                    <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm">
+                                                        <h3 class="text-2xl font-bold text-center mb-3">Request Sent</h3>
+                                                        <p class="text-center">{{ $requestMessage }}</p>
+                                                        <div class="mt-4 flex justify-center">
+                                                            <x-prims-sub-button1 wire:click="$set('showRequestPrompt', false)">OK</x-prims-sub-button1>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endif
@@ -326,20 +337,6 @@
                                                                 Request for Medical Record
                                                             </x-button>
                                                         </div>
-                                                        @if ($showRequestPrompt)
-                                                            <div class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
-                                                                <div class="bg-white rounded-lg p-6 shadow-lg">
-                                                                    <h2 class="text-lg font-semibold mb-3">Email Sent</h2>
-                                                                    <p class="text-gray-700">An email has been sent to the nurse regarding your medical record request.</p>
-                                                                    <div class="mt-4 text-right">
-                                                                        <button wire:click="$set('showRequestPrompt', false)" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                                                                            OK
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        @endif
-
                                                     </div>
                                                 </div>
                                             </div>

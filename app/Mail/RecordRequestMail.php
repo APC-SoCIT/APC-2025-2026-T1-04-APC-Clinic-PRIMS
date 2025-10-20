@@ -13,7 +13,7 @@ use App\Models\DentalRecord;
 use App\Models\Patient;
 
 
-class RecordRequestMail extends Mailable 
+class RecordRequestMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
