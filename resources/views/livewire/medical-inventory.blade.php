@@ -98,16 +98,29 @@
 
                     <!-- Buttons -->
                     <div class="flex justify-end space-x-3 mt-6">
-                        <button 
-                            @click="openReport = false"
-                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
-                            Cancel
-                        </button>
-                        <button 
-                            @click="openReport = false"
-                            class="px-4 py-2 bg-prims-azure-500 text-white rounded-lg hover:bg-prims-azure-600 transition">
-                            Generate
-                        </button>
+
+                        <!-- Hidden form to send to backend (wraps the buttons so the form element exists where we need it) -->
+                        <form id="reportForm" action="{{ route('inventory.report') }}" method="POST" target="_blank" class="flex items-center space-x-3">
+                            @csrf
+                            <input type="hidden" name="duration" id="reportDuration">
+                            <!-- dynamically appended hidden inputs for sections[] will go here -->
+
+                            <!-- Cancel (button inside form but does not submit) -->
+                            <button 
+                                type="button"
+                                @click="openReport = false"
+                                class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                                Cancel
+                            </button>
+
+                            <!-- Generate (type=button so default submit is prevented) -->
+                            <button 
+                                type="button"
+                                id="generateReportBtn"
+                                class="px-4 py-2 bg-prims-azure-500 text-white rounded-lg hover:bg-prims-azure-600 transition">
+                                Generate
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -256,3 +269,49 @@
         </div>
     </div>
 </div>
+
+<!-- FOR PRINTING !--> 
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('generateReportBtn').addEventListener('click', function () {
+        // Scope selection to the modal area to avoid picking other checkboxes on the page.
+        // Give your modal inner box an id="reportModalBox" — see note below if not present.
+        const modalRoot = document.getElementById('reportModalBox') || document; // fallback to whole doc
+
+        const selectedDuration = modalRoot.querySelector('input[name="duration"]:checked')?.value;
+        const selectedSections = Array.from(modalRoot.querySelectorAll('input[type="checkbox"]:checked'))
+            .map(cb => cb.nextElementSibling ? cb.nextElementSibling.textContent.trim() : cb.value);
+
+        if (!selectedDuration || selectedSections.length === 0) {
+            alert('Please select a duration and at least one section.');
+            return;
+        }
+
+        document.getElementById('reportDuration').value = selectedDuration;
+
+        // Remove any previous dynamic section inputs
+        document.querySelectorAll('#reportForm input[name="sections[]"]').forEach(e => e.remove());
+
+        // Append selected sections
+        selectedSections.forEach(sec => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'sections[]';
+            input.value = sec;
+            document.getElementById('reportForm').appendChild(input);
+        });
+
+        // Submit the form (opens in new tab because of target="_blank")
+        document.getElementById('reportForm').submit();
+
+        // Close the modal (Alpine will still track it)
+        if (window.Alpine) {
+            // If you need Alpine to close it more reliably, call a small hack:
+            // find nearest Alpine component and set openReport = false
+            // but simplest is to keep the click handler we had:
+            // This will rely on the @click on Cancel/close elsewhere if needed.
+        }
+    });
+});
+</script>

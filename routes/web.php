@@ -9,6 +9,7 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\DentalRecordController;
+use App\Http\Controllers\InventoryReportController;
 
 $url = config('app.url');
 URL::forceRootUrl($url);
@@ -62,7 +63,9 @@ Route::middleware([
         return view('patient-calendar');
     })->name('appointment');
 
-
+    
+   // Invetory Report ROUTE FOR PDF
+    Route::post('/inventory/report', [InventoryReportController::class, 'generate'])->name('inventory.report');
     // Dental form route
     // Route::get('/staff/dental-form', function () {
     //     $user = Auth::user();
@@ -109,6 +112,42 @@ Route::middleware([
         }
         return view('medical-inventory');
     })->name('medical-inventory');
+
+    // Medical Inventory Dashboard
+    Route::get('/staff/inventory', function () {
+    $user = Auth::user();
+    if (!$user || !$user->hasRole('clinic staff')) {
+        abort(403);    
+    }
+    return view('medical-inventory');
+    })->name('medical-inventory');
+
+    // Inventory Summary / Report Page
+    Route::get('/staff/inventory-summary', function () {
+        $user = Auth::user();
+        if (!$user || !$user->hasRole('clinic staff')) {
+            abort(403); // Forbidden    
+        }
+
+        $duration = request()->query('duration', 'monthly');
+        $sections = request()->query('sections', ['Actual Stocks', 'General Issuance']);
+
+        // Fetch all medicines
+        $medicines = DB::table('supplies')->orderBy('name')->get();
+
+        return view('inventory-summary', compact('duration', 'sections', 'medicines'));
+    })->name('inventory.summary');
+
+    // PDF Generation Route
+    Route::get('/staff/inventory-report', function () {
+        $user = Auth::user();
+        if (!$user || !$user->hasRole('clinic staff')) {
+            abort(403); // Forbidden
+        }
+
+        // Forward the request to the controller
+        return app(InventoryReportController::class)->generate(request());
+    })->name('inventory.report');
 
     // Medical records route
     Route::get('/staff/medical-records', function () {

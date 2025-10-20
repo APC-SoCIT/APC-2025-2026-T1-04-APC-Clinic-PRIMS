@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "prims-475112",
+  "private_key_id": "2820937a06bca630e86a085191068fd6b30f010a",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEugIBADANBgkqhkiG9w0BAQEFAASCBKQwggSgAgEAAoIBAQCyQFtS1FvaYxEI\nk43pX/ngJ1721uRsbRiS6ADKimu6RiQPqFrMt2Nto55vdJzv6ouXzpah0BizmQo/\n0BeRqFWZ74RNHS+EQ/ZqeoGgeW9XqUKhOXZan6Utu8vDiMzEB507QI69n8codNGy\nmQFNVBwfUMPomUOHiZuSYS5IYVxzYWLDE1wG1MJ0k4xMXu5wXdPuT6djebiWCsxF\nnrzHpvws40MOEyf19wk/DANz+HKz4Uz9HMrN8ltzjwqFLjnyZEPLnELSjaT2kLwd\nnTBqrCrXhOHpEPOwWzXPCZsmeMbpxPasV0y4r3WQIQYyjnemNC30W2g2IDKmX3nu\n+ySLn6OFAgMBAAECgf8rsRqxctwQ67eBIqnmSmA1UXE1j/btnNApMjT/cG53ejnc\nnKelBk6Y0UJEj5DoPdV5oGnLv/ZOD3Uzrw4X5esVkGAdhsne4cnEz8J2U023bwWl\n/y/Dht42F5Iam62VX0hq/af/Uuq+P+Qmotpu2e8KvgFHQkoLLu+zMZ7mnvbKUOtz\nGMIYRR7jsUARkd+GOboWJVQuLzsW54gqncYKc5LII+a7mRFCDXT05TdFNMK37wPt\nOC7JkRleywQ/xmpTqTp9PhICmoF08GH9TiZOoiGvJn9H7lknD1Ew85m8xLOAGVdt\nbSZTEWZgN5Rqou4gpPZ3eNSU9gFHNsDxaJwBKokCgYEA6taFwX55tU65lh/01ct2\n6jwu2U1Xk0DnwkBkPuUrW4Kmrvil9YRlVbDo4HYfHyTEijCXgKvsT4fWlp/osDNp\nhoSvivi7vBzwo2PWhTCT6il8i5OFZ1jELWFALWYk4F8/0B5FmJnkYFLL4QEMsEbW\n5Ubyj9H7kGiiRgax0k0uvL0CgYEAwlBwMr1Gyzj5Al4ax6+3/dddU2KSswDzoK3u\nPgIzxG41tkJOZQHoibN1C+CW58FQ18RsXXvHRlAc3cuailmyGXoKDYNv7rk2re0G\nWzbmhsdmcywFaVLdh+okCAIjMfBOuEuzjmE4UaTjGGi4dbjQKqWEMOeLSpKE+ibb\n+d1xwmkCgYAKAD7MAb3fKc4fhZbgr/yNdyirmm6bV81G6YUbZJkXGZZNp0syDIRg\nRNt2C7HBmsg/9lfNZAT5Uhiia4b2Ugoxb18mdPdRyI2695qAK5RxCXlDXHH298HL\nCPQ5urrhT00haNif6hXewEfseiX3L90hAId99nxXJw2aG9jg0ualpQKBgAQo6q37\nZVeWaaZGU3Zw6ZRyltnhI1jXrV+EObR0IZ2T6mxzcPAyoULJZ7kQXsqpVcy4tMUv\nkC2OK4AICs/paamn9i0h4jSPHH+OsnMjcr3x6NyQVbFSh9GQDqNpQE2iYl0Jqddj\nd2wwBniQTVqf0T0IfBL78fxvtI8SY+Uue2/5AoGARlgGPnYR8JvBJBBUPuh8dMeG\nHI0a/K7pXue71pD4ScFohnMqUvVrywQu8FYo0rbbmMtHm9kM0UL+AkwwfqRX0ERj\nkTbPQNW6J/8hbZpe9IwASFSVxW6oeShszzvBTy+NKUtwmxc+SrQVtM+PsZEKpNlh\nQoP9+1KGmHU41uvDT0U=\n-----END PRIVATE KEY-----\n",
+  "client_email": "prims-ai@prims-475112.iam.gserviceaccount.com",
+  "client_id": "116842460727279479938",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/prims-ai%40prims-475112.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
