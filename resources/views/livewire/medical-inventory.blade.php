@@ -116,8 +116,6 @@
         </div>
     </div>
 
-    ---
-
     <div class="bg-white border-b border-gray-200 flex flex-wrap justify-center">
         <span class="text-prims-azure-500 uppercase font-semibold text-lg"> MEDICAL INVENTORY</span>
         <div class="bg-white rounded-b-md overflow-x-auto w-full p-2">
