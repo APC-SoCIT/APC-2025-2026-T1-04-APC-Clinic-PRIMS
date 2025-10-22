@@ -66,7 +66,29 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <!-- Chart 1 -->
                 <div class="bg-white rounded-lg shadow-md p-4">
-                    <h3 class="text-lg font-semibold text-gray-800 text-center mb-3">Appointments Overview</h3>
+                    @php
+                        // Safely determine display label for selected month/year filter
+                        $displayMonthYear = 'All time';
+
+                        if (!empty($selectedYear)) {
+                            if (!empty($selectedMonth) && is_numeric($selectedMonth)) {
+                                // Convert numeric month to month name (e.g., 10 -> October)
+                                $monthName = \Carbon\Carbon::create(null, (int)$selectedMonth, 1)->format('F');
+                                $displayMonthYear = $monthName . ' ' . $selectedYear;
+                            } else {
+                                // Only year selected
+                                $displayMonthYear = $selectedYear;
+                            }
+                        }
+                    @endphp
+
+                    <h3 class="text-lg font-semibold text-gray-800 text-center mb-3">
+                        Appointments Overview 
+                        @if($displayMonthYear)
+                            - <span class="text-sm text-gray-600">{{ $displayMonthYear }}</span>
+                        @endif
+                    </h3>
+
                     <div class="relative h-[180px] w-full">
                         <canvas id="appointmentMeter"></canvas>
                     </div>
@@ -74,7 +96,7 @@
 
                 <!-- Chart 2 -->
                 <div class="bg-white rounded-lg shadow-md p-4">
-                    <h3 class="text-lg font-semibold text-gray-800 text-center mb-3">Patient Demographics (Age)</h3>
+                    <h3 class="text-lg font-semibold text-gray-800 text-center mb-3">Patient Demographics (Age) @if($displayMonthYear) - <span class="text-sm text-gray-600">{{ $displayMonthYear }}</span>@endif</h3>
                     <div class="relative h-[180px] w-full">
                         <canvas id="ageChart"></canvas>
                     </div>
@@ -154,7 +176,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <!-- Chart 3 -->
                 <div class="bg-white rounded-lg shadow-md p-4">
-                    <h3 class="text-lg font-semibold text-gray-800 text-center mb-3">Top Reasons for Visit</h3>
+                    <h3 class="text-lg font-semibold text-gray-800 text-center mb-3">Top Reasons for Visit @if($displayMonthYear) - <span class="text-sm text-gray-600">{{ $displayMonthYear }}</span>@endif</h3>
                     <div class="relative h-[180px] w-full">
                         <canvas id="diagnosisChart"></canvas>
                     </div>
@@ -162,7 +184,7 @@
 
                 <!-- Chart 4 -->
                 <div class="bg-white rounded-lg shadow-md p-4">
-                    <h3 class="text-lg font-semibold text-gray-800 text-center mb-3">Top Prescribed Medications</h3>
+                    <h3 class="text-lg font-semibold text-gray-800 text-center mb-3">Top Prescribed Medications @if($displayMonthYear) - <span class="text-sm text-gray-600">{{ $displayMonthYear }}</span>@endif</h3>
                     <div class="relative h-[180px] w-full">
                         <canvas id="medicationChart"></canvas>
                     </div>
