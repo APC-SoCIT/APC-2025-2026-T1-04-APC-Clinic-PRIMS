@@ -81,7 +81,7 @@
         </div>
 
         <footer class="bg-prims-yellow-1 w-full h-16 flex items-center pl-6 relative">
-        <img src="img/apc-logo.svg" class="object-scale-down h-16">
+        <img src="img/APC_LOGO_SEAL.png" class="object-scale-down h-10">
         <p class="absolute inset-0 flex items-center justify-center w-full">
         Copyright © 2025<span class="ml-1 text-blue-500">Asia Pacific College</span>. All Rights Reserved.
         </p>
