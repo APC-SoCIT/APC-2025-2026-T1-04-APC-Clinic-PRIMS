@@ -4,27 +4,28 @@ pipeline {
         ENV_FILE = credentials('wonderprims')
     }
     stages {
-    stage('Load Env') {
-        steps {
-            withCredentials([file(credentialsId: 'wonderprims', variable: 'ENV_FILE')]) {
-                sh(script: '''
-                    #!/bin/bash
-                    set -a
-                    while IFS='=' read -r key value; do
-                        if [[ "$key" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
-                            export "$key=$value"
-                        fi
-                    done < "$ENV_FILE"
-                    set +a
-                ''', shell: '/bin/bash')
+        stage('Load Env') {
+            steps {
+                withCredentials([file(credentialsId: 'wonderprims', variable: 'ENV_FILE')]) {
+                    sh(script: '''
+                        #!/bin/bash
+                        set -a
+                        while IFS='=' read -r key value; do
+                            if [[ "$key" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
+                                export "$key=$value"
+                            fi
+                        done < "$ENV_FILE"
+                        set +a
+                    ''', shell: '/bin/bash')
+                }
             }
         }
-    
+
         stage('Install Composer Dependencies') {
             steps {
                 sh '''
-                docker run --rm -v $PWD:/app -w /app composer install
-                git config --global --add safe.directory /app
+                    docker run --rm -v $PWD:/app -w /app composer install
+                    git config --global --add safe.directory /app
                 '''
             }
         }
@@ -37,9 +38,7 @@ pipeline {
 
         stage('App Setup') {
             steps {
-                sh '''
-                    ./vendor/bin/sail artisan key:generate
-                '''
+                sh './vendor/bin/sail artisan key:generate'
             }
         }
 
