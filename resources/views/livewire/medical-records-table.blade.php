@@ -1,4 +1,4 @@
-<div class="p-6 bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-lg mt-5">
+<div class="p-6 bg-white overflow-hidden shadow-lg sm:rounded-lg mt-5">
     <!-- Search bar -->
     <div class="flex gap-6 pb-5 justify-end">
         <input 
