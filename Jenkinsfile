@@ -7,16 +7,16 @@ pipeline {
         stage('Load Env') {
             steps {
                 withCredentials([file(credentialsId: 'wonderprims', variable: 'ENV_FILE')]) {
-                    sh(script: '''
-                        #!/bin/bash
-                        set -a
-                        while IFS='=' read -r key value; do
-                            if [[ "$key" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
-                                export "$key=$value"
-                            fi
-                        done < "$ENV_FILE"
-                        set +a
-                    ''', shell: '/bin/bash')
+                    sh '''
+                    #!/bin/bash
+                    set -a
+                    while IFS='=' read -r key value; do
+                        if [[ "$key" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
+                            export "$key=$value"
+                        fi
+                    done < "$ENV_FILE"
+                    set +a
+                    '''
                 }
             }
         }
