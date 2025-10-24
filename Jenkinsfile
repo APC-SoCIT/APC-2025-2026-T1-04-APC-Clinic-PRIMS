@@ -1,13 +1,20 @@
 pipeline {
     agent { label 'wonderpets' }
-
+    environment {
+        ENV_FILE = credentials('my-env-file')
+    }
     stages {
-        stage('Copy .env') {
+        stage('Load Env') {
             steps {
-                sh 'cp .env.example .env || true'
+                sh '''
+                set -a
+                source $ENV_FILE
+                set +a
+                '''
             }
         }
-
+    }
+    
         stage('Install Composer Dependencies') {
             steps {
                 sh '''
