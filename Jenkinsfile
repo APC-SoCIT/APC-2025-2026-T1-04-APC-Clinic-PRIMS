@@ -7,6 +7,7 @@ pipeline {
         stage('Load Env') {
             steps {
                 sh '''
+                #!/bin/bash
                 set -a
                 source $ENV_FILE
                 set +a
