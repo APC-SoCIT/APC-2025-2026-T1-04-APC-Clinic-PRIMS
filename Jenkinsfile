@@ -11,6 +11,15 @@ pipeline {
             }
         }
 
+        stage('Inject Secrets into .env') {
+            steps {
+                sh '''
+                echo "GEMINI_API_KEY=${GEMINI_API_KEY}" >> .env
+                echo "MAIL_PASSWORD=${MAIL_PASSWORD}" >> .env
+                '''
+            }
+        }
+
         stage('Install Composer Dependencies') {
             steps {
                 sh '''
