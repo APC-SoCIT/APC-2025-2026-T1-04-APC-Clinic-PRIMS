@@ -1,7 +1,7 @@
 pipeline {
     agent { label 'wonderpets' }
     environment {
-        ENV_FILE = credentials('my-env-file')
+        ENV_FILE = credentials('wonderprims')
     }
     stages {
         stage('Load Env') {
