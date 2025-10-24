@@ -1,31 +1,21 @@
 pipeline {
     agent { label 'wonderpets' }
     environment {
-        ENV_FILE = credentials('wonderprims')
+        GEMINI_API_KEY = credentials('WONDERPETS_GEMINI_KEY')
+        MAIL_PASSWORD = credentials('WONDERPETS_EMAIL_PW')
     }
     stages {
-        stage('Load Env') {
+        stage('Copy .env') {
             steps {
-                withCredentials([file(credentialsId: 'wonderprims', variable: 'ENV_FILE')]) {
-                    sh '''
-                    #!/bin/bash
-                    set -a
-                    while IFS='=' read -r key value; do
-                        if [[ "$key" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
-                            export "$key=$value"
-                        fi
-                    done < "$ENV_FILE"
-                    set +a
-                    '''
-                }
+                sh 'cp .env.example .env || true'
             }
         }
 
         stage('Install Composer Dependencies') {
             steps {
                 sh '''
-                    docker run --rm -v $PWD:/app -w /app composer install
-                    git config --global --add safe.directory /app
+                docker run --rm -v $PWD:/app -w /app composer install
+                git config --global --add safe.directory /app
                 '''
             }
         }
@@ -38,7 +28,9 @@ pipeline {
 
         stage('App Setup') {
             steps {
-                sh './vendor/bin/sail artisan key:generate'
+                sh '''
+                    ./vendor/bin/sail artisan key:generate
+                '''
             }
         }
 
