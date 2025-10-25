@@ -10,11 +10,13 @@ use App\Models\Appointment;
 use App\Models\Patient;
 use Carbon\Carbon;
 
-class ApprovedAppointment extends Mailable
+class ApprovedAppointment extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     public $appointment;
+    public $selectedDate;
+    public $selectedTime;
 
     public function __construct($appointment)
     {
@@ -26,11 +28,11 @@ class ApprovedAppointment extends Mailable
     public function build()
     {
         return $this->subject('Appointment Status')
-        ->view('emails.approved-appointment')
-        ->with([
-            'appointment'   => $this->appointment,
-            'selectedDate'  => $this->selectedDate,
-            'selectedTime'  => $this->selectedTime,
-        ]);
+                    ->view('emails.approved-appointment')
+                    ->with([
+                        'appointment'  => $this->appointment,
+                        'selectedDate' => $this->selectedDate,
+                        'selectedTime' => $this->selectedTime,
+                    ]);
     }
 }

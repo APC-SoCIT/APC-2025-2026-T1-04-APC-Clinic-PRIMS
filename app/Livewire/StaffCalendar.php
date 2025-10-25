@@ -36,14 +36,16 @@ class StaffCalendar extends Component
     public $doctors;
     public $selectedDoctor;
     public $timeSlots = [
-        '7:30 AM', '8:00 AM', '8:30 AM', '9:00 AM', '9:30 AM',
-        '10:00 AM', '10:30 AM', '11:00 AM','11:30 AM', '12:00 PM', 
-        '12:30 PM', '1:00 PM', '1:30 PM', '2:00 PM', '2:30 PM',
-        '3:00 PM', '3:30 PM', '4:00 PM', '4:30 PM', '5:00 PM',
+        '2:00 PM', '2:15 PM', '2:30 PM', '2:45 PM',
+        '3:00 PM', '3:15 PM', '3:30 PM', '3:45 PM',
+        '4:00 PM', '4:15 PM', '4:30 PM', '4:45 PM',
     ];
     public $selectedTimes = [];
     public $isEditingSchedule = false;
     public $stopPolling = false;
+    public $autoCancelMinutes;
+    public $showApproveErrorModal = false;
+    public $approveErrorMessage = '';
 
     protected $paginationTheme = 'tailwind';
 
@@ -115,13 +117,33 @@ class StaffCalendar extends Component
     public function confirmApprove($appointmentId)
     {
         $this->selectedAppointmentId = $appointmentId;
+
+        $appointment = Appointment::find($appointmentId);
+
+        $conflict = $this->findApprovalConflict($appointment);
+            if ($conflict) {
+                $this->approveErrorMessage = "There's already an approved appointment for {$appointment->appointment_date}.";
+                $this->showApproveErrorModal = true;
+                $this->showApproveModal = false;
+                return;
+            }
+
         $this->showApproveModal = true;
+        $this->showApproveErrorModal = false;
     }
 
     public function approveAppointment()
     {
         $appointment = Appointment::find($this->selectedAppointmentId);
         if ($appointment) {
+
+            $conflict = $this->findApprovalConflict($appointment);
+            if ($conflict) {
+                $this->approveErrorMessage = "There's already an approved appointment for {$appointment->appointment_date}.";
+                $this->showApproveErrorModal = true;
+                $this->showApproveModal = false;
+                return;
+            }
 
             $appointment->status = 'approved';
             $appointment->status_updated_by = Auth::id();
@@ -151,8 +173,17 @@ class StaffCalendar extends Component
 
             session()->flash('success', 'Appointment approved. Email notification sent.');
 
-            Mail::to($appointment->patient->email)->send(new ApprovedAppointment($appointment));
+            Mail::to($appointment->patient->email)->queue(new ApprovedAppointment($appointment));
+
         }
+    }
+
+    private function findApprovalConflict($appointment)
+    {
+        return Appointment::where('clinic_staff_id', $appointment->clinic_staff_id)
+            ->where('status', 'approved')
+            ->where('appointment_date', $appointment->appointment_date)
+            ->exists();
     }
 
     public function confirmDecline($appointmentId)
@@ -182,7 +213,7 @@ class StaffCalendar extends Component
             $this->loadAppointments();
             $this->generateCalendar();
 
-            Mail::to($appointment->patient->email)->send(new DeclinedAppointment($appointment));
+            Mail::to($appointment->patient->email)->queue(new DeclinedAppointment($appointment));
         }
     }
 
@@ -194,11 +225,30 @@ class StaffCalendar extends Component
             session()->flash('error', 'Appointment not found.');
             return;
         }
-    
-        return redirect()->route('addRecordmain', [
-            'appointment_id' => $appointment->id,
-            'fromStaffCalendar' => true
-        ]);
+        // Mark the appointment as started and record who updated it
+        $appointment->status = 'started';
+        $appointment->status_updated_by = Auth::id();
+        $appointment->save();
+
+        // Refresh local lists so UI reflects the change (if Livewire continues running)
+        $this->loadAppointments();
+        $this->generateCalendar();
+
+        // Get the doctor's category from the related clinic staff
+        $staff = $appointment->doctor;
+
+        // Redirect based on doctor category
+        if ($staff->doctor_category === 'Medical') {
+            return redirect()->route('addRecordmain', [
+                'appointment_id' => $appointment->id,
+                'fromStaffCalendar' => true
+            ]);
+        } else {
+            return redirect()->route('dental-form', [
+                'appointment_id' => $appointment->id,
+                'fromStaffCalendar' => true
+            ]);
+        }
     }
 
     public function reapproveAppointment($appointmentId)
@@ -252,7 +302,7 @@ class StaffCalendar extends Component
                 $schedule->update(['available_times' => json_encode($availableTimes)]);
             }
 
-            Mail::to($appointment->patient->email)->send(new CancelledAppointment($appointment));
+            Mail::to($appointment->patient->email)->queue(new CancelledAppointment($appointment));
 
             // Reset values and close modal
             $this->showCancelModal = false;
@@ -377,17 +427,9 @@ class StaffCalendar extends Component
         return view('livewire.staff-calendar', [
             'currentMonthYear' => $this->currentDate->format('F Y'),
             'approvedAppointments' => Appointment::whereDate('appointment_date', $this->selectedDate)
-                ->where('status', 'approved')
+                ->whereIn('status', ['approved', 'started'])
                 ->orderBy('appointment_date', 'asc')
                 ->paginate(2)
         ]);
     }
-
-    // private function getApprovedAppointments()
-    // {
-    //     return Appointment::whereDate('appointment_date', $this->selectedDate)
-    //         ->where('status', 'approved')
-    //         ->orderBy('appointment_date', 'asc')
-    //         ->paginate(2);
-    // }
 }

@@ -8,6 +8,8 @@ use App\Http\Controllers\StaffSummaryReportController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\DentalRecordController;
+use App\Http\Controllers\InventoryReportController;
 
 $url = config('app.url');
 URL::forceRootUrl($url);
@@ -25,7 +27,7 @@ Route::middleware([
         $user = Auth::user();
 
         if ($user->hasRole('clinic staff')) {
-            return redirect()->route('calendar');
+            return redirect()->route('summary-report');
         } elseif ($user->hasRole('patient')) {
             return redirect()->route('patient-homepage');
         }
@@ -61,6 +63,43 @@ Route::middleware([
         return view('patient-calendar');
     })->name('appointment');
 
+    
+   // Invetory Report ROUTE FOR PDF
+    Route::post('/inventory/report', [InventoryReportController::class, 'generate'])->name('inventory.report');
+    // Dental form route
+    // Route::get('/staff/dental-form', function () {
+    //     $user = Auth::user();
+    //     if (!$user || !$user->hasRole('clinic staff')) {
+    //         abort(403); // Forbidden
+    //     }
+    //     return view('dental-form');
+    // })->name('dental-form');
+
+    Route::get('/staff/dental-form', function (Illuminate\Http\Request $request) {
+        $user = Auth::user();
+        if (!$user || !$user->hasRole('clinic staff')) {
+            abort(403);
+        }
+    
+        return view('dental-form', [
+            'appointment_id' => $request->query('appointment_id'),
+            'fromStaffCalendar' => $request->query('fromStaffCalendar', false)
+        ]);
+    })->name('dental-form');
+
+
+    // Dental records table route
+    Route::get('/staff/dental-records-table', function () {
+        $user = Auth::user();
+        if (!$user || !$user->hasRole('clinic staff')) {
+            abort(403); // Forbidden
+        }
+        return view('dental-records-table');
+    })->name('dental-records-table');
+
+    Route::get('/staff/dental-records/{id}', [DentalRecordController::class, 'view'])
+    ->name('view-dental-record');
+
     Route::post('/appointment/notif', [AppointmentController::class, 'store'])
     ->name('appointment.notif')
     ->middleware('auth');
@@ -73,6 +112,42 @@ Route::middleware([
         }
         return view('medical-inventory');
     })->name('medical-inventory');
+
+    // Medical Inventory Dashboard
+    Route::get('/staff/inventory', function () {
+    $user = Auth::user();
+    if (!$user || !$user->hasRole('clinic staff')) {
+        abort(403);    
+    }
+    return view('medical-inventory');
+    })->name('medical-inventory');
+
+    // Inventory Summary / Report Page
+    Route::get('/staff/inventory-summary', function () {
+        $user = Auth::user();
+        if (!$user || !$user->hasRole('clinic staff')) {
+            abort(403); // Forbidden    
+        }
+
+        $duration = request()->query('duration', 'monthly');
+        $sections = request()->query('sections', ['Actual Stocks', 'General Issuance']);
+
+        // Fetch all medicines
+        $medicines = DB::table('supplies')->orderBy('name')->get();
+
+        return view('inventory-summary', compact('duration', 'sections', 'medicines'));
+    })->name('inventory.summary');
+
+    // PDF Generation Route
+    Route::get('/staff/inventory-report', function () {
+        $user = Auth::user();
+        if (!$user || !$user->hasRole('clinic staff')) {
+            abort(403); // Forbidden
+        }
+
+        // Forward the request to the controller
+        return app(InventoryReportController::class)->generate(request());
+    })->name('inventory.report');
 
     // Medical records route
     Route::get('/staff/medical-records', function () {
@@ -156,6 +231,10 @@ Route::middleware([
         return view('add-medicine');
     })->name('add-medicine');
 
+    // Generate Inventory Route
+    Route::get('/inventory/report', [InventoryController::class, 'generateReport'])
+    ->name('inventory.report');
+
     // About us
     Route::get('/about-us', function () {
         $user = Auth::user();
@@ -165,6 +244,8 @@ Route::middleware([
         return view('about-us');
     })->name('about-us');
 
+    Route::get('staff/medical-records/{id}/print', [MedicalRecordController::class, 'printMedicalRecord'])
+        ->name('print-medical-record');
 
     // About us Button Route
     Route::get('/about-us', function () {
@@ -180,4 +261,8 @@ Route::middleware([
     Route::get('/generate-accomplishment-report', 
         [App\Http\Controllers\StaffSummaryReportController::class, 'generateAccomplishmentReport']
     )->name('generate.accomplishment.report');
+
+    // Print dental record route
+    Route::get('/dental-records/{id}/print', [DentalRecordController::class, 'printPDF'])
+    ->name('print-dental-record');
 });

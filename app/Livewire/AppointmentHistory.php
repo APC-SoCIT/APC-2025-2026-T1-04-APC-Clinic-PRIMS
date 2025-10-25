@@ -7,7 +7,13 @@ use App\Models\Appointment;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\DoctorSchedule;
+use App\Models\ClinicStaff;
 use App\Models\Feedback;
+use App\Models\MedicalRecord;
+use App\Models\DentalRecord;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\RecordRequestMail;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class AppointmentHistory extends Component
@@ -15,6 +21,10 @@ class AppointmentHistory extends Component
     public $patient;
     public $appointmentHistory;
     public $hasUpcomingAppointment;
+    public $showingWalkIns = false;
+    public $walkInMedicalRecords;
+    public $walkInDentalRecords;
+    public $expandedWalkIn = null;
     public $showCancelModal = false;
     public $cancelAppointmentId;
     public $cancelReason;
@@ -36,7 +46,7 @@ class AppointmentHistory extends Component
 
     public function loadAppointments()
     {
-        $this->appointmentHistory = Appointment::with(['consultationFeedback', 'medicalRecord.diagnoses', 'medicalRecord.physicalExaminations'])
+        $this->appointmentHistory = Appointment::with(['consultationFeedback', 'medicalRecord.diagnoses', 'medicalRecord.physicalExaminations', 'dentalRecord', 'doctor'])
             ->where('patient_id', $this->patient->id)
             ->orderBy('appointment_date', 'desc')
             ->get();
@@ -45,6 +55,43 @@ class AppointmentHistory extends Component
             ->where('appointment_date', '>=', now())
             ->whereIn('status', ['approved'])
             ->first();
+
+        // Also prepare walk-in records (medical records not linked to an appointment)
+        $this->loadWalkIns();
+    }
+
+    public function loadWalkIns()
+    {
+        // Medical records that belong to this patient and are not linked to an appointment
+        $this->walkInMedicalRecords = \App\Models\MedicalRecord::with(['physicalExaminations', 'diagnoses', 'appointment.doctor'])
+            ->where('patient_id', $this->patient->id)
+            ->whereNull('appointment_id')
+            ->orderBy('last_visited', 'desc')
+            ->get();
+
+        // Dental records that belong to this patient and are not linked to an appointment
+        $this->walkInDentalRecords = \App\Models\DentalRecord::with(['appointment.doctor'])
+            ->where('patient_id', $this->patient->id)
+            ->whereNull('appointment_id')
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
+    public function showWalkIns()
+    {
+        $this->showingWalkIns = true;
+        $this->loadWalkIns();
+    }
+
+    public function showAppointments()
+    {
+        $this->showingWalkIns = false;
+        $this->expandedWalkIn = null;
+    }
+
+    public function toggleExpandWalkIn($recordId)
+    {
+        $this->expandedWalkIn = $this->expandedWalkIn === $recordId ? null : $recordId;
     }
 
     public function confirmCancel($appointmentId)
@@ -159,6 +206,54 @@ class AppointmentHistory extends Component
         return response()->streamDownload(function() use ($pdf) {
             echo $pdf->output();
         }, 'Medical_Record_' . $patient->first_name . '_' . $patient->last_name . '_' . Carbon::now()->format('Ymd_His') . '.pdf');
+    }
+
+    public $showRequestPrompt = false;
+    public $requestMessage = '';
+    public $requested_record_id;
+    
+    public function requestMedicalRecord($recordId)
+    {
+        \Log::info('Received request to send med record email for ID: ' . $recordId);
+
+        $record = \App\Models\MedicalRecord::where('appointment_id', $recordId)->first();
+
+        if (!$record) {
+            \Log::info('Record not found for email!');
+            return;
+        }
+
+        \Log::info('Preparing to send mail for record ID: ' . $record->id);
+        
+        Mail::to('primsapcclinic@gmail.com')->queue(new RecordRequestMail($record, 'medical'));
+
+        \Log::info('Mail sent successfully (or queued).');
+
+        $this->requestMessage = 'An email has been sent to the clinic regarding your medical record request.';
+        $this->showRequestPrompt = true;
+    }
+
+    public function requestDentalRecord($recordId)
+    {
+        \Log::info('Received request to send dental record email for ID: ' . $recordId);
+
+        $record = DentalRecord::where('appointment_id', $recordId)->first();
+
+        if (!$record) {
+            \Log::info('Dental record not found for email!');
+            return;
+        }
+
+        \Log::info('Preparing to send mail for dental record ID: ' . $record->id);
+
+        Mail::to('primsapcclinic@gmail.com')->queue(new RecordRequestMail($record, 'dental'));
+
+        \Log::info('Dental appointment IDs in DB: ' . implode(',', DentalRecord::pluck('appointment_id')->toArray()));
+
+        \Log::info('Mail sent successfully (or queued).');
+
+        $this->requestMessage = 'An email has been sent to the clinic regarding your dental record request.';
+        $this->showRequestPrompt = true;
     }
 
 

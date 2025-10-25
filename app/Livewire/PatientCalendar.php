@@ -58,10 +58,9 @@ class PatientCalendar extends Component
         $this->hasUpcomingAppointment = $this->checkExistingAppointment();
 
         $this->allTimes = [
-            '7:30 AM', '8:00 AM', '8:30 AM', '9:00 AM', '9:30 AM',
-            '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', 
-            '12:30 PM', '1:00 PM', '1:30 PM', '2:00 PM', '2:30 PM',
-            '3:00 PM', '3:30 PM', '4:00 PM', '4:30 PM', '5:00 PM',
+            '2:00 PM', '2:15 PM', '2:30 PM', '2:45 PM',
+            '3:00 PM', '3:15 PM', '3:30 PM', '3:45 PM',
+            '4:00 PM', '4:15 PM', '4:30 PM', '4:45 PM',
         ];
     }
 
@@ -124,11 +123,49 @@ class PatientCalendar extends Component
         $this->availableDates = [];
         $this->fullyBookedDates = []; // Store fully booked dates
     
+        $now = Carbon::now('Asia/Manila');
+    
         foreach ($doctorSchedules as $schedule) {
-            if (empty($schedule->available_times)) { 
+            // skip past schedule dates entirely
+            if (Carbon::parse($schedule->date)->lt(Carbon::today('Asia/Manila'))) {
+                continue;
+            }
+    
+            // decode available times
+            $availableTimes = is_array($schedule->available_times)
+                ? $schedule->available_times
+                : json_decode($schedule->available_times, true) ?? [];
+    
+            // if schedule has no configured times, mark fully booked
+            if (empty($availableTimes)) {
                 $this->fullyBookedDates[] = $schedule->date;
-            } else {
+                continue;
+            }
+    
+            // get already approved booked times for that doctor/date (format to h:i A)
+            $bookedTimes = Appointment::where('clinic_staff_id', $this->selectedDoctor->id)
+                ->whereDate('appointment_date', $schedule->date)
+                ->where('status', 'approved')
+                ->pluck('appointment_date')
+                ->map(function ($dateTime) {
+                    return Carbon::parse($dateTime)->format('h:i A');
+                })
+                ->toArray();
+    
+            // determine if there's at least one slot that's not booked and not already past
+            $hasAvailableSlot = false;
+            foreach ($availableTimes as $time) {
+                $slotDateTime = Carbon::createFromFormat('Y-m-d h:i A', $schedule->date . ' ' . $time, 'Asia/Manila');
+                if ($slotDateTime->gt($now) && !in_array($time, $bookedTimes)) {
+                    $hasAvailableSlot = true;
+                    break;
+                }
+            }
+    
+            if ($hasAvailableSlot) {
                 $this->availableDates[] = $schedule->date;
+            } else {
+                $this->fullyBookedDates[] = $schedule->date;
             }
         }
     
@@ -139,7 +176,7 @@ class PatientCalendar extends Component
                 $day['isFullyBooked'] = in_array($day['date'], $this->fullyBookedDates);
             }
         }
-    }    
+    }
 
     public function selectDate($date)
     {
@@ -187,25 +224,44 @@ class PatientCalendar extends Component
                 return Carbon::parse($dateTime)->format('h:i A');
             })
             ->toArray();
+
+        $now = Carbon::now('Asia/Manila');
     
         // Store available times properly (excluding booked slots)
         $this->availableTimes = [];
         foreach ($this->allTimes as $time) {
+            $slotDateTime = Carbon::createFromFormat('Y-m-d h:i A', $this->selectedDate . ' ' . $time, 'Asia/Manila');
+
+            $isPast = $slotDateTime->lte($now);
+            $isAvailable = in_array($time, $availableTimes) && !in_array($time, $bookedTimes) && !$isPast;
+
             $this->availableTimes[] = [
                 'time' => $time,
-                'isAvailable' => in_array($time, $availableTimes) && !in_array($time, $bookedTimes) // Exclude booked slots
+                'isAvailable' => $isAvailable,
+                'isPast' => $isPast,
             ];
         }
     }
 
     public function selectTime($time)
     {
+        // prevent selecting a past time
+        if (!$this->selectedDate) {
+            return;
+        }
+
+        // silently ignore past times
+        $slotDateTime = Carbon::createFromFormat('Y-m-d h:i A', $this->selectedDate . ' ' . $time, 'Asia/Manila');
+        if ($slotDateTime->lte(Carbon::now('Asia/Manila'))) {
+            return;
+        }
+
         // If the same time is clicked again, unselect it
         if ($this->selectedTime === $time) {
             $this->selectedTime = null;
             return;
         }
-    
+
         $this->selectedTime = $time;
     }
     
@@ -259,8 +315,8 @@ class PatientCalendar extends Component
         $this->showSuccessModal = true;
         $this->successMessage = '<strong>Your appointment request has been received.</strong> An <span class="text-red-500">email notification</span> has been sent to you, please wait for the clinic staff to approve your appointment.';
 
-        Mail::to('primsapcclinic@gmail.com')->send(new ClinicAppointmentNotif($appointment));
-        Mail::to(Auth::user()->email)->send(new PatientAppointmentNotif($appointment));
+        Mail::to('primsapcclinic@gmail.com')->queue(new ClinicAppointmentNotif($appointment));
+        Mail::to(Auth::user()->email)->queue(new PatientAppointmentNotif($appointment));
     }
 
     public function resetSelection()

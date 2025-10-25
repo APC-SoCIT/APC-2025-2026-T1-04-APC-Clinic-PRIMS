@@ -10,36 +10,30 @@ class MedicalRecord extends Model
     use HasFactory;
 
     protected $fillable = [
-        'email',
-        'apc_id_number',
-        'first_name',
-        'mi',
-        'last_name',
-        'dob',
-        'age',
-        'gender',
-        'contact_number',
-        'street_number',
-        'barangay',
-        'city',
-        'province',
-        'zip_code',
-        'country',
-        'nationality',
+        'patient_id',
         'reason',
         'description',
+        'last_visited',
         'allergies',
+        'medications',
         'past_medical_history',
         'family_history',
-        'social_history',
+        'personal_history',
         'obgyne_history',
         'hospitalization',
         'operation',
         'immunizations',
-        'physical_examination',
+        'weight',
+        'height',
+        'blood_pressure',
+        'heart_rate',
+        'respiratory_rate',
+        'temperature',
+        'bmi',
+        'o2sat',
         'prescription',
-        'last_visited',
         'appointment_id',
+        'doctor_id',
         'archived_at',
     ];
 
@@ -55,6 +49,11 @@ class MedicalRecord extends Model
         return $this->belongsTo(Patient::class, 'patient_id');
     }
 
+    public function doctor()
+    {
+        return $this->belongsTo(ClinicStaff::class, 'doctor_id');
+    }
+
     public function appointment()
     {
         return $this->belongsTo(Appointment::class, 'appointment_id');
@@ -68,7 +67,7 @@ class MedicalRecord extends Model
 
         public function diagnoses()
     {
-        return $this->hasMany(Diagnosis::class);
+        return $this->hasMany(Diagnosis::class, 'medical_record_id');
     }
 
     public function physicalExaminations()
@@ -80,4 +79,5 @@ class MedicalRecord extends Model
     {
         return $query->whereNotNull('archived_at');
     }
+
 }

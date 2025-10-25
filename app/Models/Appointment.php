@@ -26,9 +26,23 @@ class Appointment extends Model
         'status_updated_by',
     ];
 
+    // 🔹 Appointment belongs to a Patient
     public function patient()
     {
         return $this->belongsTo(Patient::class, 'patient_id');
+    }
+
+    // 🔹 Shortcut: Get User directly from Patient
+    public function patientUser()
+    {
+        return $this->hasOneThrough(
+            User::class,    // Final model
+            Patient::class, // Intermediate model
+            'id',           // Patient.id
+            'id',           // User.id
+            'patient_id',   // Appointment.patient_id
+            'user_id'       // Patient.user_id
+        );
     }
 
     public function medicalRecord()
@@ -36,6 +50,10 @@ class Appointment extends Model
         return $this->hasOne(MedicalRecord::class, 'appointment_id');
     }
 
+    public function dentalRecord()
+    {
+        return $this->hasOne(DentalRecord::class, 'appointment_id');
+    }
 
     public function updatedBy()
     {
@@ -51,5 +69,4 @@ class Appointment extends Model
     {
         return $this->hasOne(Feedback::class)->where('type', 'consultation');
     }
-
 }

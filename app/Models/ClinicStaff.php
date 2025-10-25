@@ -20,6 +20,8 @@ class ClinicStaff extends Model
         'clinic_staff_minitial',
         'clinic_staff_lname',
         'clinic_staff_role',
+        'email',
+        'doctor_category',
         'clinic_staff_image',
         'clinic_staff_desc',
     ];
@@ -32,6 +34,14 @@ class ClinicStaff extends Model
     public function appointments()
     {
         return $this->hasMany(Appointment::class);
+    }
+
+    public function getFullNameAttribute()
+    {
+        return $this->clinic_staff_fname 
+            . ' ' 
+            . ($this->clinic_staff_minitial ? $this->clinic_staff_minitial . '. ' : '') 
+            . $this->clinic_staff_lname;
     }
 
 

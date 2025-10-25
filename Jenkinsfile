@@ -1,68 +1,62 @@
 pipeline {
-    agent any
-
+    agent { label 'wonderpets' }
     environment {
-        APP_IMAGE = 'prims-app:latest'
-        DB_CONNECTION = 'mysql'
-        DB_HOST = 'mysql'
-        DB_PORT = '3306'
-        DB_DATABASE = 'laravel'
-        DB_USERNAME = 'sail'
-        DB_PASSWORD = 'password'
+        GEMINI_API_KEY = credentials('WONDERPETS_GEMINI_KEY')
+        MAIL_PASSWORD = credentials('WONDERPETS_EMAIL_PW')
     }
-
     stages {
-        stage('Build Docker Image') {
+        stage('Copy .env') {
             steps {
-                sh 'docker build -t $APP_IMAGE .'
+                sh 'cp .env.example .env || true'
             }
         }
 
-        stage('Prepare Environment') {
+        stage('Inject Secrets into .env') {
+            steps {
+                sh """
+                echo '${GEMINI_API_KEY}' >> .env
+                echo '${MAIL_PASSWORD}' >> .env
+                """
+            }
+        }
+
+        stage('Install Composer Dependencies') {
             steps {
                 sh '''
-                cp .env.example .env
-                chmod -R 777 storage bootstrap/cache .env
+                docker run --rm -v $PWD:/app -w /app composer install
+                git config --global --add safe.directory /app
                 '''
             }
         }
 
-        stage('Generate App Key & Run Migrations') {
+        stage('Start Sail') {
+            steps {
+                sh './vendor/bin/sail up -d'
+            }
+        }
+
+        stage('App Setup') {
             steps {
                 sh '''
-                docker run --rm \
-                    -v $PWD:/var/www/html \
-                    -e DB_CONNECTION=$DB_CONNECTION \
-                    -e DB_HOST=$DB_HOST \
-                    -e DB_PORT=$DB_PORT \
-                    -e DB_DATABASE=$DB_DATABASE \
-                    -e DB_USERNAME=$DB_USERNAME \
-                    -e DB_PASSWORD=$DB_PASSWORD \
-                    $APP_IMAGE \
-                    bash -c "php artisan key:generate && php artisan migrate:fresh --seed"
+                    ./vendor/bin/sail artisan key:generate
                 '''
             }
         }
 
-        stage('Install Frontend & Build Assets') {
+        stage('npm build') {
             steps {
                 sh '''
-                docker run --rm \
-                    -v $PWD:/var/www/html \
-                    $APP_IMAGE \
-                    bash -c "npm install && npm audit fix || true && npm run build"
+                    ./vendor/bin/sail npm install
+                    ./vendor/bin/sail npm run build
                 '''
             }
         }
 
-        stage('Commit Jenkinsfile') {
+        stage('Run Tests and migrate') {
             steps {
                 sh '''
-                git config user.email "jmmiyabe@student.apc.edu.ph"
-                git config user.name "jmmiyabe"
-                git add Jenkinsfile
-                git commit -m "Update Jenkinsfile for Docker pipeline" || true
-                git push origin HEAD:main
+                    ./vendor/bin/sail test
+                    ./vendor/bin/sail artisan migrate:fresh --seed
                 '''
             }
         }

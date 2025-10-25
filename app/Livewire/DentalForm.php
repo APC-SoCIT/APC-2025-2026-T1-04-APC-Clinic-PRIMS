@@ -1,0 +1,264 @@
+<?php
+
+namespace App\Livewire;
+
+use Livewire\Component;
+use App\Models\Patient;
+use App\Models\Appointment;
+use App\Models\RfidCard;
+use App\Models\DentalRecord;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use App\Models\ClinicStaff;
+
+class DentalForm extends Component
+{
+    public $appointment_id, $fromStaffCalendar, $apc_id_number, $first_name, $middle_initial, $last_name, $gender, $age, $date_of_birth, $nationality, $blood_type, $civil_status, $religion, $contact_number, $email, $house_unit_number, $street, $barangay, $city, $province, $zip_code, $country, $emergency_contact_name, $emergency_contact_number, $emergency_contact_relationship;
+
+    public $showErrorModal = false;
+    public $errorMessage = '';
+
+    public $oral_hygiene = null;
+    public $gingival_color = null;
+    public $prophylaxis = false;
+    public $recommendation = null;
+
+    public function searchPatient()
+    {
+        $patient = Patient::where('apc_id_number', $this->apc_id_number)->first();
+
+        if (!$patient) {
+            $card = RfidCard::with('patient')
+                ->where('rfid_uid', $this->apc_id_number)
+                ->first();
+
+            if ($card && $card->patient) {
+                $patient = $card->patient;
+                $this->apc_id_number = $patient->apc_id_number;
+            }
+        }
+
+        $patient ? $this->fillPatientDetails($patient) : $this->resetPatientFields();
+    }
+
+    private function fillPatientDetails(Patient $patient)
+    {
+        $this->apc_id_number = $patient->apc_id_number;
+        $this->first_name = $patient->first_name;
+        $this->middle_initial = $patient->middle_initial;
+        $this->last_name = $patient->last_name;
+        $this->gender = $patient->gender;
+        $this->date_of_birth = $patient->date_of_birth;
+        $this->age = $patient->date_of_birth ? Carbon::parse($patient->date_of_birth)->age : null;
+        $this->nationality = $patient->nationality;
+        $this->blood_type = $patient->blood_type;
+        $this->civil_status = $patient->civil_status;
+        $this->religion = $patient->religion;
+        $this->contact_number = $patient->contact_number;
+        $this->email = $patient->email;
+        $this->house_unit_number = $patient->house_unit_number;
+        $this->street = $patient->street;
+        $this->barangay = $patient->barangay;
+        $this->city = $patient->city;
+        $this->province = $patient->province;
+        $this->zip_code = $patient->zip_code;
+        $this->country = $patient->country;
+        $this->emergency_contact_name = $patient->emergency_contact_name;
+        $this->emergency_contact_number = $patient->emergency_contact_number;
+        $this->emergency_contact_relationship = $patient->emergency_contact_relationship;
+    }
+
+    private function resetPatientFields()
+    {
+        $this->apc_id_number = null;
+        $this->first_name = null;
+        $this->middle_initial = null;
+        $this->last_name = null;
+        $this->gender = null;
+        $this->date_of_birth = null;
+        $this->nationality = null;
+        $this->blood_type = null;
+        $this->civil_status = null;
+        $this->religion = null;
+        $this->contact_number = null;
+        $this->email = null;
+        $this->house_unit_number = null;
+        $this->street = null;
+        $this->barangay = null;
+        $this->city = null;
+        $this->province = null;
+        $this->zip_code = null;
+        $this->country = null;
+        $this->emergency_contact_name = null;
+        $this->emergency_contact_number = null;
+        $this->emergency_contact_relationship = null;
+    }
+
+    public $teeth = [
+        'upper' => [],
+        'lower' => []
+    ];
+
+    public $leftLabels = ['8','7','6','5','4','3','2','1'];
+    public $rightLabels = ['1','2','3','4','5','6','7','8'];
+
+    public $showModal = false;
+    public $selectedJaw = null;     // 'upper' or 'lower'
+    public $selectedIndex = null;   // position index 0..15, this won't duplicate since each button has its own
+
+    public function mount($appointment_id = null, $fromStaffCalendar = false)
+    {
+        // Try to load appointment if coming from calendar
+        $this->appointment_id = $appointment_id;
+        $this->fromStaffCalendar = in_array($fromStaffCalendar, [1, "1", true], true);
+
+        if ($appointment_id) {
+            $appointment = \App\Models\Appointment::with('patient')->find($appointment_id);
+            if ($appointment && $appointment->patient) {
+                $this->fillPatientDetails($appointment->patient);
+            }
+        }
+
+        // initialize teeth arrays (keep your original logic)
+        for ($i = 0; $i < 16; $i++) {
+            $this->teeth['upper'][$i] = null;
+            $this->teeth['lower'][$i] = null;
+        }
+    }
+
+    // open modal for a specific jaw + position index (unique per jaw)
+    public function openModal($jaw, $index)
+    {
+        // ensure index is integer
+        $this->selectedJaw = $jaw;
+        $this->selectedIndex = (int) $index;
+        $this->showModal = true;
+    }
+
+    public function closeModal()
+    {
+        $this->showModal = false;
+        $this->selectedJaw = null;
+        $this->selectedIndex = null;
+    }
+
+    // set the status for the selected position (overwrites previous)
+    public function selectToothCondition($status)
+    {
+        if (!$this->selectedJaw || $this->selectedIndex === null) return;
+
+        // If the same status is clicked, deselect it
+        if ($this->teeth[$this->selectedJaw][$this->selectedIndex] === $status) {
+            $this->teeth[$this->selectedJaw][$this->selectedIndex] = null;
+        } else {
+            $this->teeth[$this->selectedJaw][$this->selectedIndex] = $status;
+        }
+
+    }
+
+    public $toothColors = [
+        'C'  => 'bg-red-500 text-white',       // Caries
+        'M'  => 'bg-blue-500 text-white',      // Missing
+        'E'  => 'bg-green-500 text-white',     // Extraction
+        'LC' => 'bg-orange-500 text-white',    // Lesion/Cavity
+        'CR' => 'bg-purple-500 text-white',    // Crown
+        'UE' => 'bg-yellow-500 text-white',    // Unerupted
+    ];
+
+    public function getSelectedToothLabel()
+    {
+        if ($this->selectedJaw === null || $this->selectedIndex === null) return '';
+
+        // Determine side
+        $side = $this->selectedIndex < count($this->leftLabels) ? 'Left' : 'Right';
+
+        // Adjust index for side
+        $indexInSide = $side === 'Left' ? $this->selectedIndex : $this->selectedIndex - count($this->leftLabels);
+
+        // Pick the label
+        $label = $side === 'Left' 
+            ? $this->leftLabels[$indexInSide] 
+            : $this->rightLabels[$indexInSide];
+
+        return $label . ' (' . ucfirst($this->selectedJaw) . ' ' . $side . ')';
+    }
+
+    public function closeModalWithSave()
+    {
+        $this->showModal = false;
+    }
+
+    public $statusMessage = null;
+
+    public function submit()
+    {
+
+        try {
+            $this->validate([
+                'oral_hygiene'   => 'required|string',
+                'gingival_color' => 'required|string',
+                'prophylaxis'    => 'required|boolean',
+                'recommendation' => 'nullable|string',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Show your modal when any field is missing
+            $this->errorMessage = 'Please fill out all <strong>The required parts of the form</strong>.';
+            $this->showErrorModal = true;
+            return;
+        }
+
+
+        $patient = Patient::where('apc_id_number', $this->apc_id_number)->firstOrFail();
+        $clinicStaff = \App\Models\ClinicStaff::where('user_id', auth()->id())->first();
+        
+        $record = DentalRecord::create([
+            'patient_id' => $patient->id,
+            'oral_hygiene'    => $this->oral_hygiene,
+            'gingival_color'  => $this->gingival_color,
+            'prophylaxis'     => (bool) $this->prophylaxis,
+            'teeth'           => $this->teeth,
+            'recommendation'  => $this->recommendation,
+            'appointment_id' => $this->appointment_id,
+            'doctor_id' => $clinicStaff?->id,
+        ]);
+
+        if ($this->fromStaffCalendar && $this->appointment_id) {
+                Appointment::where('id', $this->appointment_id)->update(['status' => 'completed']);
+            }
+
+        $this->reset();
+        
+        return redirect()
+            ->route('medical-records')
+            ->with('toast', [
+                'style' => 'success',
+                'message' => 'Record saved successfully!'
+            ]);
+
+    }
+
+    protected function resetAfterSave()
+    {
+        $this->oral_hygiene = null;
+        $this->gingival_color = null;
+        $this->prophylaxis = false;
+        $this->recommendation = null;
+        $this->showModal = false;
+
+        // clear teeth selections
+        for ($i = 0; $i < 16; $i++) {
+            $this->teeth['upper'][$i] = null;
+            $this->teeth['lower'][$i] = null;
+        }
+    }
+
+
+    public function render()
+    {
+        // pass arrays to view to map index -> visible label
+        $upper = array_merge($this->leftLabels, $this->rightLabels);
+        $lower = array_merge($this->leftLabels, $this->rightLabels);
+
+        return view('livewire.dental-form', compact('upper','lower'));
+    }
+}

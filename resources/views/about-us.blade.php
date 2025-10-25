@@ -43,24 +43,20 @@
                     <!-- Mission -->
                     <div>
                         <h3 class="text-xl font-bold text-[#1D3557]">Mission</h3>
-                        <p class="text-md mt-2 leading-relaxed">
-                            Our mission is to provide high-quality, patient-centered healthcare through 
-                            innovative medical solutions and compassionate care. We are committed to promoting 
-                            wellness, preventing illness, and ensuring timely, accurate diagnoses. 
-                            By integrating advanced technology and a dedicated healthcare team, we strive to 
-                            enhance the well-being of every patient in our community.
+                        <p class="text-md mt-2 custom-justify leading-relaxed">
+                        Asia Pacific College, powered by education and industry professionals as faculty and a balanced curriculum, 
+                        aims to provide business and the information and communications technology industry in the Philippines and in 
+                        the global community lifelong learning graduates who are anchored on the principles of integrity and professionalism.
                         </p>
                     </div>
 
                     <!-- Vision -->
                     <div>
                         <h3 class="text-xl font-bold text-[#1D3557]">Vision</h3>
-                        <p class="text-md mt-2 leading-relaxed">
-                            Our vision is to become a leading healthcare provider known for excellence 
-                            in medical services, patient safety, and holistic wellness. 
-                            We aspire to create a healthier community by setting new standards in clinical care, 
-                            research, and medical education. Through continuous innovation and collaboration, 
-                            we aim to be a trusted healthcare partner for generations to come.
+                        <p class="text-md mt-2 custom-justify leading-relaxed">
+                        Asia Pacific College envisions itself to be the preferred Higher 
+                        Education Institution bridging academe and industry with its programs founded on the 
+                        concepts and applications of IT, guided by the core values of integrity, industry and innovation that works.
                         </p>
                     </div>
 
@@ -73,13 +69,9 @@
                     <!-- Values -->
                     <div>
                         <h3 class="text-xl font-bold text-[#1D3557]">Values</h3>
-                        <p class="text-md mt-2 leading-relaxed">
-                            We uphold compassion by treating every patient with empathy, dignity, and respect. 
-                            <em>We strive for excellence</em>, maintaining the highest standards of medical care 
-                            and continuous improvement. Integrity guides our practice, ensuring honesty, transparency, 
-                            and ethical healthcare. We embrace innovation, utilizing advanced medical solutions 
-                            to enhance patient care. Above all, we value community, prioritizing the well-being of 
-                            students, faculty, and staff through accessible and comprehensive healthcare services.
+                        <p class="text-md mt-2 custom-justify leading-relaxed">
+                        APC aims to produce graduates with strong sense of industry or hard work, integrity or being honest and having strong 
+                        moral / ethical principles, and innovation or constantly introducing new and creative methods or ideas.
                         </p>
                     </div>
 
@@ -93,7 +85,7 @@
     </html>
 
     <footer class="bg-prims-yellow-1 w-full h-16 mt-6 flex items-center pl-6 relative">
-        <img src="img/apc-logo.svg" class="object-scale-down h-16">
+        <img src="img/APC_LOGO_SEAL.png" class="object-scale-down h-10">
         <p class="absolute inset-0 flex items-center justify-center w-full">
         Copyright © 2025<span class="ml-1 text-blue-500">Asia Pacific College</span>. All Rights Reserved.
         </p>

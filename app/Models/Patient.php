@@ -16,16 +16,38 @@ class Patient extends Model
      */
     protected $fillable = [
         'user_id',
+        'category_id',
+
         'apc_id_number',
         'first_name',
         'middle_initial',
         'last_name',
+
         'gender',
         'date_of_birth',
-        'category_id',
+        'nationality',
+
+        'blood_type',
+        'civil_status',
+        'religion',
         'contact_number',
-        'medical_history_id',
-        'emergencycontact_id',
+
+        'email',
+        'house_unit_number',
+        'street',
+        'barangay',
+        'city',
+        'province',
+        'zip_code',
+        'country',
+
+        'emergency_contact_name',
+        'emergency_contact_number',
+        'emergency_contact_relationship',
+    ];
+
+    protected $casts = [
+    'birthdate' => 'date',
     ];
 
     public function user()
@@ -36,6 +58,16 @@ class Patient extends Model
     public function appointments()
     {
         return $this->hasMany(Appointment::class);
+    }
+
+    public function medicalRecords()
+    {
+        return $this->hasMany(MedicalRecord::class);
+    }
+
+    public function dentalRecords()
+    {
+        return $this->hasMany(DentalRecord::class);
     }
 
     public function rfidCards()
