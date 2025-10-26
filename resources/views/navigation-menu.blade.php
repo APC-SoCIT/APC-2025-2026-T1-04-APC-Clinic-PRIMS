@@ -45,7 +45,7 @@
                     <x-nav-link href="{{ route('admin-acc-management') }}" :active="request()->routeIs('admin-acc-management')">
                         {{ __('Account Management') }}
                     </x-nav-link>
-                    <x-nav-link href="{{ route('admin-acc-management') }}" :active="request()->routeIs('admin-acc-management')">
+                    <x-nav-link href="{{ route('roles-permissions') }}" :active="request()->routeIs('roles-permissions')">
                         {{ __('Roles & Permissions') }}
                     </x-nav-link>
                     @endif
