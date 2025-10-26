@@ -1,17 +1,19 @@
 <div class="p-4 my-4 mx-6 bg-white rounded-lg shadow">
         <!-- Header -->
         <div class="flex items-center justify-between">
-            <h1 class="m-4 text-2xl font-semibold text-gray-800">Clinic Account Management</h1>
-            <input 
-                type="text" 
-                wire:model.live="search" 
-                placeholder="Search by name or APC email...     ⌕" 
-                class="border-gray-300 rounded-lg px-4 py-2 w-full sm:w-72 focus:ring-2 focus:ring-blue-400 outline-none">
-            <button 
-                wire:click="openModal" 
-                class="flex justify-end m-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-                + Add Doctor
-            </button>
+            <h1 class="mx-4 text-2xl font-semibold text-gray-800">Clinic Account Management</h1>
+            <div class="mx-4 flex items-center space-x-3">
+                <input 
+                    type="text" 
+                    wire:model.live="search" 
+                    placeholder="Search by name or APC email...     ⌕" 
+                    class="border-gray-300 rounded-lg px-4 py-2 sm:w-72 focus:ring-2 focus:ring-blue-400 outline-none">
+                <button 
+                    wire:click="openModal" 
+                    class="flex justify-end m-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition">
+                    + Add Doctor
+                </button>
+            </div>
         </div>
 
         <!-- One Modal -->
@@ -23,8 +25,8 @@
                     <h2 class="text-xl font-semibold mb-4">Add Doctor (Enter APC Email)</h2>
                     <input type="text" wire:model.lazy="email" placeholder="Enter APC email..." class="border rounded px-4 py-2 w-full mb-4">
                     <div class="flex justify-end gap-2">
-                        <button wire:click="submitEmail" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Submit</button>
                         <button wire:click="closeModal" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500 transition">Cancel</button>
+                        <button wire:click="submitEmail" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Submit</button>
                     </div>
                 @else
                     <!-- Step 2: Confirm Info -->
