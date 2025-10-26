@@ -30,6 +30,8 @@ Route::middleware([
             return redirect()->route('summary-report');
         } elseif ($user->hasRole('patient')) {
             return redirect()->route('patient-homepage');
+        } elseif ($user->hasRole('admin')) {
+            return redirect()->route('admin-acc-management'); // redirect admin to Manage Doctors page
         }
 
         abort(403, 'Unauthorized action.');
@@ -265,4 +267,15 @@ Route::middleware([
     // Print dental record route
     Route::get('/dental-records/{id}/print', [DentalRecordController::class, 'printPDF'])
     ->name('print-dental-record');
+
+    // ADMIN
+    Route::get('/admin/dashboard', function () {
+        $user = Auth::user();
+
+        if (!$user || !$user->hasRole('admin')) {
+            abort(403); // Forbidden
+        }
+
+        return view('admin-acc-management');
+    })->name('admin-acc-management');
 });

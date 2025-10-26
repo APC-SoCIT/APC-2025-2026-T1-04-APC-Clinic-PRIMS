@@ -61,6 +61,11 @@ class UserSeeder extends Seeder
                 'password' => 'winniesy',
                 'role' => 'clinic staff',
             ],
+            [
+                'email' => 'admin@apc.edu.ph',
+                'password' => 'admin123',
+                'role' => 'admin',
+            ]
         ];
 
         foreach($users as $user) {
