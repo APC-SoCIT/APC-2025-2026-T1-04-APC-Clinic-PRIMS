@@ -19,8 +19,7 @@ class AdminAccManagement extends Component
     public $showSuccessModal = false;
     public $successMessage = '';
 
-    public $showErrorModal = false;
-    public $errorMessage = '';
+    public $emailError = '';
 
     // Sample data for school doctors
 
@@ -87,25 +86,29 @@ class AdminAccManagement extends Component
         $this->isConfirmStep = false;
         $this->email = '';
         $this->doctorInfo = [];
+        $this->emailError = '';
     }
 
     public function submitEmail()
     {
         $email = strtolower(trim($this->email));
-        if (!$email) return;
+
+        $this->emailError = '';
+
+        if (!$email) {
+            $this->emailError = 'Please enter an email address.';
+            return;
+        }
 
         // Already in clinic DB
         if (Doctor::where('email', $email)->exists()) {
-            $this->errorMessage = 'Already added. This doctor is in the clinic database.';
-            $this->showErrorModal = true;
-            $this->closeModal();
+            $this->emailError = 'Already added. This doctor is in the clinic database.';
             return;
         }
 
         // Not in school dummy DB
         if (!isset($this->schoolDoctors[$email])) {
-            $this->errorMessage = 'Doctor not found in school database.';
-            $this->showErrorModal = true;
+            $this->emailError = 'Email not found in APC database.';
             return;
         }
 

@@ -23,8 +23,11 @@
                 @if(!$isConfirmStep)
                     <!-- Step 1: Enter Email -->
                     <h2 class="text-xl font-semibold mb-4">Add Doctor (Enter APC Email)</h2>
-                    <input type="text" wire:model.lazy="email" placeholder="Enter APC email..." class="border rounded px-4 py-2 w-full mb-4">
-                    <div class="flex justify-end gap-2">
+                    <input type="text" wire:model.lazy="email" placeholder="Enter APC email..." class="border rounded px-4 py-2 w-full mb-1">
+                    @if ($emailError)
+                        <p class="text-sm text-red-600">{{ $emailError }}</p>
+                    @endif
+                    <div class="flex justify-end gap-2 mt-4">
                         <button wire:click="closeModal" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500 transition">Cancel</button>
                         <button wire:click="submitEmail" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Submit</button>
                     </div>
