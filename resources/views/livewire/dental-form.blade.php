@@ -306,20 +306,20 @@
         </form>
     </div>
     @if ($showErrorModal)
-            <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                <div class="bg-white rounded-xl shadow-lg p-6 w-96">
-                    <h2 class="text-lg font-semibold text-red-600">Error</h2>
-                    <p class="mt-2 text-gray-700">{!! $errorMessage !!}</p>
+        <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div class="bg-white rounded-xl shadow-lg p-6 w-96">
+                <h2 class="text-lg font-semibold text-red-600">Error</h2>
+                <p class="mt-2 text-gray-700">{!! $errorMessage !!}</p>
 
-                    <div class="mt-4 flex justify-end">
-                        <button 
-                            wire:click="$set('showErrorModal', false)" 
-                            class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                        >
-                            Close
-                        </button>
-                    </div>
+                <div class="mt-4 flex justify-end">
+                    <button 
+                        wire:click="$set('showErrorModal', false)" 
+                        class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                    >
+                        Close
+                    </button>
                 </div>
             </div>
+        </div>
     @endif
 </div>
