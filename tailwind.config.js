@@ -39,7 +39,10 @@ export default {
                 'choose-time': {
                     1: '#E3E3E3',
                     2: '#3E3E3E',
-                }
+                },
+                'light-blue': {
+                    1: '#3283FD',
+                },
             },
             spacing: {
                 '3': '0.75rem',

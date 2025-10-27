@@ -11,6 +11,8 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -35,7 +37,6 @@
         @stack('modals')
 
         @livewireScripts
-        
     </body>
     <footer class="text-center text-xs text-gray-500 py-2">
         Version 1.1.0 | Build 0dac77b
