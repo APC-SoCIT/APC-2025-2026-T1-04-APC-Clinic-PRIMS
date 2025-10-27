@@ -288,4 +288,15 @@ Route::middleware([
 
         return view('roles-permissions');
     })->name('roles-permissions');
+
+    Route::get('/admin', function () {
+        $user = Auth::user();
+
+        if (!$user || !$user->hasRole('admin')) {
+            abort(403); // Forbidden
+        }
+
+        return view('admin-view');
+    })->name('admin');
 });
+
