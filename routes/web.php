@@ -10,6 +10,7 @@ use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\DentalRecordController;
 use App\Http\Controllers\InventoryReportController;
+use App\Http\Controllers\UserRoleController;
 
 $url = config('app.url');
 URL::forceRootUrl($url);
@@ -31,7 +32,7 @@ Route::middleware([
         } elseif ($user->hasRole('patient')) {
             return redirect()->route('patient-homepage');
         } elseif ($user->hasRole('admin')) {
-            return redirect()->route('admin-acc-management'); // redirect admin to Manage Doctors page
+            return redirect()->route('admin'); // redirect admin to Manage Doctors page
         }
 
         abort(403, 'Unauthorized action.');
@@ -268,35 +269,12 @@ Route::middleware([
     Route::get('/dental-records/{id}/print', [DentalRecordController::class, 'printPDF'])
     ->name('print-dental-record');
 
-    // ADMIN
-    Route::get('/admin/dashboard', function () {
-        $user = Auth::user();
+    Route::get('/admin', [UserRoleController::class, 'index'])->name('admin');
 
-        if (!$user || !$user->hasRole('admin')) {
-            abort(403); // Forbidden
-        }
+    Route::get('/admin/roles/search', [UserRoleController::class, 'search'])
+    ->name('admin.roles.search');
 
-        return view('admin-acc-management');
-    })->name('admin-acc-management');
-
-    Route::get('/admin/roles-permission', function () {
-        $user = Auth::user();
-
-        if (!$user || !$user->hasRole('admin')) {
-            abort(403); // Forbidden
-        }
-
-        return view('roles-permissions');
-    })->name('roles-permissions');
-
-    Route::get('/admin', function () {
-        $user = Auth::user();
-
-        if (!$user || !$user->hasRole('admin')) {
-            abort(403); // Forbidden
-        }
-
-        return view('admin-view');
-    })->name('admin');
+    Route::post('/admin/assign-role/{user}', [UserRoleController::class, 'assignRole'])
+    ->name('admin.assignRole');
 });
 
