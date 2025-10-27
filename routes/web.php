@@ -216,13 +216,13 @@ Route::middleware([
     })->name('addRecordmain');
 
      // Test route
-     Route::get('/test', function () {
+     Route::get('/staff/medformv2', function () {
         $user = Auth::user();
-        if (!$user || !$user->hasRole('patient')) {
+        if (!$user || !$user->hasRole('clinic staff')) {
             abort(403); // Forbidden
         }
-        return view('test');
-    })->name('test');
+        return view('medformv2');
+    })->name('medformv2');
 
     // Add Medicine route
     Route::get('/staff/add-medicine', function () {
