@@ -10,7 +10,8 @@ class DentalRecord extends Model
         'patient_id',
         'oral_hygiene',
         'gingival_color',
-        'prophylaxis',
+        'procedures',
+        'procedure_notes',
         'teeth',
         'recommendation',
         'appointment_id',
@@ -19,19 +20,14 @@ class DentalRecord extends Model
     ];
 
     protected $casts = [
-        'teeth' => 'array',       // automatically json encode/decode
-        'prophylaxis' => 'boolean',
+        'teeth' => 'array',       
+        'oral_hygiene' => 'array', // needed for Livewire
+        'procedures' => 'array',   // optional, good for consistency
     ];
 
     public function patient()
     {
         return $this->belongsTo(Patient::class, 'patient_id');
-    }
-
-    public function latestRecord()
-    {
-        return $this->hasOne(MedicalRecord::class, 'apc_id_number', 'apc_id_number')
-            ->latestOfMany('last_visited');
     }
 
     public function doctor()
@@ -43,5 +39,4 @@ class DentalRecord extends Model
     {
         return $this->belongsTo(Appointment::class, 'appointment_id');
     }
-
 }
