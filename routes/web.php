@@ -12,6 +12,7 @@ use App\Http\Controllers\DentalRecordController;
 use App\Http\Controllers\InventoryReportController;
 use App\Http\Controllers\UserRoleController;
 use App\Livewire\AdminDoctorSchedule;
+use App\Http\Controllers\DashboardController;
 
 $url = config('app.url');
 URL::forceRootUrl($url);
@@ -29,7 +30,7 @@ Route::middleware([
         $user = Auth::user();
 
         if ($user->hasRole('clinic staff')) {
-            return redirect()->route('summary-report');
+            return redirect()->route('staff-dashboard');
         } elseif ($user->hasRole('patient')) {
             return redirect()->route('patient-homepage');
         } elseif ($user->hasRole('admin')) {
@@ -170,6 +171,21 @@ Route::middleware([
 
     Route::get('/archived-records', [MedicalRecordController::class, 'archiveRecord'])
     ->name('archived-records');
+
+    //Dashboard Route
+    Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])
+        ->group(function () {
+
+            Route::get('/staff/dashboard', function () {
+                $user = Auth::user();
+
+                if (!$user || !$user->hasRole('clinic staff')) {
+                    abort(403, 'Unauthorized');
+                }
+
+                return app(DashboardController::class)->index();
+            })->name('staff-dashboard');
+        });
 
 
     // Summary report route
