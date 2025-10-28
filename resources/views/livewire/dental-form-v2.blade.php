@@ -6,30 +6,30 @@
         </div>
         <hr class="my-3"/>
         <div class="text-sm">
-            <p><span class="font-semibold">ID Number: </span>2022-140224</p>
-            <p><span class="font-semibold">Name: </span>Shannelien Mae M. Catingub</p>
-            <p><span class="font-semibold">Gender: </span>Female</p>
-            <p><span class="font-semibold">Date of Birth: </span>12/29/2003</p>
-            <p><span class="font-semibold">Age: </span>21</p>
+            <p><span class="font-semibold">ID Number: </span>{{ $patient_info['id'] }}</p>
+            <p><span class="font-semibold">Name: </span>{{ $patient_info['full_name'] }}</p>
+            <p><span class="font-semibold">Gender: </span>{{ $patient_info['gender'] }}</p>
+            <p><span class="font-semibold">Date of Birth: </span>{{ $patient_info['dob'] }}</p>
+            <p><span class="font-semibold">Age: </span>{{ $patient_info['age'] }}</p>
             <br>
-            <p><span class="font-semibold">Nationality: </span>Filipino</p>
-            <p><span class="font-semibold">Blood Type: </span>O</p>
-            <p><span class="font-semibold">Civil Status: </span>Single</p>
-            <p><span class="font-semibold">Religion: </span>Catholic</p>
+            <p><span class="font-semibold">Nationality: </span>{{ $patient_info['nationality'] }}</p>
+            <p><span class="font-semibold">Blood Type: </span>{{ $patient_info['blood_type'] }}</p>
+            <p><span class="font-semibold">Civil Status: </span>{{ $patient_info['civil_status'] }}</p>
+            <p><span class="font-semibold">Religion: </span>{{ $patient_info['religion'] }}</p>
             <br>
-            <p><span class="font-semibold">Contact Number: </span>09761164892</p>
-            <p><span class="font-semibold">Email Address: </span>smcatingub@student.apc.edu.ph</p>
-            <p><span class="font-semibold">House/Unit No.: </span>60</p>
-            <p><span class="font-semibold">Street: </span>J. Fernandez St.</p>
-            <p><span class="font-semibold">Barangay: </span>Pinagbuhatan</p>
-            <p><span class="font-semibold">City/Municipality: </span>Pasig City</p>
-            <p><span class="font-semibold">Province: </span>NCR</p>
-            <p><span class="font-semibold">ZIP Code: </span>1602</p>
-            <p><span class="font-semibold">Country: </span>Philippines</p>
+            <p><span class="font-semibold">Contact Number: </span>{{ $patient_info['contact_number'] }}</p>
+            <p><span class="font-semibold">Email Address: </span>{{ $patient_info['email'] }}</p>
+            <p><span class="font-semibold">House/Unit No.: </span>{{ $patient_info['house_no'] }}</p>
+            <p><span class="font-semibold">Street: </span>{{ $patient_info['street'] }}</p>
+            <p><span class="font-semibold">Barangay: </span>{{ $patient_info['barangay'] }}</p>
+            <p><span class="font-semibold">City/Municipality: </span>{{ $patient_info['city'] }}</p>
+            <p><span class="font-semibold">Province: </span>{{ $patient_info['province'] }}</p>
+            <p><span class="font-semibold">ZIP Code: </span>{{ $patient_info['zip_code'] }}</p>
+            <p><span class="font-semibold">Country: </span>{{ $patient_info['country'] }}</p>
             <br>
-            <p><span class="font-semibold">Emergency Contact Name: </span>Emergency</p>
-            <p><span class="font-semibold">Emergency Contact Number: </span>09123456789</p>
-            <p><span class="font-semibold">Relationship to Patient: </span>Parent</p>
+            <p><span class="font-semibold">Emergency Contact Name: </span>{{ $patient_info['emergency_name'] }}</p>
+            <p><span class="font-semibold">Emergency Contact Number: </span>{{ $patient_info['emergency_number'] }}</p>
+            <p><span class="font-semibold">Relationship to Patient: </span>{{ $patient_info['emergency_relationship'] }}</p>
         </div>
     </div>
 
@@ -70,7 +70,7 @@
                     Previous
                 </button>
             @endif
-            @if ($step < count($steps))
+            @if ($step < 4)
                 <button type="button" wire:click="nextStep"
                     class="ml-auto bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
                     Next
@@ -102,6 +102,7 @@
                                     <option value="Fair">Fair</option>
                                     <option value="Poor">Poor</option>
                                 </select>
+                                @error('oral_hygiene.plaque_level') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                             </div>
                         </div>
                         <div>
@@ -121,6 +122,7 @@
                                         </button>
                                     @endforeach
                                 </div>
+                                @error('gingival_color') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                             </div>
                         </div>
                     </div>
@@ -236,74 +238,42 @@
 
         <!-- Pop-up Modal -->
         @if($showModal)
-            <div id="dentalModalBackdrop" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50" onclick="@this.closeModalWithSave()"> <!-- click anywhere on backdrop -->
-                <div id="dentalModal" class="bg-white rounded-lg shadow-lg p-6 w-96" onclick="event.stopPropagation()"> <!-- stops clicks inside modal from closing -->
-                    <h3 class="text-md font-semibold mb-4 text-gray-800">
-                        Tooth 
-                        <span>
-                            {{ $this->getSelectedToothLabel() }}
-                        </span>
-                    </h3>
-
-                    <div class="grid grid-cols-3 gap-3">
-                        @php
-                            $statusLabels = [
-                                'C'  => 'Caries',
-                                'M'  => 'Missing',
-                                'E'  => 'Extraction',
-                                'LC' => 'Lesion/Cavity',
-                                'CR' => 'Crown',
-                                'UE' => 'Unerupted',
-                            ];
-                            $statuses = ['C','M','E','LC','CR','UE'];
-                        @endphp
-
-                        @foreach($statuses as $status)
-                            @php
-                                $isActive = ($selectedJaw && $selectedIndex !== null)
-                                    && ($teeth[$selectedJaw][$selectedIndex] === $status);
-                                $baseClass = $toothColors[$status] ?? 'bg-gray-200 text-gray-800';
-                            @endphp
-
-                            <button
-                                type="button"
-                                wire:click="selectToothCondition('{{ $status }}')"
-                                class="py-2 px-3 rounded shadow-sm transition transform duration-150
-                                    {{ $isActive ? 'scale-105 ring-2 ring-offset-1' : '' }}
-                                    {{ $baseClass }}"
-                                    title="@switch($status)
-                                            @case('C') Caries @break
-                                            @case('M') Missing @break
-                                            @case('E') Extraction @break
-                                            @case('LC') Lesion/Cavity @break
-                                            @case('CR') Crown @break
-                                            @case('UE') Unerupted @break
-                                        @endswitch"
-                            >
+            <div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50" wire:click="closeModal">
+                <div class="bg-white rounded p-6 w-96" wire:click.stop>
+                    <h3 class="font-semibold mb-4">Tooth {{ $selectedToothLabel }}</h3>
+                    <div class="grid grid-cols-3 gap-2">
+                        @foreach(['C','M','E','LC','CR','UE'] as $status)
+                            <button type="button" wire:click="selectToothCondition('{{ $status }}')"
+                                class="py-2 px-3 rounded {{ ($teeth[$selectedJaw][$selectedIndex] ?? null) === $status ? 'ring-2' : '' }} {{ $toothColors[$status] }}">
                                 {{ $status }}
                             </button>
                         @endforeach
                     </div>
-
-                    <div class="flex justify-end mt-5">
-                        <button
-                            type="button"
-                            wire:click="closeModal"
-                            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 transition-colors duration-200">
-                            Close
-                        </button>
+                    <div class="flex justify-end mt-4">
+                        <button type="button" wire:click="closeModal" class="px-4 py-2 bg-gray-300 rounded">Close</button>
                     </div>
                 </div>
             </div>
         @endif
-                            
-        <!-- Success Message -->
+        </form>
+        <!-- Success Modal -->
         @if (session()->has('success'))
-            <div class="mt-4 p-3 bg-green-100 text-green-800 rounded">
-                {{ session('success') }}
+            <div 
+                x-data="{ show: true }" 
+                x-init="setTimeout(() => show = false, 1000)" 
+                x-show="show" 
+                x-transition
+                class="fixed inset-0 flex items-center justify-center z-50"
+            >
+                <!-- Background overlay -->
+                <div class="fixed inset-0 bg-black bg-opacity-50"></div>
+
+                <!-- Green message box -->
+                <div class="bg-green-500 text-white p-3 rounded shadow z-50">
+                    {{ session('success') }}
+                </div>
             </div>
         @endif
-        </form>
     </div>
 </div>
 

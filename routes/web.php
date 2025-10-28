@@ -66,6 +66,14 @@ Route::middleware([
         return view('patient-calendar');
     })->name('appointment');
 
+    Route::get('/staff/dental-form-v2', function () {
+        $user = Auth::user();
+        if (!$user || !$user->hasRole('clinic staff')) {
+            abort(403); // Forbidden
+        }
+        return view('dental-form-v2');
+    })->name('dental-form-v2');
+    
     
    // Invetory Report ROUTE FOR PDF
     Route::post('/inventory/report', [InventoryReportController::class, 'generate'])->name('inventory.report');
