@@ -217,7 +217,7 @@ Route::middleware([
     })->name('addRecordmain');
 
      // Test route
-     Route::get('/staff/medformv2', function () {
+    Route::get('/staff/medformv2', function () {
         $user = Auth::user();
         if (!$user || !$user->hasRole('clinic staff')) {
             abort(403); // Forbidden

@@ -230,7 +230,7 @@
         <!-- Pop-up Modal -->
         @if($showModal)
             <div id="dentalModalBackdrop" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50" onclick="@this.closeModalWithSave()"> <!-- click anywhere on backdrop -->
-    <div id="dentalModal" class="bg-white rounded-lg shadow-lg p-6 w-96" onclick="event.stopPropagation()"> <!-- stops clicks inside modal from closing -->
+                <div id="dentalModal" class="bg-white rounded-lg shadow-lg p-6 w-96" onclick="event.stopPropagation()"> <!-- stops clicks inside modal from closing -->
                     <h3 class="text-lg font-semibold mb-4 text-gray-800">
                         Tooth 
                         <span>
