@@ -29,7 +29,7 @@ Route::middleware([
         $user = Auth::user();
 
         if ($user->hasRole('clinic staff')) {
-            return redirect()->route('summary-report');
+            return redirect()->route('staff-dashboard');
         } elseif ($user->hasRole('patient')) {
             return redirect()->route('patient-homepage');
         } elseif ($user->hasRole('admin')) {
