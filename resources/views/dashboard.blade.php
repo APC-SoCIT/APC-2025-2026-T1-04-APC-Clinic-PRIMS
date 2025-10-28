@@ -197,7 +197,7 @@
             <!-- Calendar Section (unchanged) -->
             <div class="bg-white rounded-lg shadow-md p-6 mb-6">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Clinic Schedule</h3>
+                    <h3 class="text-lg font-semibold text-gray-800">Clinic Schedule for the month of {{ now()->format('F') }}</h3>
                     <div class="space-x-2">
                         <button id="weekView" class="px-3 py-1 bg-blue-500 text-white rounded-md text-sm">Week</button>
                         <button id="monthView" class="px-3 py-1 bg-gray-300 text-gray-800 rounded-md text-sm">Month</button>
