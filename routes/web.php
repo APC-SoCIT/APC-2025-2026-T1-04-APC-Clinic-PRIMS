@@ -216,7 +216,7 @@ Route::middleware([
     })->name('addRecordmain');
 
      // Test route
-     Route::get('/staff/medformv2', function () {
+    Route::get('/staff/medformv2', function () {
         $user = Auth::user();
         if (!$user || !$user->hasRole('clinic staff')) {
             abort(403); // Forbidden
@@ -288,4 +288,12 @@ Route::middleware([
 
         return view('roles-permissions');
     })->name('roles-permissions');
+
+    Route::get('/staff/dental-form-v2', function () {
+        $user = Auth::user();
+        if (!$user || !$user->hasRole('clinic staff')) {
+            abort(403); // Forbidden
+        }
+        return view('dental-formv2');
+    })->name('dental-formv2');
 });

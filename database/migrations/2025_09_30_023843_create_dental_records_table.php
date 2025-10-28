@@ -14,18 +14,25 @@ return new class extends Migration
         Schema::create('dental_records', function (Blueprint $table) {
             $table->id();
             $table->foreignId('patient_id')->constrained('patients')->onDelete('cascade');
-            $table->string('oral_hygiene')->nullable();
-            $table->string('gingival_color')->nullable();
-            $table->boolean('prophylaxis')->default(false);
-            $table->json('teeth')->nullable(); // store your $teeth array as JSON
-            $table->text('recommendation')->nullable();
-            $table->timestamps();
 
-            // appointment reference
+            // Intraoral Exam + Procedures
+            $table->json('oral_hygiene')->nullable(); // stores plaque level + remarks
+            $table->string('gingival_color')->nullable();
+            $table->json('procedures')->nullable(); // stores multiple selected procedures
+            $table->text('procedure_notes')->nullable(); // additional notes
+
+            // Tooth chart
+            $table->json('teeth')->nullable(); // upper + lower arrays
+
+            // Recommendation
+            $table->text('recommendation')->nullable();
+
+            // References
             $table->foreignId('appointment_id')->nullable()->constrained('appointments')->onDelete('set null');
-            
             $table->foreignId('doctor_id')->nullable()->constrained('clinic_staff')->onDelete('set null');
+
             $table->timestamp('archived_at')->nullable();
+            $table->timestamps();
         });
     }
 
