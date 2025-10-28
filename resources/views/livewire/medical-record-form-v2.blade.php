@@ -89,7 +89,7 @@
                 <div>
                     <h2 class="font-bold mb-4">Medical Concern</h2>
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Reason for Visit</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Reason for Visit: <span class="text-red-500">*</span></label>
                         <div class="grid grid-cols-5 gap-3">
                             @foreach (['Consultation', 'Fever', 'Headache', 'Injury', 'Other'] as $option)
                                 <button 
@@ -106,8 +106,8 @@
                     
                     </div>
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700">Description of Symptoms:</label>
-                        <textarea rows="2" class="text-gray-700 text-sm mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="Enter description of symptoms..."></textarea>
+                        <label class="block text-sm font-medium text-gray-700">Description of Symptoms: <span class="text-red-500">*</span></label>
+                        <textarea wire:model.defer="description" rows="2" class="text-gray-700 text-sm mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="Enter description of symptoms..."></textarea>
                     </div>
                 </div>
             @elseif ($step === 2)
@@ -150,30 +150,32 @@
                                 <h3 class="text-lg font-semibold text-blue-700 mb-3">Past Medical History</h3>
                                 <div class="mb-2">
                                     <label class="block text-sm font-medium text-gray-700">Medications:</label>
-                                    <textarea rows="2" class="text-gray-700 text-sm mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="List any current or past medications, including maintenance prescriptions..."></textarea>
+                                    <textarea wire:model.defer="medications" rows="2" class="text-gray-700 text-sm mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="List any current or past medications, including maintenance prescriptions..."></textarea>
                                 </div>
                                 <div class="mb-2">
                                     <label class="block text-sm font-medium text-gray-700">Allergies:</label>
-                                    <textarea rows="2" class="text-gray-700 text-sm mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="Specify any known drug, food, or environmental allergies..."></textarea>
+                                    <textarea wire:model.defer="allergies" rows="2" class="text-gray-700 text-sm mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="Specify any known drug, food, or environmental allergies..."></textarea>
                                 </div>
                                 <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <!-- Column 1 -->
                                     <div class="space-y-2">
                                         <label class="flex items-center space-x-2">
-                                            <input type="checkbox" name="mumps" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                            <input type="checkbox" wire:model.defer="past_medical_history.Mumps" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                                             <span>Mumps</span>
                                         </label>
+
                                         <label class="flex items-center space-x-2">
-                                            <input type="checkbox" name="heart_disorder" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                            <input type="checkbox" wire:model.defer="past_medical_history.Heart Disorder" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                                             <span>Heart Disorder</span>
                                         </label>
 
                                         <label class="flex items-center space-x-2">
-                                            <input type="checkbox" name="bleeding_problem" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                            <input type="checkbox" wire:model.defer="past_medical_history.Bleeding Problem" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                                             <span>Bleeding Problem</span>
                                         </label>
 
                                         <label class="flex items-center space-x-2">
-                                            <input type="checkbox" name="chicken_pox" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                            <input type="checkbox" wire:model.defer="past_medical_history.Chicken Pox" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                                             <span>Chicken Pox</span>
                                         </label>
                                     </div>
@@ -181,17 +183,17 @@
                                     <!-- Column 2 -->
                                     <div class="space-y-2">
                                         <label class="flex items-center space-x-2">
-                                            <input type="checkbox" name="dengue" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                            <input type="checkbox" wire:model.defer="past_medical_history.Dengue" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                                             <span>Dengue</span>
                                         </label>
 
                                         <label class="flex items-center space-x-2">
-                                            <input type="checkbox" name="kidney_disease" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                            <input type="checkbox" wire:model.defer="past_medical_history.Kidney Disease" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                                             <span>Kidney Disease</span>
                                         </label>
 
                                         <label class="flex items-center space-x-2">
-                                            <input type="checkbox" name="covid19" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                            <input type="checkbox" wire:model.defer="past_medical_history.Covid-19" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                                             <span>COVID-19</span>
                                         </label>
 
@@ -199,7 +201,7 @@
                                             <span>Hepatitis</span>
                                             <button 
                                                 type="button" 
-                                                wire:click="$set('hepatitis_type', null)" 
+                                                wire:click="$set('past_medical_history.Hepatitis', null)" 
                                                 class="text-gray-400 hover:text-red-500 transition"
                                                 title="Clear selection">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" class="w-4 h-4" fill="currentColor"><path d="M690-240h190v80H610l80-80Zm-500 80-85-85q-23-23-23.5-57t22.5-58l440-456q23-24 56.5-24t56.5 23l199 199q23 23 23 57t-23 57L520-160H190Zm296-80 314-322-198-198-442 456 64 64h262Zm-6-240Z"/></svg>
@@ -207,19 +209,19 @@
                                         </label>
                                         <div class="flex items-center space-x-4">
                                             <label class="flex items-center space-x-1">
-                                                <input type="radio" wire:model="hepatitis_type" value="A" class="text-blue-600 border-gray-300 focus:ring-blue-500">
+                                                <input type="radio" wire:model="past_medical_history.Hepatitis" value="A" class="text-blue-600 border-gray-300 focus:ring-blue-500">
                                                 <span>A</span>
                                             </label>
                                             <label class="flex items-center space-x-1">
-                                                <input type="radio" wire:model="hepatitis_type" value="B" class="text-blue-600 border-gray-300 focus:ring-blue-500">
+                                                <input type="radio" wire:model="past_medical_history.Hepatitis" value="B" class="text-blue-600 border-gray-300 focus:ring-blue-500">
                                                 <span>B</span>
                                             </label>
                                             <label class="flex items-center space-x-1">
-                                                <input type="radio" wire:model="hepatitis_type" value="C" class="text-blue-600 border-gray-300 focus:ring-blue-500">
+                                                <input type="radio" wire:model="past_medical_history.Hepatitis" value="C" class="text-blue-600 border-gray-300 focus:ring-blue-500">
                                                 <span>C</span>
                                             </label>
                                             <label class="flex items-center space-x-1">
-                                                <input type="radio" wire:model="hepatitis_type" value="D" class="text-blue-600 border-gray-300 focus:ring-blue-500">
+                                                <input type="radio" wire:model="past_medical_history.Hepatitis" value="D" class="text-blue-600 border-gray-300 focus:ring-blue-500">
                                                 <span>D</span>
                                             </label>
                                         </div>
@@ -230,41 +232,42 @@
                             <div>
                                 <h3 class="text-lg font-semibold text-blue-700 mb-3">Family History</h3>
                                 <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <!-- Column 1 -->
                                     <div class="space-y-2">
                                         <label class="flex items-center space-x-2">
-                                            <input type="checkbox" name="" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                            <input type="checkbox" wire:model.defer="family_history.Bronchial Asthma" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                                             <span>Bronchial Asthma</span>
                                         </label>
                                         <label class="flex items-center space-x-2">
-                                            <input type="checkbox" name="" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                            <input type="checkbox" wire:model.defer="family_history.Diabetes Mellitus" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                                             <span>Diabetes Mellitus</span>
                                         </label>
-
                                         <label class="flex items-center space-x-2">
-                                            <input type="checkbox" name="" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                            <input type="checkbox" wire:model.defer="family_history.Thyroid Disorder" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                                             <span>Thyroid Disorder</span>
                                         </label>
-
                                         <label class="flex items-center space-x-2">
-                                            <input type="checkbox" name="" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                            <input type="checkbox" wire:model.defer="family_history.Cancer" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                                             <span>Cancer</span>
                                         </label>
                                     </div>
+
+                                    <!-- Column 2 -->
                                     <div class="space-y-2">
                                         <label class="flex items-center space-x-2">
-                                            <input type="checkbox" name="" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                            <input type="checkbox" wire:model.defer="family_history.Hypertension" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                                             <span>Hypertension</span>
                                         </label>
                                         <label class="flex items-center space-x-2">
-                                            <input type="checkbox" name="" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                            <input type="checkbox" wire:model.defer="family_history.Liver Disease" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                                             <span>Liver Disease</span>
                                         </label>
-
                                         <label class="flex items-center space-x-2">
-                                            <input type="checkbox" name="" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                            <input type="checkbox" wire:model.defer="family_history.Epilepsy" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                                             <span>Epilepsy</span>
                                         </label>
                                     </div>
+                                </div>
                             </div>
                         @elseif ($substep === 3)
                             <div>
@@ -272,9 +275,17 @@
                                     <h3 class="text-lg font-semibold text-blue-700">Personal History</h3>
                                     <label class="flex items-center space-x-2">
                                         <span>Stick/s per day: </span>
-                                        <input type="number" class="text-gray-700 text-sm ml-2 w-20 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="N/A">
-                                        <span>Pack/s per week: </span>
-                                        <input type="number" class="text-gray-700 text-sm ml-2 w-20 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="N/A">
+                                        <input 
+                                            type="number" 
+                                            wire:model.defer="personal_history.sticks_per_day"
+                                            class="text-gray-700 text-sm ml-2 w-20 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                                            placeholder="N/A">
+                                        <span>Pack/s per year: </span>
+                                        <input 
+                                            type="number" 
+                                            wire:model.defer="personal_history.packs_per_year"
+                                            class="text-gray-700 text-sm ml-2 w-20 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                                            placeholder="N/A">
                                     </label>
                                     <label class="flex items-center space-x-2">
                                         <span>Alcohol Consumption</span>
@@ -286,7 +297,10 @@
                                         </select>
                                     </label>
                                     <label class="flex items-center space-x-2">
-                                        <input type="checkbox" name="" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                        <input 
+                                            type="checkbox" 
+                                            wire:model.defer="personal_history.Vape"
+                                            class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                                         <span>Vape</span>
                                     </label>
                                 </div>
@@ -295,66 +309,93 @@
                             <div>
                                 <h3 class="text-lg font-semibold text-blue-700 mb-3">OB-Gyne History</h3>
                                 <div class="flex gap-4 text-sm">
-                                    <label class="flex flex-col space-x-2">
+                                    <label class="flex flex-col">
                                         <span>LNMP</span>
-                                        <input type="date" class="text-gray-700 text-sm ml-2 w-40 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                                        <input 
+                                            type="date" 
+                                            wire:model.defer="obgyne_history.LNMP"
+                                            class="text-gray-700 text-sm w-40 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                                     </label>
-                                    <label class="flex flex-col space-x-2">
+
+                                    <label class="flex flex-col">
                                         <span>OB Score</span>
-                                        <input type="text" class="text-gray-700 text-sm ml-2 w-40 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="N/A">
+                                        <input 
+                                            type="text" 
+                                            wire:model.defer="obgyne_history.OB Score"
+                                            class="text-gray-700 text-sm w-40 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                                            placeholder="N/A">
                                     </label>
-                                    <label class="flex flex-col space-x-2">
+
+                                    <label class="flex flex-col">
                                         <span>Date of Last Delivery</span>
-                                        <input type="date" class="text-gray-700 text-sm ml-2 w-40 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                                        <input 
+                                            type="date" 
+                                            wire:model.defer="obgyne_history.Date of Last Delivery"
+                                            class="text-gray-700 text-sm w-40 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                                     </label>
                                 </div>
                             </div>
                         @elseif ($substep === 5)
-                            <div>
+                            <div wire:key="hospitalization-section">
                                 <h3 class="text-lg font-semibold text-blue-700 mb-3">Hospitalization History</h3>
-                                <textarea rows="2" class="text-gray-700 text-sm w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="Please specify..."></textarea>
+                                <textarea rows="2"
+                                    wire:model.defer="hospitalization"
+                                    class="text-gray-700 text-sm w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                                    placeholder="Please specify..."></textarea>
                             </div>
                         @elseif ($substep === 6)
-                            <div>
+                            <div wire:key="operation-section">
                                 <h3 class="text-lg font-semibold text-blue-700 mb-3">Operation History</h3>
-                                <textarea rows="2" class="text-gray-700 text-sm w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="Please specify..."></textarea>
+                                <textarea rows="2"
+                                    wire:model.defer="operation"
+                                    class="text-gray-700 text-sm w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                                    placeholder="Please specify..."></textarea>
                             </div>
                         @elseif ($substep === 7)
                             <div>
                                 <h3 class="text-lg font-semibold text-blue-700 mb-3">Immunizations History</h3>
+
                                 <div class="grid grid-cols-2 gap-4 text-sm pb-3">
                                     <div class="space-y-2">
                                         <label class="flex items-center space-x-2">
                                             <span>COVID-19 1st</span>
-                                            <input type="date" class="text-gray-700 text-sm ml-2 w-40 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                                            <input type="date" wire:model.defer="immunizations.COVID-19 1st"
+                                                class="text-gray-700 text-sm ml-2 w-40 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                                         </label>
                                         <label class="flex items-center space-x-2">
                                             <span>COVID-19 2nd</span>
-                                            <input type="date" class="text-gray-700 text-sm ml-2 w-40 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                                            <input type="date" wire:model.defer="immunizations.COVID-19 2nd"
+                                                class="text-gray-700 text-sm ml-2 w-40 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                                         </label>
                                     </div>
                                     <div class="space-y-2">
                                         <label class="flex items-center space-x-2">
                                             <span>Booster 1</span>
-                                            <input type="date" class="text-gray-700 text-sm ml-2 w-40 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                                            <input type="date" wire:model.defer="immunizations.Booster 1"
+                                                class="text-gray-700 text-sm ml-2 w-40 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                                         </label>
                                         <label class="flex items-center space-x-2">
                                             <span>Booster 2</span>
-                                            <input type="date" class="text-gray-700 text-sm ml-2 w-40 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                                            <input type="date" wire:model.defer="immunizations.Booster 2"
+                                                class="text-gray-700 text-sm ml-2 w-40 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                                         </label>
                                     </div>
                                 </div>
+
                                 <div class="gap-4 text-sm space-y-2">
                                     <label class="flex items-center space-x-2">
-                                        <input type="checkbox" name="" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                        <input type="checkbox" wire:model.defer="immunizations.Hepa B"
+                                            class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                                         <span>Hepa B</span>
                                     </label>
                                     <label class="flex items-center space-x-2">
-                                        <input type="checkbox" name="" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                        <input type="checkbox" wire:model.defer="immunizations.HPV"
+                                            class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                                         <span>HPV</span>
                                     </label>
                                     <label class="flex items-center space-x-2">
-                                        <input type="checkbox" name="" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                        <input type="checkbox" wire:model.defer="immunizations.FLU VAC"
+                                            class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                                         <span>Flu Vac</span>
                                     </label>
                                 </div>
@@ -368,35 +409,35 @@
                     <div class="grid grid-cols-8 gap-4 mb-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Weight <span class="text-xs">(kg)</span></label>
-                            <input type="number" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <input type="number" wire:model.live="weight" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Height <span class="text-xs">(cm)</span></label>
-                            <input type="number" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <input type="number" wire:model.live="height" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700">BP <span class="text-xs">(mmHg)</span></label>
-                            <input type="number" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <input type="number" wire:model="blood_pressure" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700">HR  <span class="text-xs">(beats/min)</span></label>
-                            <input type="number" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <input type="number" wire:model="heart_rate" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700">RR <span class="text-xs">(breaths/min)</span></label>
-                            <input type="number" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <input type="number" wire:model="respiratory_rate" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Temp <span class="text-xs">(°C)</span></label>
-                            <input type="number" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <input type="number" wire:model="temperature" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700">BMI</label>
-                            <input type="number" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <input type="number" wire:model="bmi" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" readonly>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700">O2Sat <span class="text-xs">(%)</span></label>
-                            <input type="number" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <input type="number" wire:model="o2sat" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </div>
                     </div>
                     <div class="flex justify-center mb-6">
@@ -476,7 +517,7 @@
             @elseif ($step === 5)
                 <div>
                     <h2 class="text-lg font-semibold mb-4 text-blue-700">Prescription</h2>
-                    <textarea rows="2" class="text-gray-800 text-sm w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="Enter prescription notes or instructions..."></textarea>
+                    <textarea rows="2" wire:model.defer="prescription" class="text-gray-800 text-sm w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="Enter prescription notes or instructions..."></textarea>
                 </div>
             @endif
         </form>
