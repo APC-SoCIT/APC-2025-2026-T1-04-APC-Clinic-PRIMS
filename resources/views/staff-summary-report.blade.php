@@ -102,74 +102,7 @@
                     </div>
                 </div>
         </div>
-            <!-- Incoming Appointments Table -->
-            <div class="bg-white rounded-lg shadow-md p-4 col-span-1 md:col-span-2 mb-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3 text-center">Approved Upcoming Appointments</h3>
 
-                <div class="overflow-y-auto max-h-80 border rounded">
-                    <table class="min-w-full text-sm text-left">
-                        <thead class="bg-gray-100 text-gray-700 font-semibold sticky top-0 z-10">
-                            <tr>
-                                <th class="px-4 py-2 border">Patient</th>
-                                <th class="px-4 py-2 border">Date</th>
-                                <th class="px-4 py-2 border">Time</th>
-                                <th class="px-4 py-2 border">Doctor</th>
-                                <th class="px-4 py-2 border">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-gray-600">
-                        @forelse($incomingAppointments as $appt)
-                            <tr class="hover:bg-gray-50">
-                                <!-- Patient Name -->
-                                <td class="px-4 py-2 border">
-                                    {{ optional($appt->patient->user)->name 
-                                        ?? ($appt->patient->first_name . ' ' . $appt->patient->last_name) 
-                                        ?? 'Unknown' }}
-                                </td>
-
-                                <!-- Appointment Date -->
-                                <td class="px-4 py-2 border">
-                                    {{ \Carbon\Carbon::parse($appt->appointment_date)->format('M d, Y') }}
-                                </td>
-
-                                <!-- Appointment Time -->
-                                <td class="px-4 py-2 border">
-                                    {{ \Carbon\Carbon::parse($appt->appointment_date)->format('g:i A') }}
-                                </td>
-
-                                <!-- Doctor Name -->
-                                <td class="px-4 py-2 border">
-                                    {{ optional($appt->doctor)->full_name ?? 'N/A' }}
-                                </td>
-
-                                <!-- Status -->
-                                <td class="px-4 py-2 border">
-                                    <span class="px-2 py-1 text-xs rounded-full 
-                                        {{ $appt->status == 'approved' ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600' }}">
-                                        {{ ucfirst($appt->status) }}
-                                    </span>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="text-center text-gray-500 py-4">
-                                    No upcoming appointments
-                                </td>
-                            </tr>
-                        @endforelse
-
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Button to Calendar -->
-                <div class="mt-4 text-center">
-                    <a href="{{ route('calendar') }}" 
-                    class="inline-block px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
-                    View All in Calendar
-                    </a>
-                </div>
-            </div>
 
 
             <!-- 🔹 Charts Row (3 + 4) -->
