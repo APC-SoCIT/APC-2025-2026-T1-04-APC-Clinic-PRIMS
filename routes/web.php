@@ -11,6 +11,7 @@ use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\DentalRecordController;
 use App\Http\Controllers\InventoryReportController;
 use App\Http\Controllers\UserRoleController;
+use App\Livewire\AdminDoctorSchedule;
 use App\Http\Controllers\DashboardController;
 
 $url = config('app.url');
@@ -67,6 +68,14 @@ Route::middleware([
         return view('patient-calendar');
     })->name('appointment');
 
+    Route::get('/staff/dental-form-v2', function () {
+        $user = Auth::user();
+        if (!$user || !$user->hasRole('clinic staff')) {
+            abort(403); // Forbidden
+        }
+        return view('dental-form-v2');
+    })->name('dental-form-v2');
+    
     
    // Invetory Report ROUTE FOR PDF
     Route::post('/inventory/report', [InventoryReportController::class, 'generate'])->name('inventory.report');
@@ -292,5 +301,13 @@ Route::middleware([
 
     Route::post('/admin/assign-role/{user}', [UserRoleController::class, 'assignRole'])
     ->name('admin.assignRole');
+
+    Route::get('/admin/doctor-schedule', function () {
+        $user = Auth::user();
+        if (!$user || !$user->hasRole('admin')) {
+            abort(403); // Forbidden
+        }
+        return view('admin-doctor-schedule');
+    })->name('admin.doctor-schedule');
 });
 
