@@ -89,9 +89,41 @@ class MedicalRecordFormV2 extends Component
         $this->diagnoses = array_values($this->diagnoses); // reindex
     }
 
-    public function nextStep() {
-        if ($this->step < 5) $this->step++;
+    public function nextStep()
+    {
+        if ($this->step === 1) {
+            $this->validate([
+                'reason' => 'required|string',
+                'description' => 'required|string|min:5',
+            ]);
+        }
+
+        if ($this->step === 3) {
+            $this->validate([
+                'weight' => 'required|numeric|min:1',
+                'height' => 'required|numeric|min:1',
+                'blood_pressure' => 'required|string',
+                'heart_rate' => 'required|numeric|min:1',
+                'respiratory_rate' => 'required|numeric|min:1',
+                'temperature' => 'required|numeric|min:1',
+                'o2sat' => 'required|numeric|min:1',
+                'physical_examinations.*.normal' => 'nullable|boolean',
+                'physical_examinations.*.findings' => 'nullable|string',
+            ]);
+
+            $invalid = collect($this->physical_examinations)
+                ->filter(fn($row) => empty($row['normal']) && empty($row['findings']))
+                ->isNotEmpty();
+
+            $this->addError('physical_examinations', 'Please check normal or input findings for every row.');
+                return;
+        }
+
+        if ($this->step < 4) {
+            $this->step++;
+        }
     }
+
 
     public function previousStep() {
         if ($this->step > 1) $this->step--;
