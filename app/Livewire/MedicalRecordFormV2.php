@@ -115,11 +115,13 @@ class MedicalRecordFormV2 extends Component
                 ->filter(fn($row) => empty($row['normal']) && empty($row['findings']))
                 ->isNotEmpty();
 
-            $this->addError('physical_examinations', 'Please check normal or input findings for every row.');
+            if ($invalid) {
+                $this->addError('physical_examinations', 'Please check normal or input findings for every row.');
                 return;
+            }
         }
 
-        if ($this->step < 4) {
+        if ($this->step < 5) {
             $this->step++;
         }
     }
@@ -163,25 +165,27 @@ class MedicalRecordFormV2 extends Component
         $this->emergency_contact_relationship = null;
     }
 
-    public function submitMedicalRecord() 
+    public function save()
     {
+        // Step 1: Validate core fields
         $this->validate([
-            'apc_id_number' => 'required|exists:patients,apc_id_number',
-            'reason' => 'required|not_in:""',
-            'description' => 'required|string|min:1|max:1000',
+            // 'apc_id_number' => 'required|exists:patients,apc_id_number',
+            'reason' => 'required|string|min:5',
+            'description' => 'required|string|max:1000',
         ]);
 
+        // Normalize personal history values
         $this->personal_history['sticks_per_day'] = $this->personal_history['sticks_per_day'] ?: 'N/A';
         $this->personal_history['packs_per_year'] = $this->personal_history['packs_per_year'] ?: 'N/A';
 
-        // physical examination vitals validation
+        // Step 2: Validate physical examination vitals
         if (
             empty($this->weight) ||
             empty($this->height) ||
             empty($this->blood_pressure) ||
             empty($this->heart_rate) ||
             empty($this->respiratory_rate) ||
-            empty($this->temperature) || 
+            empty($this->temperature) ||
             empty($this->o2sat)
         ) {
             $this->errorMessage = 'Please fill out all <strong>Physical Examination vitals</strong>.';
@@ -189,20 +193,20 @@ class MedicalRecordFormV2 extends Component
             return;
         }
 
-        // physical examinations table validation
+        // Step 3: Validate physical examination table
         foreach ($this->sections as $section) {
             $row = $this->physical_examinations[$section] ?? ['normal' => null, 'findings' => ''];
-
             $normal = !empty($row['normal']);
             $findings = trim($row['findings'] ?? '');
 
             if (!$normal && $findings === '') {
-                $this->errorMessage = 'Please fill out the <strong>Physical Examination</strong> table completely.';
+                $this->errorMessage = 'Please complete the <strong>Physical Examination</strong> table.';
                 $this->showErrorModal = true;
                 return;
             }
         }
 
+        // Step 4: Create medical record
         $patient = Patient::where('apc_id_number', $this->apc_id_number)->firstOrFail();
         $clinicStaff = \App\Models\ClinicStaff::where('user_id', auth()->id())->first();
 
@@ -229,11 +233,11 @@ class MedicalRecordFormV2 extends Component
             'bmi' => $this->bmi,
             'o2sat' => $this->o2sat,
             'last_visited' => now(),
-            // If structured prescriptions have meaningful data, prefer saving them as JSON.
-            'prescription' => $this->buildPrescriptionPayload(),
+            'prescription' => $this->prescription,
             'doctor_id' => $clinicStaff?->id,
         ]);
 
+        // Step 5: Save diagnoses
         foreach ($this->diagnoses as $diag) {
             if (!empty($diag['diagnosis'])) {
                 Diagnosis::create([
@@ -244,6 +248,7 @@ class MedicalRecordFormV2 extends Component
             }
         }
 
+        // Step 6: Save physical examinations
         foreach ($this->physical_examinations as $section => $data) {
             PhysicalExamination::create([
                 'medical_record_id' => $medicalRecord->id,
@@ -253,23 +258,25 @@ class MedicalRecordFormV2 extends Component
             ]);
         }
 
+        // Step 7: Mark appointment as completed
         if ($this->fromStaffCalendar && $this->appointment_id) {
             Appointment::where('id', $this->appointment_id)->update(['status' => 'completed']);
         }
 
+        // Step 8: Reset and redirect
         $this->reset();
         $this->physical_examinations = [];
         $this->diagnoses = [];
-        $this->dispatch('recordAdded');
+        // $this->dispatch('recordAdded');
 
         return redirect()
             ->route('medical-records')
             ->with('toast', [
                 'style' => 'success',
                 'message' => 'Record saved successfully!'
-                ]);
-
+            ]);
     }
+
 
     public function render()
     {

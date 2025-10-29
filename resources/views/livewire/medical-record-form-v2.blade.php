@@ -62,29 +62,29 @@
             </ol>
         </div>
 
-        <!-- Navigation buttons -->
-        <div class="flex justify-between mb-5">
-            @if ($step > 1)
-                <button type="button" wire:click="previousStep"
-                    class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition">
-                    Previous
-                </button>
-            @endif
-            @if ($step < count($steps))
-                <button type="button" wire:click="nextStep"
-                    class="ml-auto bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
-                    Next
-                </button>
-            @else
-                <button type="submit"
-                    class="ml-auto bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition">
-                    Save Record
-                </button>
-            @endif
-        </div>
-
         <!-- Form content -->
         <form wire:submit.prevent="save">
+             <!-- Navigation buttons -->
+            <div class="flex justify-between mb-5">
+                @if ($step > 1)
+                    <button type="button" wire:click="previousStep"
+                        class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition">
+                        Previous
+                    </button>
+                @endif
+                @if ($step < count($steps))
+                    <button type="button" wire:click="nextStep"
+                        class="ml-auto bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
+                        Next
+                    </button>
+                @else
+                    <button type="submit"
+                        class="ml-auto bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition">
+                        Save Record
+                    </button>
+                @endif
+            </div>
+            
             @if ($step === 1)
                 <div>
                     <h2 class="font-bold mb-4">Medical Concern</h2>
@@ -145,7 +145,7 @@
                     </div>
 
                     <!-- Right content -->
-                    <div class="flex-1 rounded-md bg-gray-50 p-4 rounded-lg">
+                    <div class="flex-1 rounded-md bg-gray-50 p-4">
                         @if ($substep === 1)
                             <div>
                                 <h3 class="text-lg font-semibold text-blue-700 mb-3">Past Medical History</h3>

@@ -18,9 +18,9 @@
         </div>
 
         <div>
-            <label class="block text-sm font-medium">Add Custom Time (e.g. 8:15 AM)</label>
-            <div class="flex gap-2">
-                <input type="text" wire:model="customTime" class="w-full border rounded p-2" placeholder="8:15 AM">
+            <label class="block text-sm font-medium">Select Time</label>
+            <div class="flex gap-2 items-center">
+                <input type="time" wire:model="customTime" class="w-full border rounded p-2">
                 <button wire:click="addCustomTime" class="bg-blue-600 text-white px-3 rounded hover:bg-blue-700">Add</button>
             </div>
         </div>
