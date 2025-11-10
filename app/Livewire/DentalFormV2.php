@@ -170,7 +170,7 @@ class DentalFormV2 extends Component
         $this->resetForm();
 
         // Redirect to same Livewire route (first step)
-        return redirect()->route('dental-form-v2')->with('success', 'Dental record saved successfully!');
+        return redirect()->route('medical-records')->with('success', 'Dental record saved successfully!');
     }
 
     private function resetForm()

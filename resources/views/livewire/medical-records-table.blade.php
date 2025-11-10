@@ -237,14 +237,14 @@
         if (medicalBtn) {
             medicalBtn.addEventListener('click', () => {
                 // Corrected route:
-                window.location.href = '/staff/add-record'; 
+                window.location.href = '/staff/medformv2'; 
             });
         }
 
         if (dentalBtn) {
             dentalBtn.addEventListener('click', () => {
                 // Corrected route:
-                window.location.href = '/staff/dental-form'; 
+                window.location.href = '/staff/dental-form-v2'; 
             });
         }
     });
