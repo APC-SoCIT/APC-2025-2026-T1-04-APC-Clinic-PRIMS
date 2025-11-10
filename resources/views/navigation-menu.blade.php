@@ -48,8 +48,11 @@
                     </x-nav-link>
 
                     @elseif (Auth::user()->hasRole('admin'))
-                    <x-nav-link href="{{ route('admin') }}" :active="request()->routeIs('admin-acc-management')">
+                    <x-nav-link href="{{ route('admin') }}" :active="request()->routeIs('admin')">
                         {{ __('Account Management') }}
+                    </x-nav-link>
+                    <x-nav-link href="{{ route('admin.doctor-schedule') }}" :active="request()->routeIs('/admin/doctor-schedule')">
+                        {{ __('Schedule') }}
                     </x-nav-link>
                     @endif
                 </div>

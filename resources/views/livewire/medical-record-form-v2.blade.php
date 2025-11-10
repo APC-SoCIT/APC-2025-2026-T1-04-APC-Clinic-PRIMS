@@ -103,11 +103,12 @@
                                 </button>
                             @endforeach
                         </div>
-                    
+                        @error('reason') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     </div>
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">Description of Symptoms: <span class="text-red-500">*</span></label>
-                        <textarea wire:model.defer="description" rows="2" class="text-gray-700 text-sm mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="Enter description of symptoms..."></textarea>
+                        <textarea wire:model.defer="description" rows="2" class="text-gray-700 text-sm mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="Enter description of symptoms..." required></textarea>
+                        @error('description') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     </div>
                 </div>
             @elseif ($step === 2)
@@ -408,38 +409,65 @@
                     <h2 class="text-lg font-semibold mb-4 text-blue-700">Physical Examination</h2>
                     <div class="grid grid-cols-8 gap-4 mb-6">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Weight <span class="text-xs">(kg)</span></label>
-                            <input type="number" wire:model.live="weight" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <label class="block text-sm font-medium text-gray-700">Weight <span class="text-red-500">*</span></label>
+                            <input type="number" wire:model.live="weight" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="kg">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Height <span class="text-xs">(cm)</span></label>
-                            <input type="number" wire:model.live="height" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <label class="block text-sm font-medium text-gray-700">Height <span class="text-red-500">*</span></label>
+                            <input type="number" wire:model.live="height" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="cm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">BP <span class="text-xs">(mmHg)</span></label>
-                            <input type="number" wire:model="blood_pressure" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <label class="block text-sm font-medium text-gray-700">BP <span class="text-red-500">*</span></label>
+                            <input type="number" wire:model="blood_pressure" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="mmHg">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">HR  <span class="text-xs">(beats/min)</span></label>
+                            <label class="block text-sm font-medium text-gray-700">HR <span class="text-red-500">*</span></label>
                             <input type="number" wire:model="heart_rate" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">RR <span class="text-xs">(breaths/min)</span></label>
+                            <label class="block text-sm font-medium text-gray-700">RR <span class="text-red-500">*</span></label>
                             <input type="number" wire:model="respiratory_rate" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Temp <span class="text-xs">(°C)</span></label>
-                            <input type="number" wire:model="temperature" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <label class="block text-sm font-medium text-gray-700">Temp <span class="text-red-500">*</span></label>
+                            <input type="number" wire:model="temperature" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="°C">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700">BMI</label>
                             <input type="number" wire:model="bmi" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" readonly>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">O2Sat <span class="text-xs">(%)</span></label>
-                            <input type="number" wire:model="o2sat" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <label class="block text-sm font-medium text-gray-700">O2Sat <span class="text-red-500">*</span></label>
+                            <input type="number" wire:model="o2sat" class="text-gray-800 text-sm mt-1 w-full border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="%">
                         </div>
                     </div>
+                    @if ($errors->any())
+                        @php
+                            $requiredFields = [
+                                'weight' => 'Weight',
+                                'height' => 'Height',
+                                'blood_pressure' => 'BP',
+                                'heart_rate' => 'HR',
+                                'respiratory_rate' => 'RR',
+                                'temperature' => 'Temp',
+                                'o2sat' => 'O2Sat',
+                            ];
+
+                            $missingFields = collect($requiredFields)
+                                ->filter(fn($label, $field) => $errors->has($field))
+                                ->values()
+                                ->implode(', ');
+                        @endphp
+
+                        @if ($missingFields)
+                            <div class="text-red-600 text-sm mb-2">
+                                {{ $missingFields }} {{ Str::contains($missingFields, ',') ? 'are' : 'is' }} required.
+                            </div>
+                        @endif
+                    @endif
+                    @error('physical_examinations')
+                        <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
+                    @enderror
                     <div class="flex justify-center mb-6">
                         <table class="table-auto w-[80%] border-collapse border border-gray-300 text-sm">
                             <thead>
