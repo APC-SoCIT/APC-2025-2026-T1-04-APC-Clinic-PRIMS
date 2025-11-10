@@ -260,7 +260,7 @@
         @if (session()->has('success'))
             <div 
                 x-data="{ show: true }" 
-                x-init="setTimeout(() => show = false, 1000)" 
+                x-init="setTimeout(() => show = false, 5000)" 
                 x-show="show" 
                 x-transition
                 class="fixed inset-0 flex items-center justify-center z-50"
